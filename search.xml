@@ -22,7 +22,7 @@
             
             <tag> FSL </tag>
             
-            <tag> 阅读笔记 </tag>
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -49,7 +49,7 @@
             
             <tag> FSL </tag>
             
-            <tag> 阅读笔记 </tag>
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -76,7 +76,7 @@
             
             <tag> FSL </tag>
             
-            <tag> 阅读笔记 </tag>
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -103,7 +103,7 @@
             
             <tag> FSL </tag>
             
-            <tag> 阅读笔记 </tag>
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -130,7 +130,7 @@
             
             <tag> FSL </tag>
             
-            <tag> 阅读笔记 </tag>
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -146,6 +146,20 @@
         <content type="html"><![CDATA[]]></content>
       
       
+      <categories>
+          
+          <category> FSL in NLP </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> 论文笔记 </tag>
+            
+        </tags>
       
     </entry>
     
@@ -170,7 +184,7 @@
             
             <tag> FSL </tag>
             
-            <tag> 阅读笔记 </tag>
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -197,7 +211,7 @@
             
             <tag> FSL </tag>
             
-            <tag> 阅读笔记 </tag>
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -213,6 +227,20 @@
         <content type="html"><![CDATA[]]></content>
       
       
+      <categories>
+          
+          <category> FSL in NLP </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> 论文笔记 </tag>
+            
+        </tags>
       
     </entry>
     
