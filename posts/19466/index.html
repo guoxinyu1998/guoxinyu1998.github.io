@@ -1,0 +1,370 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Induction Networks for Few-Shot Text Classification | Guo Xinyu's blog</title><meta name="description" content="Induction Networks for Few-Shot Text ClassificationAbstract当数据不足或需要适应没有见过的类时，文本分类往往会遇到困难。在这种具有挑战性的情况下，最近的研究使用元学习来模拟小样本任务，在该任务中，将新的查询(query)与样本级别的小型支持集进行比较。但是，这种基于样本的比较可能会受到同一类中各种表达的严重干扰。因此，我们应该能够学习支持集"><meta name="keywords" content="FSL,阅读笔记"><meta name="author" content="郭新宇"><meta name="copyright" content="郭新宇"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/wangzhan.png"><link rel="canonical" href="https://guoxinyu1998.github.io/posts/19466/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="preconnect" href="//zz.bdstatic.com"/><meta property="og:type" content="article"><meta property="og:title" content="Induction Networks for Few-Shot Text Classification"><meta property="og:url" content="https://guoxinyu1998.github.io/posts/19466/"><meta property="og:site_name" content="Guo Xinyu's blog"><meta property="og:description" content="Induction Networks for Few-Shot Text ClassificationAbstract当数据不足或需要适应没有见过的类时，文本分类往往会遇到困难。在这种具有挑战性的情况下，最近的研究使用元学习来模拟小样本任务，在该任务中，将新的查询(query)与样本级别的小型支持集进行比较。但是，这种基于样本的比较可能会受到同一类中各种表达的严重干扰。因此，我们应该能够学习支持集"><meta property="og:image" content="https://pic1.zhimg.com/80/v2-c02e85719ceae1596dd060b2d49bf8d5_720w.jpg?source=1940ef5c"><meta property="article:published_time" content="2021-06-09T01:18:45.000Z"><meta property="article:modified_time" content="2021-06-09T01:39:52.555Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="next" title="Few-shot learning for short text classification" href="https://guoxinyu1998.github.io/posts/31101/"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.js" defer></script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"ERJWQV3VD4","apiKey":"ea28b49d5c7503bc94618714372feb48","indexName":"guoxinyu'blog","hits":{"per_page":6},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: {"languages":{"author":"作者: 郭新宇","link":"链接: ","source":"来源: Guo Xinyu's blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: true,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2021-06-09 09:39:52'
+}</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><div class="aplayer" data-id="751883403" data-server="netease" data-type="playlist" data-fixed="true" data-listFolded="false" data-order="random" data-preload="none"></div><link rel="stylesheet" href="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.css"><script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@master/Hexo/css/flink.min.css"></head><body><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">7</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">3</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">1</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><i class="fa-fw fab fa-xbox"></i><span> 聚宝盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><i class="fa-fw far fa-comment"></i><span> 微语</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Induction-Networks-for-Few-Shot-Text-Classification"><span class="toc-number">1.</span> <span class="toc-text">Induction Networks for Few-Shot Text Classification</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Abstract"><span class="toc-number">1.1.</span> <span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Introduction"><span class="toc-number">1.2.</span> <span class="toc-text">1.Introduction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Related-Work"><span class="toc-number">1.3.</span> <span class="toc-text">2.Related Work</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-小样本学习"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 小样本学习</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-胶囊网络Capsule-Network"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 胶囊网络Capsule Network</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-问题定义"><span class="toc-number">1.4.</span> <span class="toc-text">3.问题定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-小样本分类"><span class="toc-number">1.4.1.</span> <span class="toc-text">3.1 小样本分类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2训练过程"><span class="toc-number">1.4.2.</span> <span class="toc-text">3.2训练过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-The-Models"><span class="toc-number">1.5.</span> <span class="toc-text">4.The Models</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1编码器模块"><span class="toc-number">1.5.1.</span> <span class="toc-text">4.1编码器模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2Induction-模块"><span class="toc-number">1.5.2.</span> <span class="toc-text">4.2Induction 模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3关系模块"><span class="toc-number">1.5.3.</span> <span class="toc-text">4.3关系模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4目标函数"><span class="toc-number">1.5.4.</span> <span class="toc-text">4.4目标函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-实验"><span class="toc-number">1.6.</span> <span class="toc-text">5.实验</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1dataset"><span class="toc-number">1.6.1.</span> <span class="toc-text">5.1dataset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2实验设置"><span class="toc-number">1.6.2.</span> <span class="toc-text">5.2实验设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3实验结果"><span class="toc-number">1.6.3.</span> <span class="toc-text">5.3实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#整体性能"><span class="toc-number">1.6.3.1.</span> <span class="toc-text">整体性能</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4进一步分析"><span class="toc-number">1.6.4.</span> <span class="toc-text">5.4进一步分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#transformation的效果"><span class="toc-number">1.6.5.</span> <span class="toc-text">transformation的效果</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Conclusion"><span class="toc-number">1.7.</span> <span class="toc-text">6.Conclusion</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><header class="post-bg" id="page-header" style="background-image: url(https://pic1.zhimg.com/80/v2-c02e85719ceae1596dd060b2d49bf8d5_720w.jpg?source=1940ef5c)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Guo Xinyu's blog</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><i class="fa-fw fab fa-xbox"></i><span> 聚宝盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><i class="fa-fw far fa-comment"></i><span> 微语</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Induction Networks for Few-Shot Text Classification</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2021-06-09 09:18:45"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2021-06-09</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2021-06-09 09:39:52"><i class="fas fa-history fa-fw"></i> 更新于 2021-06-09</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/FSL-in-NLP/">FSL in NLP</a></span></div><div class="meta-secondline"> <span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta__icon"></i><span>字数总计:</span><span class="word-count">7.5k</span><span class="post-meta__separator">|</span><i class="far fa-clock fa-fw post-meta__icon"></i><span>阅读时长: 26 分钟</span></span></div><div class="meta-thirdline"><span class="post-meta-pv-cv"><span class="post-meta__separator">|</span><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span><span class="post-meta__separator">|</span><i class="far fa-comments fa-fw post-meta__icon"></i><span>评论数:</span><a href="/posts/19466/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count comment-count" data-xid="/posts/19466/" itemprop="commentCount"></span></a></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h2 id="Induction-Networks-for-Few-Shot-Text-Classification"><a href="#Induction-Networks-for-Few-Shot-Text-Classification" class="headerlink" title="Induction Networks for Few-Shot Text Classification"></a>Induction Networks for Few-Shot Text Classification</h2><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>当数据不足或需要适应没有见过的类时，文本分类往往会遇到困难。在这种具有挑战性的情况下，<strong>最近的研究使用元学习来模拟小样本任务，在该任务中，将新的查询(query)与样本级别的小型支持集进行比较。但是，这种基于样本的比较可能会受到同一类中各种表达的严重干扰</strong>。因此，我们应该能够<strong>学习支持集中每个类的一般表示</strong>，然后将其与新的查询进行比较。在本文中，我们提出了一种新颖的归纳网络，通过在元学习中创新地利用<strong>动态路由算法</strong>来学习这种广义的类表示。这样，我们发现该模型能够更好地归纳和推广。我们在经过充分研究的情感分类数据集（英语）和真实世界的对话意图分类数据集（中文）上评估了提出的模型。实验结果表明，在两个数据集上，所提出的模型均明显优于现有的最新方法，证明了逐级泛化在小样本文本分类中的有效性。</p>
+<h3 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1.Introduction"></a>1.Introduction</h3><p>深度学习在计算机视觉，语音识别和自然语言处理等许多领域都取得了巨大的成功。但是，对于大型标签数据集，监督式深度学习众所周知是贪婪的，这会导致由于标注成本而限制了深度模型在新的类别上的泛化能力。另一方面，人类很容易就能以很少的实例或刺激快速学习新的概念类别。这一明显的差距为进一步研究提供了思路。<br>　　小样本学习致力于通过从极少数带有标签的示例中识别新颖的类来解决数据不足问题。<strong>仅一个或几个示例的局限性就挑战了深度学习中的标准微调方法。早期研究仅在有限的程度上应用了数据扩充和正则化技术来缓解因数据稀疏而导致的过拟合问题</strong>。相反，研究人员探索了元学习，以在人类学习的启发下将分布分配到类似任务上。当代的小样本学习方法通常遵循测试和训练条件必须匹配的原则，将训练过程分解为辅助元学习阶段，该阶段包括许多元任务。他们通过将元任务从一个小批量转换为另一个小批量来提取一些可转移的知识。 这样，小样本模型可以仅通过一个带有标签的小型支持集对新类进行分类。<br>　　然而，现有的方法对小样本学习仍然面临许多重要问题，包括实行强有力的先验，任务间复杂的梯度转移，和微调目标的问题。<strong>Snell等人提出的方法将非参数方法和度量学习相结合，为其中一些问题提供了潜在的解决方案</strong>。非参数方法可以使新示例快速被吸收，而不会遭受灾难性的过度拟合。<strong>这样的非参数模型仅需要学习样本的表示和度量标准。但是，相同类别的实例是相互关联的，并且具有统一的分数和特定的分数</strong>。<u>在以前的研究中，<strong>通过简单地将支持集中样本的表示形式相加或取平均值来计算类级别的表示形式</strong>。这样做可能会在同一类别的各种形式的样本所带来的<strong>噪声中丢失基本信息</strong>。</u>请注意，小样本学习算法无法在支持集上进行微调。当增加支持集的大小，由一个大数据量带来的改善也将会被更多的样本级别的噪音所抵消。<br>　　相反，<u><strong>我们通过在类级别上进行归纳来探索一种更好的方法</strong>：忽略无关的细节，并从同一类中具有各种语言形式的样本中封装一般语义信息。因此，需要一种全面的体系结构，其可以重构支持集的分层表示并且将样本表示动态地转换为类表示。</u><br>　　最近，提出了<strong>胶囊网络</strong>（capsule network）【1】，它具有解决上述问题的令人兴奋的潜力。<strong>一个胶囊网络通过使用执行动态路由的“胶囊”来编码个体和整体之间的内在空间关系从而构成视点不变的知识</strong>。遵循类似的灵感，我们可以将样本视为个体，将类视为整体。我们提出了归纳网络，其目的是基于动态路由过程，对<strong>从小型支持集中的样本中学习广义类级别表示的能力</strong>进行建模。首先，<strong>编码器模块</strong>为问题和支持样本生成表示形式。接下来，<strong>归纳模块</strong>执行动态路由过程，其中矩阵变换可以看作是从样本空间到类空间的映射，然后<strong>类表示的生成全都取决于按协议进行的路由而不是任何参数</strong>，这为所提出的模型提供了强大的归纳能力，可以处理看不见的类。通过将<strong>样本的表示形式视为胶囊输入，将类的表示视为胶囊输出</strong>，我们希望识别出与样本级噪声无关的类的语义。最终，对query和类之间的交互进行了建模-<strong>关系模块</strong>将比较它们的表示，以确定问题是否与类匹配。整体模型定义了基于episode的元训练策略，具有端到端的元训练能力，具有通用性和可伸缩性，<strong>可以识别没有见过的类别</strong>。<br>　　我们工作的具体贡献如下：</p>
+<ul>
+<li>我们为短文本分类提出了归纳网络。为了处理小样本学习任务中的样本多样性，该模型显式地建模了从小型支持集中推导类级别表示的能力。</li>
+<li>提出的归纳模块将动态路由算法与典型的元学习框架结合在一起。矩阵转换和路由过程使我们的模型能够很好地泛化以识别没有见过的类。</li>
+<li>我们的方法在两个小样本的文本分类数据集（包括经过深入研究的情感分类基准和现实世界中的对话意图分类数据集）上的表现优于当前的最新模型。</li>
+</ul>
+<p>remark：【1】胶囊网络Sara Sabour, Nicholas Frosst, and Geoffrey E Hinton.2017.Dynamic routing between capsules. In Ad-vances in Neural Information Processing Systems,pages 3856–3866.</p>
+<h3 id="2-Related-Work"><a href="#2-Related-Work" class="headerlink" title="2.Related Work"></a>2.Related Work</h3><h4 id="2-1-小样本学习"><a href="#2-1-小样本学习" class="headerlink" title="2.1 小样本学习"></a>2.1 小样本学习</h4><p>关于小样本学习的开创性工作可以追溯到2000年代初。 作者将生成模型与复杂的迭代推理策略结合在一起。最近，许多方法都使用了元学习策略，从某种意义上讲，它们从一组辅助任务中提取了一些可转移的知识，从而帮助他们学习很好地针对少数问题解决问题，而不会遭受过度拟合的困扰。通常，这些方法可以分为两类<br><strong>（1）基于优化的方法</strong><br>　　这种类型的方法旨在学习根据给定的样例计算出的梯度来优化模型参数。Munkhdalai and Yu（2017）提出了元网络，该元网络跨任务学习了元级知识，并通过快速参数化转移了归纳偏差，从而实现了快速概括。<strong>Mishra et al.（2018）引入了一种称为SNAIL的通用元学习架构，该架构使用了时间卷积(temporal convolutions)和软注意力(soft attention)的新颖组合</strong>。[1]</p>
+<p><strong>（2）距离度量学习</strong><br>　　这些方法与上述方法不同，后者在学习目标小样本问题时会带来一些复杂性。<strong>基于度量的小样本学习的核心思想类似于最近邻和核密度估计</strong>。在一组已知标签的集合上的预测概率是支持集样本的标签的加权总和。Vinyals等产生了通过余弦距离测量的加权K最近邻分类器，称为匹配网络。Snell等提出了原型网络，该网络学习了一个度量空间，可以通过对每个类别的原型表示计算欧式距离的平方来进行分类。与固定度量指标不同，关系网络学会了一种深度距离度量标准，可以将问题与给定示例进行比较（Sung等人，2018年）。<br>　　近来，已经提出了一些专门针对小样本文本分类问题的研究。 <strong>Xu et al.(2018)通过元学习研究了lifelong domain word embeddings</strong>[2]。 <strong>Yu et al.(2018)等认为最优元模型可能会因任务而异，他们通过将元任务聚类为几个定义的聚类来采用多指标模型</strong>[3]。<strong>Rios和Kavuluru（2018）开发了针对多标签文本分类的小样本文本分类模型</strong>[4]，该模型在标签空间上存在已知结构。  <strong>Xu et al.<br>(2019) 提出了一个开放世界的学习模型来处理产品分类问题中未见过的类</strong>[5]。我们从不同的角度解决了小样本学习问题，并提出了一种动态路由归纳方法来封装样本中的抽象类表示形式，从而在两个数据集上实现了最新的性能。</p>
+<p>remark：</p>
+<p>[1] Nikhil Mishra, Mostafa Rohaninejad, Xi Chen, and Pieter Abbeel. 2018. A simple neural attentive meta-learner. In Proceedings of ICLR.</p>
+<p>[2] Hu Xu, Bing Liu, Lei Shu, and Philip S Y u. 2018. Life-long domain word embedding via meta-learning.arXiv preprint arXiv:1805.09991.</p>
+<p>[3] Mo Y u, Xiaoxiao Guo, Jinfeng Yi, Shiyu Chang, SaloniPotdar, Y u Cheng, Gerald Tesauro, Haoyu Wang,and Bowen Zhou. 2018. Diverse few-shot text classification with multiple metrics. In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics:<br>Human Language Technologies, V olume 1 (Long Papers), pages 1206–1215.</p>
+<p>[4] Anthony Rios and Ramakanth Kavuluru. 2018. Few-shot and zero-shot multi-label learning for structured label spaces. In Proceedings of the 2018 Conference on Empirical Methods in</p>
+<p>[5] Hu Xu, Bing Liu, Lei Shu, and P Y u. 2019. Openworld learning and application to product classification. In The World Wide Web Conference, pages3413–3419. ACM.</p>
+<h4 id="2-2-胶囊网络Capsule-Network"><a href="#2-2-胶囊网络Capsule-Network" class="headerlink" title="2.2 胶囊网络Capsule Network"></a>2.2 胶囊网络Capsule Network</h4><p><strong>胶囊网络最早由Sabour et al.(2017)提出，该网络能够健壮地学习部分整体关系中的不变性</strong>[1]。最近，在自然语言处理领域已经探索了胶囊网络。Yang等成功地将胶囊网络应用到具有大型标签数据集的完全监督的文本分类问题。 与他们的工作不同，我们研究小样本的文本分类分体。夏等重用了类似于Yang等人的监督模型进行意图分类，其中基于胶囊的体系结构得到扩展，以计算目标意图和源意图之间的相似性。与他们的工作不同，我们提出了用于小样本学习的归纳网络，<strong>其中我们提出使用胶囊和动态路由从基于样本的模型中学习广义的类级表示</strong>。动态路由方法使我们的模型在小样本文本分类任务中可以更好地推广。</p>
+<p>[1] Sara Sabour, Nicholas Frosst, and Geoffrey E Hinton.Dynamic routing between capsules. In Advances in Neural Information Processing Systems,<br>pages 3856–3866.</p>
+<h3 id="3-问题定义"><a href="#3-问题定义" class="headerlink" title="3.问题定义"></a>3.问题定义</h3><h4 id="3-1-小样本分类"><a href="#3-1-小样本分类" class="headerlink" title="3.1 小样本分类"></a>3.1 小样本分类</h4><p><strong>小样本分类是一项任务，在这个任务中，仅给出每个新类别的几个样例的条件下，必须对分类器进行调整以适应训练中未见的新类别</strong>。我们有一个带有标签的具有类别集合$C_{train}$的大型训练集。但是，经过训练后，我们的最终目标是在包含不相交的新的类别集合$C_{test}$的测试集上生成分类器，在这个测试集中，只有一小部分带标签的支持集可用。如果支持集C个类别中的每个仅包含K个标记样例，则目标小样本问题称为<strong>C-way K-shot problem</strong>。通常，K太小而无法训练监督分类模型。<strong>因此，我们的目标是在训练集上进行元学习，并提取可转让的知识，这将使我们能够在支持集上进行更好的小样本学习，从而对测试集进行更准确的分类</strong>。</p>
+<h4 id="3-2训练过程"><a href="#3-2训练过程" class="headerlink" title="3.2训练过程"></a>3.2训练过程</h4><p>必须仔细选择训练过程，以在测试时匹配推理。<strong>利用训练集的一种有效方法是将训练过程分解为辅助元学习阶段，并通过基于episode的训练来模仿小样本学习设置</strong>，如Vinyals等人所提出的。我们构造一个元episode来计算梯度并在每次训练迭代中更新我们的模型。<strong>首先通过从训练集中随机选择一些类，然后在每个选择的类别中选择一部分作为支持集S，再从剩余部分的样例中选择一部分作为查询集Q，形成元episode</strong>。元训练过程在给定的支持集S上learn to learn，来最小化查询集Q上的loss。我们将此策略称为基于episode的元训练，其详细信息如算法1所示。值得注意的是，有许多可能的元任务可以用来训练模型，这使得它很难过拟合。例如，如果数据集包含159个训练类别，每次选择5个类别，则这将导致$C_{159}^{5}$种可能。</p>
+<hr>
+<p>算法1：Episode-Based Meta Training</p>
+<hr>
+<p>1: <strong>for</strong> each <em>episode iteration</em> <strong>do</strong></p>
+<p>2：        从训练集中随机选择C个类别</p>
+<p>3：        从每个C类中随机选择K个标签样本作为支持集   </p>
+<script type="math/tex; mode=display">
+S =                          \{ (x_{i},y_{i})\}_{s=1}^{m}(m = K \times C)</script><p>​               从每个C类中剩余的部分选择一部分作为查询集$Q = \{(x_{q},y_{q})_{q=1}^{n}\}$</p>
+<p>4:            把S放到模型中，通过最小化查询集Q中的loss，更新参数。</p>
+<p>5：<strong>end for</strong></p>
+<hr>
+<h3 id="4-The-Models"><a href="#4-The-Models" class="headerlink" title="4.The Models"></a>4.The Models</h3><p>Induction Networks，如图1所示(3-way 2-shot模型的情况)，包括三个模块:编码器模块，Induction模块和关系模块</p>
+<p><img src= "/img/loading.gif" data-src="/posts/19466/1.png" alt="1"></p>
+<h4 id="4-1编码器模块"><a href="#4-1编码器模块" class="headerlink" title="4.1编码器模块"></a>4.1编码器模块</h4><p>该模块是一个具有自注意(self-attention)的双向循环神经网络，如Lin  et al.(2017)[1]所示。给定一个输入文本$x = (w_{1},w_{2},w_{3},…,w_{T})$，用单词嵌入序列表示。使用双向LSTM来处理文本:</p>
+<script type="math/tex; mode=display">
+\overrightarrow{h_{t}}=\overrightarrow{L S T M}\left(w_{t}, h_{t-1}\right)  \\
+\overleftarrow{h_{t}}=\overleftarrow{L S T M}\left(w_{t}, h_{t+1}\right)</script><p>连接$\overrightarrow{h_{t}}$和$\overleftarrow {h_{t}}$得到隐藏状态$h_{t}$,令每个单向LSTM的隐藏状态大小为$u$。我们将所有$T$个$h_{t}s$记为$H= (h_{1},h_{2},…,h_{T})$,<strong>我们的目标是将可变长度的文本编码为固定大小的嵌入</strong>。我们通过在H中选择$T$个$LSTM$隐藏向量的线性组合来实现。计算线性组合需要self-attention机制，该机制将整个LSTM隐藏状态$H$作为输入，并输出权重向量$a$：</p>
+<script type="math/tex; mode=display">
+a = softmax(W_{a2}tanh(W_{a1}H^{T}))</script><p>​                                                                 公式(3)</p>
+<p>$W_{a1} \in R^{d_{a}\times2u}$和$W_{a2} \in R^{d_{a}}$是权重矩阵，$d_{a}$是超参数</p>
+<p>文本的最终表示形式是H的加权和$e$:</p>
+<script type="math/tex; mode=display">
+e = \sum_{t=1}^{T} a_{t} \cdot h_{t}</script><p>​                                                                  公 式(4)</p>
+<p>remark：</p>
+<p>[1] Zhouhan Lin, Minwei Feng, Cicero Nogueira dos San-<br>tos, Mo Y u, Bing Xiang, Bowen Zhou, and Y oshua<br>Bengio. 2017. A structured self-attentive sentence<br>embedding. arXiv preprint arXiv:1703.03130.</p>
+<h4 id="4-2Induction-模块"><a href="#4-2Induction-模块" class="headerlink" title="4.2Induction 模块"></a>4.2Induction 模块</h4><p>动态路由归纳算法</p>
+<p>我们将通过公式4从支持集S中得到的这些向量$e$作为样本向量$e^{s}$，将查询集Q中的向量e作为查询向量$e^{q}$。<strong>最重要的一步是提取支持集中每个类的表示</strong>。归纳模块的主要目的是设计一个从样本向量$e_{ij}^{s}$到类向量$c_{i}$非线性映射: </p>
+<script type="math/tex; mode=display">
+\{e_{ij}^{s} \in R^{2u}\}_{i=1,...C,j=1,...K} \longmapsto \{c_{i} \in R^{2u}\}_{i=1}^{C}.</script><p>在输出胶囊数量为1的情况下，我们在该模块中采用动态路由算法(Sabour et al.，  2017)。<strong>为了在我们的模型中接受any-ways any-shots的输入，我们在支持集的所有样本向量上采用了一个权值可共享的变换</strong>。支持集中的所有样本向量都具有相同的变换权值$W_{s} \in R^{2u \times 2u}$和偏置$b_{s}$(在第五部分的可视化中，证明经过矩阵变换后分类效果更好)，因此模型具有足够的灵活性来处理任何尺寸的支持集。每个样本预测向量的计算：</p>
+<script type="math/tex; mode=display">
+{\hat e_{ij}^{}s} = squash(W_{s}e_{ij}^{s} + b_{s})</script><p>​                                                             公式(5)</p>
+<p><em>squash</em>是整个矢量的<strong>非线性压缩函数</strong>，它使矢量的方向保持不变，但减小了其大小。给定输入向量$x$，<em>squash</em>定义为：</p>
+<script type="math/tex; mode=display">
+squash(x) = \frac {\|x\|^{2}}{1+\|x\|^{2}} \frac{x}{\|x\|}</script><p>​                                                             公式(6)</p>
+<p><strong>公式5编码了较低级别的样本特征与较高级别的类别特征之间的重要不变语义关系</strong>。为了确保类向量自动封装此类的样本特征向量，将反复地应用动态路由。在每次迭代中，该过程都会动态修改连接强度，并通过“路由softmax”确保类<em>i</em>与该类中所有支持样本之间的耦合系数$d_{i}$的和为1：</p>
+<script type="math/tex; mode=display">
+d_{i} = softmax(b_{i})</script><p>​                                                              公式(7)</p>
+<p>$b_{i}$是耦合系数的对数，在第一次迭代中初始化为0，通过学习来更新。给定每个样本预测向量$\hat  e_{ij}^{s}$,每个类别<em>i</em>的候选向量$\hat c_{i}$是该类中所有样本预测向量$\hat  e_{ij}^{s}$的加权和。</p>
+<script type="math/tex; mode=display">
+\hat c_{i} = \sum_{j} d_{ij} \cdot \hat e_{ij}^{s}</script><p>​                                                                公式(8)</p>
+<p>然后应用非线性”squashing”函数，以确保路由过程的矢量输出的长度不会超过1：</p>
+<script type="math/tex; mode=display">
+c_{i} = squash(\hat c_{i})</script><p>每次迭代的最后一步是通过“协议路由”方法调整耦合系数$b_{ij}$的对数。<strong>如果产生的类别候选向量具有一个样本预测向量的大标量输出，则存在自上而下的反馈，该反馈会增加该样本的耦合系数，而降低其他样本的耦合系数</strong>。这种调整类型对于小样本学习的情况非常有效且稳定，因为它不需要恢复任何参数。每个$b_{ij}$通过以下方式更新：</p>
+<script type="math/tex; mode=display">
+b_{ij} = b_{ij} + \hat e_{ij}^{s} \cdot c_{i}</script><p>在算法2中进行总结：</p>
+<hr>
+<p><strong>算法2</strong>： 动态路由归纳</p>
+<hr>
+<p>Require: 支持集S中的样本向量$e_{ij}^{s}$，初始化耦合系数$b_{ij} =0$的对数</p>
+<p>Ensure: 类别向量$c_{i}$</p>
+<ol>
+<li>对于i类中的所有样本$j = 1,…,K$</li>
+<li>​    ${\hat e_{ij}^{}s} = squash(W_{s}e_{ij}^{s} + b_{s})$</li>
+<li>对于每次迭代：</li>
+<li>​    $d_{i} = softmax(b_{i})$</li>
+<li>​    $\hat c_{i} = \sum_{j} d_{ij} \cdot \hat e_{ij}^{s}$</li>
+<li>​    $c_{i} = squash(\hat c_{i})$</li>
+<li>​     for all samples $j = 1,…,K$ in class i:</li>
+<li>​            $b_{ij} = b_{ij} + \hat e_{ig}^{s} \cdot c_{i}$</li>
+<li><strong>end  for</strong></li>
+<li><strong>Return $c_{i}$</strong></li>
+</ol>
+<hr>
+<h4 id="4-3关系模块"><a href="#4-3关系模块" class="headerlink" title="4.3关系模块"></a>4.3关系模块</h4><p><strong>在归纳模块生成类向量$c_{i}$并将查询集中的每个查询文本由编码器模块编码为查询向量$e^{q}$之后，接下来的基本过程是测量每个[query-类别]对之间的相关性</strong>。关系模块的输出称为关系得分，代表$c_{i}$和$e^{q}$之间的相关性，它是0到1之间的标量。具体而言，我们在此模块中使用<strong>神经张量层</strong>，<strong>该模块在建模两个向量之间的关系方面显示了巨大的优势(Wan et al., 2016;Geng et al., 2017）</strong>[1] [2]。在本文中，我们选择它作为交互函数。张量层输出如下的关系向量：</p>
+<script type="math/tex; mode=display">
+v(c_{i},e^{q}) = f(c_{i}^{T}M^{[1:h]}e^{q})</script><p>​                                                              公式(11)</p>
+<p>$M^{k} \in R^{2u \times 2u},k \in [1,…,h]$是张量参数的一个切片，f是ReLU非线性激活函数</p>
+<p>第<em>i</em>个类和第<em>q</em>个查询之间的最终关系得分$r_{iq}$是由sigmoid函数激活的全连接层计算得到：</p>
+<script type="math/tex; mode=display">
+r_{iq} = sigmoid(W_{r}v(c_{i},e^{q})+b_{r})</script><p>​                                                            公式(12)</p>
+<p>remark:</p>
+<p>[1]Shengxian Wan, Y anyan Lan, Jiafeng Guo, Jun Xu,<br>Liang Pang, and Xueqi Cheng. 2016. A deep ar-<br>chitecture for semantic matching with multiple po-<br>sitional sentence representations.  In AAAI, vol-<br>ume 16, pages 2835–2841</p>
+<p>[2]Ruiying Geng, Ping Jian, Yingxue Zhang, and Heyan<br>Huang. 2017. Implicit discourse relation identifica-<br>tion based on tree structure neural network. In 2017<br>International Conference on Asian Language Pro-<br>cessing (IALP), pages 334–337. IEEE.</p>
+<h4 id="4-4目标函数"><a href="#4-4目标函数" class="headerlink" title="4.4目标函数"></a>4.4目标函数</h4><p>均方误差MSE(mean square error loss)训练模型，将关系得分$r_{iq}$回归为ground-truth $y_{q}$:匹配对具有相似性1，错配对具有相似性0.一个episode中，给定具有C个类别的支持集S和查询集$Q = (x_{q},y_{q})_{q=1}^{n}$,损失函数定义为：</p>
+<script type="math/tex; mode=display">
+L(S,Q) = \sum_{i = 1}^{C} \sum_{q=1}^{n}(r_{iq}-1(y_{q}==i))^{2}</script><p>从概念上讲，我们正在预测关系分数，可以将其视为回归问题，并且真实得分在{0,1}空间内。<br>　　这三个模块的所有参数都通过反向传播共同训练。每个训练阶段的所有参数均使用<strong>Adagrad</strong>。<strong>由于其泛化性质，我们的模型不需要对从未见过的类进行任何微调</strong>。归纳和比较能力与训练episodes一起累积在模型中。</p>
+<h3 id="5-实验"><a href="#5-实验" class="headerlink" title="5.实验"></a>5.实验</h3><p>在两个文本分类数据集上进行实验来评估我们的模型。所有实验都是用Tensorflow实现的。</p>
+<h4 id="5-1dataset"><a href="#5-1dataset" class="headerlink" title="5.1dataset"></a>5.1dataset</h4><p><strong>亚马逊评论情感分类（ARSC）</strong></p>
+<p>继Yu et al.(2018)[1]之后，我们使用多任务多领域情感分类数据集。该数据集包含亚马逊上23种产品的英文评论。对于每个产品领域，有三个不同的二进制分类任务。总共形成23 × 3 = 69个任务从4个领域(Books, DVD, Electronics, Kitchen)中选择12个(4 ×  3)任务作为测试集，测试集中每个标签只有5个例子作为支持集。我们在这个数据集上创建了5-shot学习模型。</p>
+<p><strong>面向对话系统的开放域意图分类（ODIC）</strong></p>
+<p>通过在真实会话平台上获取日志数据来创建这个数据集。企业提交的各种对话任务具有大量的意图，但许多意图只有少数带标签的样本，这是典型的few-shot分类应用。根据少镜头学习任务的定义，将训练集和测试集进行划分，确保两集的标签不相交。</p>
+<p>remark:</p>
+<p>Mo Y u, Xiaoxiao Guo, Jinfeng Yi, Shiyu Chang, Saloni<br>Potdar, Y u Cheng, Gerald Tesauro, Haoyu Wang,<br>and Bowen Zhou. 2018. Diverse few-shot text clas-<br>sification with multiple metrics. In Proceedings of<br>the 2018 Conference of the North American Chap-<br>ter of the Association for Computational Linguistics:<br>Human Language Technologies, V olume 1 (Long Pa-<br>pers), pages 1206–1215.</p>
+<h4 id="5-2实验设置"><a href="#5-2实验设置" class="headerlink" title="5.2实验设置"></a>5.2实验设置</h4><p>Baselines 在本节中，实验中的基线模型介绍如下</p>
+<p>matching network </p>
+<p>prototypical network</p>
+<p><strong>graph network:一个基于图的少镜头学习模型，在样本级别上实现任务驱动的消息传递算法</strong>[1]</p>
+<p>relation network</p>
+<p><strong>SNAIL:使用了时间卷积和软注意力机制的通用元学习框架</strong>[2]</p>
+<p>ROBUSTTC-FSL</p>
+<p>ARSC上的基线结果在<em>Diverse few-shot text classification with multiple metrics.</em>中展示，我们使用相同的文本编码器模块在ODIC实现了基线模块</p>
+<p><strong>实现细节</strong>：将300维<strong>GLove 嵌入</strong>[3]应用到ARSC数据集上，将Li et al.(2018)[4]训练的300维中文词嵌入用于ODIC。隐藏状态的大小为$LSTM _{u} = 128$,注意力维度$d_{a}= 64$,动态路由算法中的迭代次数iter为3。关系模块是h = 100的神经张量层，后面是由sigmoid激活的全连接层。我们按照Yu et al.(2018)[5]的方法在ARSC上建立2-way  5-shot模型，构建基于episode的元训练，C = [5,10]， K  =[5,10]，用于ODIC的比较。在每个训练episode的C个样本类中，每个类除了有K个样本文本作为支持集外，还有20个样本作为查询集。这意味着，例如，5-way  5-shot实验在一个训练 episode中有20 × 5 + 5 × 5 = 125个文本。</p>
+<p><strong>评估方法</strong>：</p>
+<p>根据以前FSL方面的研究，通过FSL分类准确率来评估性能</p>
+<p>在ODIC上，计算了从测试集中随机选择的超过600个episode的平均分类精度</p>
+<p>在每个episode中，不管是5-shot,还是10-shot,每个类都取样10 个测试文本</p>
+<p>对于ARSC,用于测试的支持集由Yu et al.(2018)[5]固定，只需要为每一个测试任务运行一次test episode。</p>
+<p>remark：</p>
+<p>[1]Victor Garcia and Joan Bruna. 2017.  Few-shot<br>learning with graph neural networks. CoRR,<br>abs/1711.04043.</p>
+<p>[2]Nikhil Mishra, Mostafa Rohaninejad, Xi Chen, and<br>Pieter Abbeel. 2018. A simple neural attentive meta-<br>learner. In Proceedings of ICLR.</p>
+<p>[3]Jeffrey Pennington, Richard Socher, and Christopher<br>Manning. 2014. Glove: Global vectors for word<br>representation. In Proceedings of the 2014 confer-<br>ence on empirical methods in natural language pro-<br>cessing (EMNLP), pages 1532–1543.</p>
+<p>[4]Shen Li, Zhe Zhao, Renfen Hu, Wensi Li, Tao Liu, and<br>Xiaoyong Du. 2018. Analogical reasoning on chi-<br>nese morphological and semantic relations. In Pro-<br>ceedings of the 56th Annual Meeting of the Associa-<br>tion for Computational Linguistics (V olume 2: Short<br>Papers), pages 138–143.</p>
+<p>[5]Mo Y u, Xiaoxiao Guo, Jinfeng Yi, Shiyu Chang, Saloni<br>Potdar, Y u Cheng, Gerald Tesauro, Haoyu Wang,<br>and Bowen Zhou. 2018. Diverse few-shot text clas-<br>sification with multiple metrics. In Proceedings of<br>the 2018 Conference of the North American Chap-<br>ter of the Association for Computational Linguistics:<br>Human Language Technologies, V olume 1 (Long Pa-<br>pers), pages 1206–1215.</p>
+<h4 id="5-3实验结果"><a href="#5-3实验结果" class="headerlink" title="5.3实验结果"></a>5.3实验结果</h4><h5 id="整体性能"><a href="#整体性能" class="headerlink" title="整体性能"></a>整体性能</h5><p>在ARSC上</p>
+<p>比现有的最先进的模型ROBUSTTC-FSL显著提高了3%</p>
+<p>由于ROBUSTTC-FSL在样本层次上集成了多个度量，构建了一种通用的度量方法，这一方法面临着去除同一类中不同表达之间噪声的困难。此外，ROBUSTTC-FSL所使用的基于任务聚类的方法必须在关联矩阵上找到，这在任务快速变化的现实场景中是低效的。然而，我们的归纳网络是在具有更灵活泛化的元学习框架中训练的，因此它的归纳能力可以通过不同的任务积累</p>
+<p>还使用一个真实的意图分类数据集ODIC来评估我们的方法，我们提出的归纳网络取得了最好的分类性能。<strong>在距离度量学习模型(匹配网络、原型网络、图网络和关系网络)中，所有的学习都是在样本层次上表征特征和测量距离。我们的工作构建了一个专注于类级表示的归纳模块，它对支持集中样本的变化更健壮。我们的模型也优于最新的基于优化的方法——SNAIL</strong>。</p>
+<p><strong>Ablation Study</strong></p>
+<p><strong>Ablation Study</strong>通常是指去除模型或算法的一些“特征”，并观察其如何影响性能</p>
+<p>为了分析Induction Module和Relation Module不同组成部分的影响，我们进一步报告了在ARSC数据集上的ablation experiment，如下表所示。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/19466/2.png" alt="2"></p>
+<p>我们可以看到，使用3次迭代得到的性能最好，更多的迭代并没有进一步提高性能，表中显示了路由组件的有效性。我们还将Inducion Module改为sum和self-attention模块，将关系模块改为余弦距离模块。性能的变化验证了关系模块和归纳模块的好处。注意+关系模型通过自我注意机制来塑造归纳能力，但这种能力受到学习到的注意参数的限制。相反，所提出的动态路由诱导方法通过根据输入的支持集自动调整耦合系数来捕获类级信息，更适合于FSL任务。</p>
+<h4 id="5-4进一步分析"><a href="#5-4进一步分析" class="headerlink" title="5.4进一步分析"></a>5.4进一步分析</h4><p>我们进一步分析了转换和可视化查询文本向量的效果，以显示归纳网络的优势。</p>
+<h4 id="transformation的效果"><a href="#transformation的效果" class="headerlink" title="transformation的效果"></a>transformation的效果</h4><p>下图显示了5-way 10-shot场景下矩阵变换前后支持样本向量的t-SNE (Maaten and Hinton,  2008)可视化[1]。我们从ODIC测试集中随机选择一个包含50个文本的支持集(每个类10个文本)，获得编码器模块后的样本向量$\{e_{ij}^{s}\}_{i=1,…,5,j= 1,…,10}$和transformation后的样本预测向量$\{\hat e_{ij}^{s}\}_{i=1,…,5,j= 1,…,10}$。我们可以看到，矩阵变换后的向量更加可分，证明了矩阵变换对低层样本特征和高层类特征之间的语义关系进行编码的有效性。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/19466/3.png" alt="3"></p>
+<p><strong>Query Text Vector Visualization</strong></p>
+<p>我们还发现，我们的induction模块不仅可以很好地生成有效的类级特征，还可以帮助编码器学习更好的文本向量，因为它可以在反向传播过程中为实例和特征赋予不同的权重。下图显示了t-SNE(Maaten and Hinton，2008)从相同的随机选择的五个类别的文本向量可视化，由关系网络和我们的归纳网络学习。很明显，归纳网络学习的文本向量比关系网络学习的文本向量在语义上分离得更好。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/19466/4.png" alt="4"></p>
+<p>remark:</p>
+<p>[1]Laurens van der Maaten and Geoffrey Hinton. 2008.<br>Visualizing data using t-sne. Journal of machine learning research, 9(Nov):2579–2605.</p>
+<h3 id="6-Conclusion"><a href="#6-Conclusion" class="headerlink" title="6.Conclusion"></a>6.Conclusion</h3><p>本文提出了一种新的用于few-shot文本分类的神经模型——Induction网络。我们提出从支持集中归纳类级别的表示，以处理few-shot学习任务中的样本多样性。归纳模块将动态路由算法与元学习框架相结合，路由机制使我们的模型更容易识别未知的类。实验结果表明，该模型优于现有的少镜头文本分类模型。我们发现矩阵变换和routing procedure都有助于FSL任务。</p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">郭新宇</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://guoxinyu1998.github.io/posts/19466/">https://guoxinyu1998.github.io/posts/19466/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://guoxinyu1998.github.io" target="_blank">Guo Xinyu's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/FSL/">FSL</a><a class="post-meta__tags" href="/tags/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/">阅读笔记</a></div><div class="post_share"><div class="social-share" data-image="https://pic1.zhimg.com/80/v2-c02e85719ceae1596dd060b2d49bf8d5_720w.jpg?source=1940ef5c" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><button class="reward-button" type="button"><i class="fas fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="post-qr-code__img" src="/img/wechat.png" alt="wechat" onclick="window.open('/img/wechat.png')"/><div class="post-qr-code__desc">wechat</div></li><li class="reward-item"><img class="post-qr-code__img" src="/img/1.png" alt="alipay" onclick="window.open('/img/1.png')"/><div class="post-qr-code__desc">alipay</div></li></ul></div></button></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/31101/"><img class="next-cover" data-src="https://pic1.zhimg.com/80/v2-5d8cda5c1dc30e402147cb06acb91bee_720w.jpg?source=1940ef5c" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Few-shot learning for short text classification</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/posts/31101/" title="Few-shot learning for short text classification"><img class="relatedPosts_cover" data-src="https://pic1.zhimg.com/80/v2-5d8cda5c1dc30e402147cb06acb91bee_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-09</div><div class="relatedPosts_title">Few-shot learning for short text classification</div></div></a></div><div class="relatedPosts_item"><a href="/posts/33055/" title="Learning to Compare Relation Network for Few-Shot Learning"><img class="relatedPosts_cover" data-src="https://pic1.zhimg.com/80/v2-5d8cda5c1dc30e402147cb06acb91bee_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-09</div><div class="relatedPosts_title">Learning to Compare Relation Network for Few-Shot Learning</div></div></a></div><div class="relatedPosts_item"><a href="/posts/1591/" title="prototypical networks for few_shot learning"><img class="relatedPosts_cover" data-src="https://pic2.zhimg.com/80/v2-f60ef96e32013567e6ea47c25a1605f7_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-09</div><div class="relatedPosts_title">prototypical networks for few_shot learning</div></div></a></div><div class="relatedPosts_item"><a href="/posts/31618/" title="siamese neural nettworks for one shot image recogntion"><img class="relatedPosts_cover" data-src="https://pic2.zhimg.com/80/v2-eb86d96291535cf212ed524a5bafbcbb_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-08</div><div class="relatedPosts_title">siamese neural nettworks for one shot image recogntion</div></div></a></div></div></div><hr><div id="post-comment"><div class="comment-head"><div class="comment-headling"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div class="comments-items-1" data-name="Valine"><div class="vcomment" id="vcomment"></div><script>function loadvaline () {  
+  var requestSetting = function (from,set) {
+    var from = from
+    var setting = set.split(',').filter(function(item){
+    return from.indexOf(item) > -1
+    });
+    setting = setting.length == 0 ? from :setting;
+    return setting
+  }
+
+  var guestInfo = requestSetting(['nick','mail','link'],'nick,mail,link')
+  var requiredFields = requestSetting(['nick','mail'],'nick,mail')
+
+  function initValine () {
+    window.valine = new Valine({
+      el:'#vcomment',
+      appId: 'P8NEOKyfeC9bHLuaMnGReAz5-gzGzoHsz',
+      appKey: 'JVxIietS4NnVMnEqwKVnBNYH',
+      placeholder: '来呀，快活呀',
+      avatar: 'monsterid',
+      meta: guestInfo,
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: true,
+      serverURLs: '',
+      emojiCDN: 'true',
+      emojiMaps: "",
+      enableQQ: true,
+      requiredFields: requiredFields,
+      master: '607db4ef3c96629fb910ae8a233fae86',   //博主邮箱
+      friends: '18a99d40001be1e2b5edc415d5082468',
+      tagMeta: ["博主","博主女朋友","访客"],
+      
+      metaPlaceholder: {"nick":"QQ号","mail":"邮箱"},
+
+      // 设置Bilibili表情包地址
+  emojiCDN: '//i0.hdslb.com/bfs/emote/', 
+  // 表情title和图片映射
+  emojiMaps: {
+    "tv_doge": "6ea59c827c414b4a2955fe79e0f6fd3dcd515e24.png",
+    "tv_亲亲": "a8111ad55953ef5e3be3327ef94eb4a39d535d06.png",
+    "tv_偷笑": "bb690d4107620f1c15cff29509db529a73aee261.png",
+    "tv_再见": "180129b8ea851044ce71caf55cc8ce44bd4a4fc8.png",
+    "tv_冷漠": "b9cbc755c2b3ee43be07ca13de84e5b699a3f101.png",
+    "tv_发怒": "34ba3cd204d5b05fec70ce08fa9fa0dd612409ff.png",
+    "tv_发财": "34db290afd2963723c6eb3c4560667db7253a21a.png",
+    "tv_可爱": "9e55fd9b500ac4b96613539f1ce2f9499e314ed9.png",
+    "tv_吐血": "09dd16a7aa59b77baa1155d47484409624470c77.png",
+    "tv_呆": "fe1179ebaa191569b0d31cecafe7a2cd1c951c9d.png",
+    "tv_呕吐": "9f996894a39e282ccf5e66856af49483f81870f3.png",
+    "tv_困": "241ee304e44c0af029adceb294399391e4737ef2.png",
+    "tv_坏笑": "1f0b87f731a671079842116e0991c91c2c88645a.png",
+    "tv_大佬": "093c1e2c490161aca397afc45573c877cdead616.png",
+    "tv_大哭": "23269aeb35f99daee28dda129676f6e9ea87934f.png",
+    "tv_委屈": "d04dba7b5465779e9755d2ab6f0a897b9b33bb77.png",
+    "tv_害羞": "a37683fb5642fa3ddfc7f4e5525fd13e42a2bdb1.png",
+    "tv_尴尬": "7cfa62dafc59798a3d3fb262d421eeeff166cfa4.png",
+    "tv_微笑": "70dc5c7b56f93eb61bddba11e28fb1d18fddcd4c.png",
+    "tv_思考": "90cf159733e558137ed20aa04d09964436f618a1.png",
+    "tv_惊吓": "0d15c7e2ee58e935adc6a7193ee042388adc22af.png",
+    "tv_打脸": "56ab10b624063e966bfcb76ea5dc4794d87dfd47.png",
+    "tv_抓狂": "fe31c08edad661d63762b04e17b8d5ae3c71a757.png",
+    "tv_抠鼻": "c666f55e88d471e51bbd9fab9bb308110824a6eb.png",
+    "tv_斜眼笑": "911f987aa8bc1bee12d52aafe62bc41ef4474e6c.png",
+    "tv_无奈": "ea8ed89ee9878f2fece2dda0ea8a5dbfe21b5751.png",
+    "tv_晕": "5443c22b4d07fb1907ccc610c8e6db254f2461b7.png",
+    "tv_流汗": "cead1c351ab8d79e9f369605beb90148db0fbed3.png",
+    "tv_流泪": "7e71cde7858f0cd50d74b0264aa26db612a8a167.png",
+    "tv_流鼻血": "c32d39db2737f89b904ca32700d140a9241b0767.png",
+    "tv_点赞": "f85c354995bd99e28fc76c869bfe42ba6438eff4.png",
+    "tv_生气": "26702dcafdab5e8225b43ffd23c94ac1ff932654.png",
+    "tv_生病": "8b0ec90e6b86771092a498c54f09fc94621c1900.png",
+    "tv_疑问": "0793d949b18d7be716078349c202c15ff166f314.png",
+    "tv_白眼": "c1d59f439e379ee50eef488bcb5e5378e5044ea4.png",
+    "tv_皱眉": "72ccad6679fea0d14cce648b4d818e09b8ffea2d.png",
+    "tv_目瞪口呆": "0b8cb81a68de5d5365212c99375e7ace3e7891b7.png",
+    "tv_睡着": "8b196675b53af58264f383c50ad0945048290b33.png",
+    "tv_笑哭": "1abc628f6d4f4caf9d0e7800878f4697abbc8273.png",
+    "tv_腼腆": "89712c0d4af73e67f89e35cbc518420380a7f6f4.png",
+    "tv_色": "61822c7e9aae5da76475e7892534545336b23a6f.png",
+    "tv_调侃": "4bc022533ef31544ca0d72c12c808cf4a1cce3e3.png",
+    "tv_调皮": "b9c41de8e82dd7a8515ae5e3cb63e898bf245186.png",
+    "tv_鄙视": "6e72339f346a692a495b123174b49e4e8e781303.png",
+    "tv_闭嘴": "c9e990da7f6e93975e25fd8b70e2e290aa4086ef.png",
+    "tv_难过": "87f46748d3f142ebc6586ff58860d0e2fc8263ba.png",
+    "tv_馋": "fc7e829b845c43c623c8b490ee3602b7f0e76a31.png",
+    "tv_鬼脸": "0ffbbddf8a94d124ca2f54b360bbc04feb6bbfea.png",
+    "tv_黑人问号": "45821a01f51bc867da9edbaa2e070410819a95b2.png",
+    "tv_鼓掌": "1d21793f96ef4e6f48b23e53e3b9e42da833a0f6.png"
+      // ... 更多表情
+  }
+    });
+  }
+  loadScript('https://cdn.jsdelivr.net/gh/HCLonely/Valine@latest/dist/Valine.min.js', initValine)
+}
+
+if ('Valine' === 'Valine' || false) {
+  window.addEventListener('load', loadvaline)
+}
+else {
+  function loadOtherComment () {
+    loadvaline()
+  }
+}</script></div></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> 郭新宇</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="Guo Xinyu's blog" type="application/atom+xml">
+</head></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/algolia.js"></script><script src="/js/calendar.js"></script><script src="/js/languages.js"></script><script src="/js/fairyDustCursor.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"position":"right","width":120,"height":260},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
