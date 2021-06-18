@@ -4,6 +4,48 @@
   
     
     <entry>
+      <title>Meta-pretraining Then Meta-learning for Few-shot Text Classification</title>
+      <link href="/posts/19167/"/>
+      <url>/posts/19167/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>When Low Resource NLP Meets Unsupervised Language Model:</title>
+      <link href="/posts/15/"/>
+      <url>/posts/15/</url>
+      
+        <content type="html"><![CDATA[<p><strong>When Low Resource NLP Meets Unsupervised Language Model:</strong><br><strong>Meta-pretraining Then Meta-learning for Few-shot Text Classification</strong></p><p>2020年  AAAI论文（美国人工智能协会）</p><p><a href="https://arxiv.org/pdf/1908.08788.pdf" target="_blank" rel="noopener">论文地址</a></p><p><a href="https://github.com/zxlzr/FewShotNLP" target="_blank" rel="noopener">论文代码</a></p><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p> 　　当数据不足或需要适应看unseen类时，文本分类往往很困难。在这种具有挑战性的场景中，<strong>最近的研究经常使用元学习来模拟few-shot任务，从而否定了任务之间隐含的共同语言特征</strong>。本文使用<strong>元学习和无监督语言模型</strong>来解决这些问题。我们的方法基于这样的认识，<strong>即从几个样本中获得良好的泛化既依赖于通用模型初始化，也依赖于使该模型适应新出现的任务的有效策略</strong>。我们表明，我们的方法不仅简单，而且在情感分类数据集上达到了最先进的性能。因此，可以进一步提出，对于许多其他自然语言处理任务的few-shot学习，预处理可能是一个有前途的解决方案。</p><h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>　　由于优化技术、大数据集和深度神经架构的流线型设计的进步，深度学习在许多领域取得了巨大的成功。然而，DL因需要大的标记数据集，由于标注的成本，这限制了深度模型对新类的可伸缩性。<strong>Few-shot学习通常通过从很少的标记样例中识别新的类来解决数据不足的问题</strong>。样本大小的限制(只有一个或非常少的样本)对DL中的标准微调方法提出了挑战。该领域的早期研究应用了数据扩充和规则化技术来缓解由数据稀缺引起的过度拟合问题，但程度有限。相反，研究人员受到了元学习探索的启发(Finn et al，2017年)[1]，利用相似任务上的分布。<strong>然而，现有的用于few-shot学习的元学习方法不能明确的解决task-agnostic和task-specific representations，它们不能通过无监督的语言模型来使用语言属性方面的知识。</strong></p><p>　　在本文中，我们提出了这样一个问题，即是否有可能通过<strong>无监督学习</strong>来提高<strong>具有大规模原始语料库的低资源自然语言处理</strong>的性能，这需要我们处理task-agnostic和task-specific的表示学习。因此，我们提出了一种<strong>元预训练然后元学习(Meta-pretraining Then Meta-learning)(MTM)的方法</strong>，其动机是观察到<strong>元学习比多任务学习能够学习一个更好的参数初始化</strong>。<strong>元预处理是学习与任务无关的表示，它明确地学习模型参数初始化</strong>，以便在有限的监督下提高预测性能。<strong>元学习将所有类视为来自联合分布，并寻求通过使用每个类的训练实例来学习可以快速适应的模型参数</strong>，以增强其测试集的预测性能。换句话说，<strong>我们的方法明确地将任务无关和任务特定的特征学习分开</strong>。实验结果表明，提出的模型在公共基准数据集上取得了显著的改进。</p><p>remark：</p><p>[1]Finn, C., and et al. 2017. Model-agnostic meta-learning for fast adaptation of deep networks.In ICML.</p><h3 id="Approach"><a href="#Approach" class="headerlink" title="Approach"></a>Approach</h3><h4 id="Problem-Definition"><a href="#Problem-Definition" class="headerlink" title="Problem Definition"></a>Problem Definition</h4><p>　　在few-shot文本分类中，分类器必须适应在训练中没有见到的新类别，对于这些新类别中的每一个类，仅给出几个样本(Yu and et al.2018 ；Geng and et al.2019)。具体来说，我们有一个带标签的训练集$C_{train}$。我们的目标是当只有一个小的有标签的支持集可用时，在具有新类别的测试集$C_{test}$上得到一个分类器。如果支持集包含每个C类的K个标记的样本，问题被称为C-ways K-shot问题。样本集通常太小，无法训练监督分类模型。为此，我们尝试在训练集上使用元学习方法来提取task-agnostic的知识，对few-shot文本分类来说可能会得到更好的性能。</p><h4 id="Training-Procedure"><a href="#Training-Procedure" class="headerlink" title="Training Procedure"></a>Training Procedure</h4><p><strong>Task-agnostic Meta Pretraining</strong></p><p>　　在给定所有训练样本的情况下，我们<strong>首先利用BERT等预处理策略来学习task-agnostic的上下文特征，这些特征捕捉语言属性，以利于下游的few-shot文本分类任务。</strong></p><p><strong>Meta-learning Text Classification</strong></p><p>　　给定预先训练的语言表示，我们构建episodes来计算梯度，并在每次训练迭代中更新模型。</p><hr><p><img src= "/img/loading.gif" data-src="/posts/15/1.png" alt="1"></p><hr><h3 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h3><h4 id="Datasets-and-Evaluation"><a href="#Datasets-and-Evaluation" class="headerlink" title="Datasets and Evaluation"></a>Datasets and Evaluation</h4><p>　　我们使用多任务和多领域情感分类数据集ARSC。该数据集包括亚马逊上23种产品的英文评论。对于每个产品领域，有三种不同的二分类任务。总共形成23 × 3 =  69个任务。我们从四个领域中选择12个(4 ×  3)任务作为测试集，对于测试集中的每个标签，只有五个样本作为支持集。我们根据以前在few-shot学习中的研究，通过few-shot分类精度来评估性能。为了用基线客观地评估所提出的模型，请注意，对于ARSC，用于测试的支持集是由(Yu and et al.，2018)[1]确定的；因此，我们需要为每个目标任务运行一次test episode。将12个目标任务的平均精确度与基线模型(Yu and et al.2018)的精确度进行比较。</p><hr><p>remark:</p><p>[1] Y u, M., and et al. 2018. Diverse few-shot text classification with multiple metrics. In NAACL.</p><h4 id="Evaluation-Results"><a href="#Evaluation-Results" class="headerlink" title="Evaluation Results"></a>Evaluation Results</h4><hr><p><img src= "/img/loading.gif" data-src="/posts/15/2.png" alt="2"></p><p>表1：在ARSC上的性能比较</p><hr><p>　　评估结果如表1所示:MTM是我们当前的方法，<strong>匹配网络</strong>(Vinyals et al，2016)<strong>是使用基于度量的注意力方法的FSL模型</strong>，<strong>原型网络</strong>(Snell，Swersky和Zemel，2017)<strong>是使用样本平均值作为类原型的基于深度矩阵的方法</strong>，<strong>MAML</strong>  (Finn et al，2017)是模型无关的方法，<strong>它与任何用梯度下降训练的模型兼容，并适用于各种学习问题</strong>。<strong>Relation  Network</strong>  (Sung et al，2018)是一种基于度量的FSL模型，它<strong>使用神经网络作为距离度量</strong>，并通过对支持集中的样本向量求和来计算类向量，<strong>ROBSTRC-FSL</strong>(Yu et al，2018)是一种通过<strong>对任务进行聚类来组合自适应度量方法</strong>的方法，<strong>Induction-Network-Routing(</strong>Geng and et al，2019)是一种最新的方法，<strong>它通过将动态路由算法与典型的元学习框架相结合来学习广义的类表示</strong>。从表1中显示的结果，我们观察到我们的方法在所有元学习模型中取得了最好的结果。<strong>该模型是task-agnostic的，这意味着它可以很容易地适应其他NLP任务</strong>。</p><h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>　　在本研究中，我们尝试分析<strong>先Meta-pretraining再Meta-learning的方法</strong>对few-shot文本分类的影响。结果表明，我们的模型优于传统的最先进的文本分类模型。将来，我们计划将我们的方法应用到其他NLP场景中。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> FSL in NLP </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> Meta-learning </tag>
+            
+            <tag> 论文笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>SALNet: Semi-supervised Few-Shot Text Classification with Attention-based Lexicon Construction</title>
       <link href="/posts/14/"/>
       <url>/posts/14/</url>
