@@ -1,0 +1,404 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>It's Not Just Size That Matters: Small Language Models Are Also Few-Shot Learners | Guo Xinyu's blog</title><meta name="description" content="It’s Not Just Size That Matters: Small Language Models Are Also Few-Shot Learners 2021年  NAACL(The North American Chapter of the Association for Computational Linguistics)   Abstract　　GPT-3(Brown et a"><meta name="keywords" content="FSL,论文笔记"><meta name="author" content="郭新宇"><meta name="copyright" content="郭新宇"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/wangzhan.png"><link rel="canonical" href="https://guoxinyu1998.github.io/posts/18/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="preconnect" href="//zz.bdstatic.com"/><meta property="og:type" content="article"><meta property="og:title" content="It's Not Just Size That Matters: Small Language Models Are Also Few-Shot Learners"><meta property="og:url" content="https://guoxinyu1998.github.io/posts/18/"><meta property="og:site_name" content="Guo Xinyu's blog"><meta property="og:description" content="It’s Not Just Size That Matters: Small Language Models Are Also Few-Shot Learners 2021年  NAACL(The North American Chapter of the Association for Computational Linguistics)   Abstract　　GPT-3(Brown et a"><meta property="og:image" content="https://pic2.zhimg.com/80/v2-eb86d96291535cf212ed524a5bafbcbb_720w.jpg?source=1940ef5c"><meta property="article:published_time" content="2021-06-30T10:54:26.000Z"><meta property="article:modified_time" content="2021-06-30T10:57:51.569Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="next" title="Exploting Cloze Questions for Few Shot Text Classification and Natural Language Inference" href="https://guoxinyu1998.github.io/posts/17/"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.js" defer></script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"ERJWQV3VD4","apiKey":"ea28b49d5c7503bc94618714372feb48","indexName":"guoxinyu'blog","hits":{"per_page":6},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: {"languages":{"author":"作者: 郭新宇","link":"链接: ","source":"来源: Guo Xinyu's blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: true,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2021-06-30 18:57:51'
+}</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><div class="aplayer" data-id="2698841554" data-server="netease" data-type="playlist" data-fixed="true" data-listFolded="false" data-order="random" data-preload="none"></div><link rel="stylesheet" href="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.css"><script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@master/Hexo/css/flink.min.css"><link rel="stylesheet" href="/gitcalendar/css/gitcalendar.css"/></head><body><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">19</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">7</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">3</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><i class="fa-fw fab fa-xbox"></i><span> 聚宝盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><i class="fa-fw far fa-comment"></i><span> 微语</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Abstract"><span class="toc-number">1.</span> <span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Introduction"><span class="toc-number">2.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Related-Work"><span class="toc-number">3.</span> <span class="toc-text">Related Work</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pattern-Exploiting-Training"><span class="toc-number">4.</span> <span class="toc-text">Pattern-Exploiting Training</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PET-with-Multiple-Masks"><span class="toc-number">4.1.</span> <span class="toc-text">PET with Multiple Masks</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Inference"><span class="toc-number">4.1.1.</span> <span class="toc-text">Inference</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Training"><span class="toc-number">4.1.2.</span> <span class="toc-text">Training</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Experiments"><span class="toc-number">5.</span> <span class="toc-text">Experiments</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Tasks"><span class="toc-number">5.1.</span> <span class="toc-text">Tasks</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Setup"><span class="toc-number">5.2.</span> <span class="toc-text">Setup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Results"><span class="toc-number">5.3.</span> <span class="toc-text">Results</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Analysis"><span class="toc-number">6.</span> <span class="toc-text">Analysis　</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Patterns"><span class="toc-number">6.1.</span> <span class="toc-text">Patterns</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Unlabeled-Data-Usage"><span class="toc-number">6.2.</span> <span class="toc-text">Unlabeled Data Usage</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Labeled-Data-Usage"><span class="toc-number">6.3.</span> <span class="toc-text">Labeled Data Usage</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Model-Type"><span class="toc-number">6.4.</span> <span class="toc-text">Model Type</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PET-with-Multiple-Masks-1"><span class="toc-number">6.5.</span> <span class="toc-text">PET with Multiple Masks</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Training-Examples"><span class="toc-number">6.6.</span> <span class="toc-text">Training Examples</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Conclusion"><span class="toc-number">7.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><header class="post-bg" id="page-header" style="background-image: url(https://pic2.zhimg.com/80/v2-eb86d96291535cf212ed524a5bafbcbb_720w.jpg?source=1940ef5c)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Guo Xinyu's blog</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><i class="fa-fw fab fa-xbox"></i><span> 聚宝盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><i class="fa-fw far fa-comment"></i><span> 微语</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">It's Not Just Size That Matters: Small Language Models Are Also Few-Shot Learners</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2021-06-30 18:54:26"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2021-06-30</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2021-06-30 18:57:51"><i class="fas fa-history fa-fw"></i> 更新于 2021-06-30</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/FSL-in-NLP/">FSL in NLP</a></span></div><div class="meta-secondline"> <span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta__icon"></i><span>字数总计:</span><span class="word-count">7.7k</span><span class="post-meta__separator">|</span><i class="far fa-clock fa-fw post-meta__icon"></i><span>阅读时长: 27 分钟</span></span></div><div class="meta-thirdline"><span class="post-meta-pv-cv"><span class="post-meta__separator">|</span><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span><span class="post-meta__separator">|</span><i class="far fa-comments fa-fw post-meta__icon"></i><span>评论数:</span><a href="/posts/18/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count comment-count" data-xid="/posts/18/" itemprop="commentCount"></span></a></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p><strong>It’s Not Just Size That Matters: Small Language Models Are Also Few-Shot Learners</strong></p>
+<p>2021年 </p>
+<p>NAACL(The North American Chapter of the Association for Computational Linguistics)  </p>
+<h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>　　<strong>GPT-3</strong>(Brown et al.2020[1])预训练语言模型在few-shot中达到了很好的性能，但涉及到的<strong>参数太多</strong>（千亿）。训练和使用这样的模型需要大量的计算。我们发现，有一种方法可以达到和GPT-3类似的性能，同时参数要小几个数量级。该方法是<strong>通过将文本输入转换为包含任务描述的完形填空，结合基于梯度的优化来实现的</strong>。<strong>利用未标记的数据可以进行进一步的改进</strong>。这是一个小型的语言模型，我们给出了用小型语言模型处理自然语言理解任务的关键因素。</p>
+<p>remark:</p>
+<p>[1]Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry,Amanda Askell, Sandhini Agarwal, Ariel Herbert-V oss, Gretchen Krueger, Tom Henighan, Rewon Child, Aditya Ramesh, Daniel Ziegler, Jeffrey Wu, Clemens Winter, Chris Hesse, Mark Chen, Eric Sigler, Mateusz Litwin, Scott Gray, Benjamin Chess,Jack Clark, Christopher Berner, Sam McCandlish, Alec Radford, Ilya Sutskever, and Dario Amodei. 2020.<strong>Language models are few-shot learners</strong>. In Advances in Neural Information Processing Systems,volume 33, pages 1877–1901. Curran Associates,Inc.</p>
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>　　在大规模语料库上对越来越大的语言模型进行预处理，使自然语言处理任务取得了巨大进步(Radford et al., 2018[1]; Devlin et al., 2019[2]; Liu et al., 2019[3]; Raffel et al., 2020, i.a.[4])。一个标准的方法是用一个task-specific head来替换预训练模型的输出层，并在一组标记的训练数据上微调整个模型。语言建模不仅是一个强有力的预训练目标，而且许多任务可以被重新表述为完形填空问题，可以让预训练语言模型在只有少量标记样本的情况下解决问题(Radford et al., 2019[5]; Schick and Schütze, 2021)。</p>
+<p>　　最近，Brown et al.(2020)提出了GPT-3，一个具有1750亿参数的预处理语言模型，并表明它有惊人的few-shot处理能力：通过将任务重构为语言建模问题，对于SuperGLUE(Wang et al.，2019)中的一些任务，在只有32个标记样本的情况下，GPT-3实现了接近最优的结果。这是通过<em>priming</em>实现的：给定GPT-3一些输入和相应的输出，作为其预测的上下文，但没有执行梯度更新。虽然使用起来很简单，但这种方法有两个主要的缺点:</p>
+<ol>
+<li><p>它需要一个巨大的语言模型才能正常工作，这使得它在许多现实场景中无法使用.</p>
+</li>
+<li><p>它不能扩展到样本较多的情况，因为大多数语言模型的上下文窗口被限制在几百个tokens内。</p>
+</li>
+</ol>
+<p>　　<strong>进行<em>priming</em>的另一种方法是<em>pattern-explotiting training</em>(PET)</strong> (Schick and Schütze, 2021)，<strong>它结合了将任务重新定义为完形填空题的想法和常规的基于梯度的微调</strong>。而<strong>PET需要额外的无标记数据</strong>，无标记数据比有标记数据更容易获得。至关重要的是，只有当语言模型预测的结果对应于其词汇表中的单个token时，PET才能工作;这是一个严重的限制，因为许多任务不能简单地这样描述。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/18/1.png" alt="1"></p>
+<p>​                                                       图1 </p>
+<p>　　在这项工作中，我们<strong>将PET用于需要预测多个token的任务</strong>。然后我们展示了与<strong>ALBERT</strong> (Lan et al.,2020)[6]相结合的PET及其迭代变体(iPET)在SuperGLUE上的性能都优于GPT-3，而参数是GTP-3的0.1%(图1)。而且，PET在单个GPU上只需要几个小时就能训练出来，也不用进行超参数优化。最后，我们证明了在没有标签数据的情况下也可以实现类似的性能，并提供了对PET强大性能的因素的详细分析：它结合多个task formulations的能力，它对难以理解的词语的包容性，它对标签数据的使用，以及底层语言模型的特征。</p>
+<p>remark：</p>
+<p>[1]Alec Radford, Karthik Narasimhan, Tim Salimans, and Ilya Sutskever. 2018. <strong>Improving language understanding by generative pre-training</strong>.</p>
+<p>[2]Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. <strong>BERT: Pre-training of deep bidirectional transformers for language understanding</strong>. In Proceedings of the 2019 Conference of theNorth American Chapter of the Association for Computational Linguistics: Human Language Technologies, V olume 1 (Long and Short Papers),pages 4171–4186, Minneapolis, Minnesota. Association for Computational Linguistics.</p>
+<p>[3]Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar Joshi, Danqi Chen, Omer Levy, Mike Lewis, Luke Zettlemoyer, and V eselin Stoyanov. 2019<strong>RoBERTa: A robustly optimized BERT pre-training approach</strong>. Computing Research Repository,arXiv:1907.11692.</p>
+<p>[4]Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee, Sharan Narang, Michael Matena, Y anqi Zhou, Wei Li, and Peter J. Liu. 2020. <strong>Exploring the limits of transfer learning with a unified text-to-text transformer</strong>. Journal of Machine Learning Research, 21(140):1–67.</p>
+<p>[5]Alec Radford, Jeff Wu, Rewon Child, David Luan,Dario Amodei, and Ilya Sutskever. 2019. <strong>Language models are unsupervised multitask learners</strong>. Technical report</p>
+<p>[6]Zhenzhong Lan, Mingda Chen, Sebastian Goodman,Kevin Gimpel, Piyush Sharma, and Radu Soricut.2020 <strong>ALBERT: A lite BERT for self-supervised learning of language representations.</strong> In International Conference on Learning Representations.</p>
+<h3 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h3><p>　　Radford et al.(2019)提出，通过提供任务描述可以使语言模型能够进行zero-shot learning，并已应用于文本分类(Puri  and  Catanzaro, 2019)[1]。<strong>要想把任务重新组织成语言模型容易理解的完形填空题是很困难的</strong>。(Jiang et al., 2020) [2], Schick and Schütze (2021)提出了PET，<strong>一种使用知识蒸馏和self-training的方法，可以很容易的组合几个reformulations</strong>。我们修改后的PET使用了<strong>掩蔽(masked)语言模型</strong>(Devlin et al., 2019)[2]来分配文本序列的概率。与使用了基于梯度优化的PET相反， Radford et al. (2019) and Brown et al. (2020)提出了<strong>priming</strong>,其中样本作为上下文给出，但不执行参数更新。</p>
+<p>　　最后，我们关注于减少few-shot learning所需的计算量。</p>
+<p>remark:</p>
+<p>[1]Raul Puri and Bryan Catanzaro. 2019. <strong>Zero-shot text classification with generative language models</strong>.Computing Research Repository, arXiv:1912.10165.</p>
+<h3 id="Pattern-Exploiting-Training"><a href="#Pattern-Exploiting-Training" class="headerlink" title="Pattern-Exploiting Training"></a>Pattern-Exploiting Training</h3><p>　　$M$是一个掩蔽语言模型(MLM)，$T$是词汇表，$_{——} \in T$是掩码标记（token），我们把所有的token序列表示为$T^{\ast}$，对于$t \in T$以及至少包含k个掩码的$z \in T^{\ast}$，我们用$q_{M}^{k} (t|z)$表示在$z$中的第$k$个掩码位置处，$M$对其赋值为$t$的概率。模型在应用softmax之前的<strong>logits</strong> [1] 用$s_{M}^{k}(t|z)$表示。我们考虑将输入$x \in X$映射为输出$y \in Y$，PET需要大量的<strong>pattern-verbalizer pairs</strong> (PVPs)集合。每个$PVP_{p} = (P,v)$包含:</p>
+<ol>
+<li><em>a pattern P</em>：$X \rightarrow T^{\ast}$，将输入映射为只包含一个掩码的完形填空问题。</li>
+<li><em>a verbalizer v</em> : $Y \rightarrow T$将每个输出映射到表示模式中特定任务含义的单个标记。</li>
+</ol>
+<p><img src= "/img/loading.gif" data-src="/posts/18/2.png" alt="2"></p>
+<p>图2 一个用于识别文本蕴含任务的PVP $p = (P,v)$，输入$x = (x_{1},x_{2})$被转变为完形填空问题$P(x)$；每个$y$的$q_{p}(y|x)$是根据掩蔽位置是$v_{y}$的概率推导出来的。</p>
+<hr>
+<p>　　如图2所示，<strong>PET的核心思想是，根据$P(x)$中掩蔽位置是$v(y)$的概率，推导出$y$是$x$的正确标签的概率。</strong>基于直观的认识，给定$x$，$y$的条件概率$q_{p}$是：</p>
+<script type="math/tex; mode=display">
+q_{p}(y|x) = \frac {exp s_{p}(y|x)}{\sum_{y^{'} \in Y}exps_{p}(y^{'}|x)}</script><p>​                                                                      公式1</p>
+<p>其中，$s_{p}(y|x) = s_{M}^{1}(v(y)|P(x))$是$v(y)$在$P(x)$中掩码位置处的原始分数。</p>
+<p>　　对于给定的任务，在缺乏大型开发集的情况下，找到表现良好的$PVPs$是一项挑战。因此，因此可以按照如下方式对多个$PVPs$ $P = \{p_{1},…,p_{n}\}$进行组合：</p>
+<ol>
+<li><p>对于每个$PVP$ p,通过最小化$y$和$q_{p}(y|x)$之间的交叉熵，在训练样本$(x,y)$上微调一个掩码语言模型(MLM)。在实践中，对于每个模式，Schick and Schütze(2021)训练了三个MLM，在运行时性能可能有很大差异。</p>
+</li>
+<li><p>微调的MLM的集合对未标记数据进行注释，对每个未标记的样本$x \in X$,根据概率分布用soft label 进行标注：</p>
+<script type="math/tex; mode=display">
+q_{\mathbf{P}}(y \mid x) \propto \exp \sum_{\mathbf{p} \in \mathbf{P}} w_{\mathbf{p}} \cdot s_{\mathbf{p}}(y \mid x)</script><p>​                                                            公式2</p>
+<p>和公式1类似，$w_{p}$是加权项，与训练前使用p在训练集上得到的精度成正比。</p>
+</li>
+<li><p>通过最小化输出和$q_{p}$之间的交叉熵，将得到的soft label标注的数据集用于训练常规的序列分类器。</p>
+</li>
+</ol>
+<p>　　上述2、3步骤与知识蒸馏非常相似，我们也把它们简单地称为蒸馏。重要的是，这个过程不需要同时在内存中保存整个MLM，因为每个模型的预测可以按顺序计算;因此，它并不比使用单一模型更消耗内存。</p>
+<p>　　为给在不同模式上训练的MLMs提供进一步相互学习的机会, Schick<br>and Schütze (2021) 提出了iPET,是PET的一个迭代变体，其中多代模型在由前几代标记的不断增长的数据集上进行训练。这是通过以下方式实现的：</p>
+<ol>
+<li>首先按照常规的PET方式训练得到一个MLMs的集合。</li>
+<li>对于每个模型$M_{i}$，其他模型的一个随机子集通过给未标记的样本分配标签，得到一个新的训练集$T_{i}$，其中选择的模型子集对其预测具有最高置信度。</li>
+<li>每个模型$M_{i}$在$T_{i}$上重新进行训练，这个过程重复几次，每次都将训练集$T_{i}$中的样本数量增大固定倍数。</li>
+</ol>
+<h4 id="PET-with-Multiple-Masks"><a href="#PET-with-Multiple-Masks" class="headerlink" title="PET with Multiple Masks"></a>PET with Multiple Masks</h4><p>　　<strong>PET的一个重要限制是，verbalizer v必须将每个输出映射到单个token</strong>，这对于多任务来说是不可能的。因此把verbalizers表示为函数$v : Y \rightarrow T^{\ast}$，这需要对推理和训练进行一些修改。我们进一步推广PET，即不假定每个输入的输出空间是相同的：对于每个$x \in X$，给定$x$作为输入时，我们用$Y_{x} \subseteq Y$表示<strong>可能的输出的集合</strong>。给定一个PVP p = (P,v)，我们定义$l(x) = max_{y \in Y_{x}}|v(y)|$为表示$Y_{x}$中任意输出所需的最大token数，$P^{k}(x)$表示$P(x)$中掩码位置被k个掩码所替代。</p>
+<p>　　我们考虑了带有标签Y ={+1，−1}的餐馆评论的二元情感分类任务，我们使用模式$P(x) = x. It was _{——}$和一个verbalizer v，v将标签+1映射为单个token: <em>great</em>；将-1映射为<em>terri .ble</em>。假定MLM的分词器将“terrible”分割为“terri”和”.ble”。对于这个例子中的所有$x$，$l(x) = 2$，$P^{2}(x)$在图3（a）中进行了说明。</p>
+<hr>
+<p><img src= "/img/loading.gif" data-src="/posts/18/3.png" alt="3"></p>
+<p>图3 由 terr 和 .ble两个token组成的词汇推理（a）：我们首先计算每个token在完形填空问题$P^{2}(x)$中所处位置的概率，并找出概率最高的token。（b）：我们将这个token插入完形填空问题中，并计算剩余token的概率。</p>
+<hr>
+<h5 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h5><p>　　对于$x \in X, y \in Y_{x} and |v(y)| = k$，我们以一种自回归的形式重新定义$q_{p}(y|x)$：从$P^{k}(x)$开始，我们执行k个连续的预测，其中我们总是根据MLM的置信度选择下一个token进行预测。也就是令$q_{p}(y|x) = q(v(y)|P^{k}(x))$，其中:</p>
+<script type="math/tex; mode=display">
+q\left(t_{1} \ldots t_{k} \mid \mathbf{z}\right)=\left\{\begin{array}{ll}
+1 & \text { if } k=0 \\
+q_{M}^{j}\left(t_{j} \mid \mathbf{z}\right) \cdot q\left(t^{\prime} \mid \mathbf{z}^{\prime}\right) & \text { if } k \geq 1
+\end{array}\right.</script><p>​                                                                         公式3</p>
+<p>$j = arg max_{i=1}^{k}q_{M}^{i}(t_{i}|\mathbf z)$，$\mathbf z^{‘}$是不包含$\mathbf z_{j}^{‘} = t_{j}$和$t^{‘} = t_{1}…t_{j-1}t_{j+1}…t_{k}$在内的$\mathbf z$。注意，与原始的PET  (公式 1)不同，$q_{p}$不是一个概率分布，它的值之和不是1。</p>
+<p>　　对于情感分类例子，图3说明了$q_{p}(-1|x)$是如何计算的：$|v(y)| = |\{terri,\cdot ble\}|=2$，首先使用$\mathbf z = P^{2}(x)$计算$v(y)$中每个token的概率（图3a）。然后，我们选择概率最高的token，将其放在相应的掩码token处，并使用得到的完形填空问题$z^{\prime}$来计算剩余token的概率(图3b)。$y = -1$的总得分计算为：</p>
+<script type="math/tex; mode=display">
+q_{\mathbf{p}}(-1 \mid x)=q_{M}^{2}(\cdot \text { ble } \mid \mathbf{z}) \cdot q_{M}^{1}\left(\text { terri } \mid \mathbf{z}^{\prime}\right)</script><h5 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h5><p>　　对于每个训练样本$(x,y)$按照公式3的方法计算$q_{p}(y|x)$,这个过程代价很大。为了计算在一个向前传播过程中所需的所有概率，我们通过以下两种方式近似$q_{p}(y|x)$：</p>
+<ol>
+<li><p>总是插入表示任何输出所需的最大数量的掩码token</p>
+</li>
+<li><p>对于$y^{\prime} \in Y_{x}$，并行的预测$v(y^{\prime}) = t_{1},..t_{k}$中所有的token，我们简单的忽略模型对$l(x)-k$个多余的掩码token的预测：</p>
+<script type="math/tex; mode=display">
+\tilde{q}_{\mathbf{p}}\left(y^{\prime} \mid x\right)=\prod_{i=1}^{k} q_{M}^{i}\left(t_{i} \mid P^{l(x)}(x)\right)</script><p>​                                                                   公式4</p>
+</li>
+</ol>
+<p>　　对于我们的例子，意味着可以通过计算</p>
+<script type="math/tex; mode=display">
+\begin{array}{l}
+\tilde{q}_{\mathbf{p}}(+1 \mid x)=q_{M}^{1}(\text { great } \mid \mathbf{z}) \\
+\tilde{q}_{\mathbf{p}}(-1 \mid x)=q_{M}^{1}(\text { terri } \mid \mathbf{z}) \cdot q_{M}^{2}(\cdot \text { ble } \mid \mathbf{z})
+\end{array}</script><p>来近似分数$q_{p}(y|x)$，这可以在一个前向传递中完成，因为它只需要对图3（a）中的完形填空问题$\mathbf z = P^{2}(x)$处理一次。</p>
+<p>　　由于$\tilde q_{p}$不是$Y_{x}$上的概率分布，交叉熵不是一个理想的训练目标，它也可以通过减少分配给不属于输出空间的序列$\mathbf z \notin v(Y_{x})$的概率来进行最小化,尽管这对模型的预测没有影响。我们最终选了了<strong>多级铰链损失函数</strong>hinge loss，并且最小化：</p>
+<script type="math/tex; mode=display">
+\sum_{y^{\prime} \in Y_{x}} \max \left(0 ; 1-\log \tilde{q}_{\mathbf{p}}(y \mid x)+\log \tilde{q}_{\mathbf{p}}\left(y^{\prime} \mid x\right)\right)</script><p>　　　　　　　　　　　　　　　　　　公式5</p>
+<p>也就是说，我们要求$y$的log概率和任何输出$y^{\prime} \in Y_{x} \setminus \{y\}$的log概率之差至少为1。</p>
+<p>remark:</p>
+<p>[1] :logits是指未归一化的值，即各个特征的加权之和，即softmax的输入</p>
+<h3 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h3><p>　　在SuperGLUE上比较了PET和GPT-3的性能，SuperGLUE是一个自然语言理解任务的benchmak。我们无法使用与GPT-3完全相同的训练数据来评估PET，因为对于大多数任务来说，GPT-3对每个测试样例使用不同的训练样本集，对于其他任务，需要的训练集不可用。然而，样本的准确选择对GPT-3的性能几乎没有影响（与GPT-3作者沟通得到）。因此，我们通过使用<strong>固定的随机seed</strong>[1]为每个任务随机选择32个样本来创建新的训练集。</p>
+<p>　　我们还为每项任务创建了多达20，000个未标记样本的集合；这是通过从原始训练集中移除所有标签来完成的。我们将生成的训练样本集和未标记的样本集称为<strong>FewGLUE</strong>[2]</p>
+<p>remark:</p>
+<p><a href="https://blog.csdn.net/weixin_41013470/article/details/82956178?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162485171316780255280538%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=162485171316780255280538&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-82956178.first_rank_v2_pc_rank_v29_1&amp;utm_term=%E7%A7%8D%E5%AD%90seed&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">seed种子</a></p>
+<p><a href="https://github.com/timoschick/fewglue" target="_blank" rel="noopener">数据集FewGLUE</a></p>
+<h4 id="Tasks"><a href="#Tasks" class="headerlink" title="Tasks"></a>Tasks</h4><p>　　下面，我们描述每个SuperGLUE任务和我们相应的PVP。我们使用竖线(|)来标记文本段之间的边界。在考虑的八项任务中，只有COPA、WSC和ReCoRD要求使用带多个掩码的PET（见章节PET with Multiple Masks）。</p>
+<p><strong>BoolQ</strong> :QA问题  样本由文章p和一个是/否问题q组成。使用以下模式：</p>
+<script type="math/tex; mode=display">
+p.Question:q?Answer:_{——}.  \\
+p.Based\ on\ the\ pervious\ passage,q?_{——}. \\
+Based\ on\ the\ following\ passage,q?_{——}.p</script><p>在总共6个pvp中，我们定义了两个verbalizers对问题进行映射，将一个正确的表述映射到yes/true，其他语句到no/false。</p>
+<p><strong>CB、RET</strong>：文本蕴含任务，对于前提p和假设h,我们使用：</p>
+<script type="math/tex; mode=display">
+h?|_{——},p\ ,\ "h"?|_{——},"p"\ ,\ h?|_{——}.p\ ,\ "h"?|_{——}."p"</script><p>和一个verbalizer将蕴含映射为yes,不蕴含映射为no，可能映射为maybe</p>
+<p><strong>COPA</strong>:对于给定的前提p，给定两个选项$c_{1}$和$c_{2}$，确定是前提p的原因还是结果。对于确定结果，使用以下模式：</p>
+<script type="math/tex; mode=display">
+"c_{1}"\ or "c_{2}"?\ p,so_{——}.\ ,\ c_{1}\ or\ c_{2}\ ?\ p,so_{——}.</script><p>对于确定原因，将so替换为Because即可。用于$c_{1} and c_{2}$的verbalizer是相同的。</p>
+<p><strong>WiC</strong>：给定单词w和出现过w的句子$s_{1} and s_{2} $，任务是判断w在这两个句子中的意思是否相同。使用模式为:</p>
+<script type="math/tex; mode=display">
+\cdot "s_{1}/s_{2}".\ Similar\ sense\ of "w"?_{——}. \\
+\cdot s_{1}\ s_{2}\ Does\ w\ have\ the\ same\ meaning\ in\ both\ sentences?_{——}  \\
+\cdot w.Sense(1)(a)"s_{1}"(_{——})"s_{2}"</script><p>对于前两个模式，用yes表示具有相同意义的单词，no表示不同。对于第三个模式，使用b和2</p>
+<p>WSC：略</p>
+<p>MultiRC：略</p>
+<p>ReCoRD:略</p>
+<h4 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h4><p>　　<strong>对于PET的底层语言模型，我们选择ALBERT-xxlarge-v2</strong>(Lan et al., 2020)。当在常规、全部训练集上进行训练时，它是在SuperGLUE上表现最好的MLM。<strong>我们使用相同的模型，辅以序列分类头，作为我们最终的分类器</strong>。对于所有的SuperGLUE任务，在FewGLUE训练集上运行PET。我们不使用任何开发集来优化超参数;相反，我们使用与 Schick and Schütze (2021)完全相同的设置和超参数。对于COPA, WSC and ReCoRD，使用我们提出的改进的PET方法，支持verbalizers将标签映射为多个token。对于其他任务，使用常规的PET。我们在除COPA、WSC和ReCoRD之外的所有任务上训练iPET，因为COPA、WSC和ReCoRD的未标记集包含样本的数量远低于1000个，训练iPET没有意义，我们只使用单个PVP即可。对于这三个任务，我们只需重用常规PET的结果。</p>
+<h4 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h4><p>　　主要结果如表1所示。带有ALBERT的PET的性能和大型的GPT-3模型的性能相当。PET和GPT-3 Med的模型大小相近，但是PET的平均性能比它高了18个点。在我们使用iPET的5个任务中，iPET为其中3个带来了进一步的改进，最显著的是CB，但对MultiRC造成了轻微的性能下降。尽管PET有强大的性能，它仍然明显比在常规，全尺寸SuperGLUE训练集上训练的最先进的模型性能更差。</p>
+<hr>
+<p><img src= "/img/loading.gif" data-src="/posts/18/4.png" alt="4"></p>
+<p>表1：在常规方式、全尺寸设置下的SotA结果用斜体展示</p>
+<h3 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis　"></a>Analysis　</h3><p>　　我们研究了几个因素对few shot性能的重要性:<strong>模式和verbalizers的选择，未标记和标记数据的使用，以及底层语言模型的属性</strong>。我们还研究了提出的改进PET在多个masks情况下的效果，并将其与各种基线进行比较。最后，展示了选择不同的训练样本集是如何对性能产生影响的。我们的分析集中在PET上，因为GPT-3是不公开的。</p>
+<h4 id="Patterns"><a href="#Patterns" class="headerlink" title="Patterns"></a>Patterns</h4><p>　　<strong>任务被重新定义为完形填空的方式会对性能产生巨大的影响</strong>(Jiang et al., 2020[1]; Schick and Schütze, 2021)。这些重构可能是非常复杂的；例如，GPT-3中用于WSC的模式包含一个几乎有30个单词的介绍部分；尚不清楚这种构成是否可以被优化以及如何得到优化。为了研究patterns and verbalizers的重要性，对三种PVPs集合进行了比较：</p>
+<ul>
+<li>在Task里定义的初始集合($p_{ours}$)</li>
+<li>GPT-3使用的单个PVP($p_{GPT-3}$)</li>
+<li>将以上两种进行组合($p_{comb}$)</li>
+</ul>
+<p>　　用带有三种不同模式集合的PET训练ALBERT；得到的结果如表2(top)所示。可以看出来，GPT-3使用的PVP在RET上优于我们的PVPs，而我们的初始模式集合在MultiRC上表现更好。<strong>性能间的巨大差异表明将任务表示成完形填空问题的方法重要性</strong>。不在大量样本上进行尝试的话，很难知道哪个pattern性能更好，few-shot方法的一个关键挑战是对语言模型不能很好理解的PVPs进行补偿。$p_{comb}$训练的模型性能告诉我们，PET可以做到这一点：合并所有的PVPs不仅补偿了$p_{ous}$在RET以及$p_{GTP-3}$在MultiRC上的较差性能，与性能最好的模式集相比，它甚至进一步提高了三项任务的平均性能。<strong>表明设计一个合适的模式集是非常有用的，单一模式不能评估有效性</strong>。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/18/5.png" alt="5"></p>
+<p>表2：对于常规PET和没有知识蒸馏($\urcorner dist$)的PET模型集合，不同PVP组的任务结果</p>
+<hr>
+<p>remark:</p>
+<p>[1]Zhengbao Jiang, Frank F. Xu, Jun Araki, and Graham Neubig. 2020. How can we know what language models know? Transactions of the Association for Computational Linguistics, 8:423–438. </p>
+<h4 id="Unlabeled-Data-Usage"><a href="#Unlabeled-Data-Usage" class="headerlink" title="Unlabeled Data Usage"></a>Unlabeled Data Usage</h4><p>　　和GTP-3不同，<strong>PET需要使用未标记的数据将基于单个PVPs的所有模型的知识蒸馏到单个分类器中，对于iPET，未标记的数据还用于为下一代模型生成训练集</strong>。潜在的假设是未标记数据可以很容易获得，但在一些现实场景中未标记数据也不容易获得。因此，我们研究了<strong>常规PET中未标记数据的重要性</strong>。为此，我们将PET中<strong>最终分类器</strong>的性能与<strong>直接使用对应于单个PVPs的模型集合</strong>的性能进行了比较。虽然使用这种集成完全消除了对未标记数据的需求，但是k个PVPs的模型集合比蒸馏得到的模型大3k倍，我们遵循PET的默认设置，并且每个PVP训练三个模型。然而，即使是有很多的PVPs,集合的数量也比GTP-3小了两个数量级。</p>
+<p>　　未蒸馏的结果见表2(bottom)。根据在三项任务上的平均性能，集合的性能比蒸馏得来的分类器性能更好。<strong>这说明如果目标只是为了达到良好的性能，那么无标签数据是不必要的；然而如果是为了获得一个单一的轻量模型作为最终分类器，无标签数据是需要的。</strong></p>
+<hr>
+<p><img src= "/img/loading.gif" data-src="/posts/18/6.png" alt="6"></p>
+<p>​                                                                   图4</p>
+<hr>
+<p>　　图4展示了用iPET训练多代模型的好处。对于大多数任务，从第一代到第二代性能有明显提升，第三代仅仅实现了轻微的提升。平均而言，标准偏差在后代模型中降低，说明模型相互学习，预测趋同。最后的蒸馏步骤为除MultiRC之外的所有任务带来了进一步的改进，并将三次训练运行的标准偏差降低到几乎为零，说明PET和iPET是减小微调不稳定性的有效手段.(Dodge et al., 2020)</p>
+<p>　　当然，<strong>还有其他方法来利用未标记的数据，例如在微调期间利用辅助语言建模</strong>(Chronopoulou et al，2019)[1]。我们将使用这些方法的影响留到以后的工作中研究，但我们注意到它们可以很容易地应用于PET，但是没有直接的方法将它们与<em>priming</em>结合起来。</p>
+<p>remark:</p>
+<p>[1]Alexandra Chronopoulou, Christos Baziotis, and Alexandros Potamianos. 2019. <strong>An embarrassingly simple approach for transfer learning from pretrained language models</strong>.  In Proceedings of the<br>2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, V olume 1 (Long and Short Papers), pages 2089–2095, Minneapolis, Minnesota. Association for Computational Linguistics.</p>
+<h4 id="Labeled-Data-Usage"><a href="#Labeled-Data-Usage" class="headerlink" title="Labeled Data Usage"></a>Labeled Data Usage</h4><p>　　研究标签数据的使用对结果的影响。这是<em>priming</em>和PET之间的一个关键区别。首先将PET与常规监督训练(不使用任何模式)，和完全无监督模型(使用所有PVPs的集合，但是没有标记训练样本)，给定32个样本，PET比这两个基线效果都好。</p>
+<p>　　接下来直接比较PET和<em>priming</em>，但是，我们不能使用ALBERT，因为它只能处理最多512个tokens的序列，这对于32个样本是不够的;相反，我们使用XLNet (Yang et al，2019)进行比较。XLNet的性能比ALBERT的性能普遍要差。更重要的是，带有PET的XLNet比<em>priming</em>性能更好。无法在MultiRC上使用<em>priming</em>来获得结果，因为在FewGLUE上，32个样本需要tokens的数量超过了10000个，由于self-attention的quadratic复杂度,使用标准的Transformer是不行的。这突出了<em>priming</em>的另一个问题：它不能扩展到样本较多的情况；甚至GPT-3也只能最多处理2048个token序列。而有些Transformer变体可以处理更长的上下文(e.g., Kitaev et al.,2020[1]; Beltagy et al., 2020[2])，这种模型在多大程度上能很好地利用长上下文范围内的<em>priming</em>样本还有待研究。</p>
+<p>　　通过更密切地观察GPT-3获得的结果，我们进一步研究了<em>priming</em>的有效性。为此，对于不同的任务和模型大小，图5显示了用32个样本启动GPT-3和用单个样本启动GPT-3之间的性能差异。可以看出来，用32个样本启动的仅带来了轻微的性能提升。对于一些任务，添加更多的样本甚至导致了性能的下降，尤其是对于小模型而言。对于ReCoRD，当加入更多样本时，甚至连最大模型的性能都有明显的下降。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/18/7.png" alt="7"></p>
+<p>​                                                                      图5</p>
+<p>　　图5的最后一行显示了用PET(没有蒸馏)训练的ALBERT和完全无监督的ALBERT模型在所有任务上的性能差异。虽然由于不同的底层模型和PVPs，结果不能直接比较，但与<em>priming</em>相比，PET形成更好的性能改善，并且不会恶化任何任务的结果。</p>
+<p>remark:</p>
+<p>[1]Nikita Kitaev, Lukasz Kaiser, and Anselm Levskaya.2020<strong>Reformer: The efficient transformer</strong>. In International Conference on Learning Representations.</p>
+<p>[2]Iz Beltagy, Matthew E. Peters, and Arman Cohan. 2020.<strong>Longformer: The long-document transformer</strong>. Computing Research Repository, arXiv:2004.05150.</p>
+<h4 id="Model-Type"><a href="#Model-Type" class="headerlink" title="Model Type"></a>Model Type</h4><p>　　我们接下来通过将ALBERT与RoBERTa large(Liu et al.，2019)和GPT-2 medium(Radford et al.，2019)进行比较，研究潜在的LM对PET的影响。GPT-2是一个类似于GPT-3的单向模型，它只能处理mask token是最后一个token的模式。因此，我们对CB和RTE使用$p_{GPT-3}$；对于MultiRC，我们坚持我们最初的模式集，因为它们已经满足了需求。我们也不进行蒸馏，而是报告集合的性能，因为没有既定的方法为GPT-2配备序列分类头。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/18/8.png" alt="8"></p>
+<p>　　表4中用PET训练三个LMs的结果表明，<strong>使用ALBERT作为底层语言模型对于实现PET的强大性能是非常重要的</strong>；用RoBERTa替换ALBERT导致平均性能下降了8个点。然而，RoBERTa仍然优于GPT-3(GPT-3大两个数量级)。重要的是，PET搭配GPT-2的性能比搭配另外两种模型的性能都要差的多。Brown et al. (2020)推断，<strong>造成这种性能下降的原因可能是：像GPT-3，GPT-2都是单向的，使得需要比较两个序列的任务成为挑战</strong>。然而，需要注意的是，GPT-2和其他两个模型之间还有其他实质性的差异，最显著的是预训练数据集。不管单向性是否是GPT-2性能不佳的原因，<strong>底层LM的双向性对PET来说很重要，因为它消除了mask token必须在末尾处的条件，从而在创建模式时有更大的灵活性。</strong></p>
+<h4 id="PET-with-Multiple-Masks-1"><a href="#PET-with-Multiple-Masks-1" class="headerlink" title="PET with Multiple Masks"></a>PET with Multiple Masks</h4><p>　　我们修改了PET，使其适用于需要不止一个token的输出。为了研究这种修改的影响，我们查看了三个需要这样做的任务:COPA、WSC和ReCoRD。我们将预测token的解码策略按照分配给它们的概率(我们称之为max-first)的顺序与两个备选方案进行比较:从左到右解码(ltr)，这在许多自回归语言模型中很常见;同时(并行)解码所有token。此外，我们将PET与未经训练的ALBERT进行比较，以衡量我们提出的训练损失的有效性。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/18/9.png" alt="9"></p>
+<p>　　结果如表5所示。在这三项任务上，PET明显优于未经训练的ALBERT。不进行蒸馏会影响COPA的性能，但会导致WSC略有改善;对于ReCoRD，我们没有在第一时间执行蒸馏，因为我们只使用一个单一的PVP。除了WSC之外，<strong>我们的解码策略明显优于并行解码</strong>（对于WSC，大多数预测只包含一个或两个tokens）<strong>并且比从左到右的解码性能稍好一些</strong>。</p>
+<h4 id="Training-Examples"><a href="#Training-Examples" class="headerlink" title="Training Examples"></a>Training Examples</h4><p>　　FewGLUE是原始SuperGLUE训练示例的随机子集。我们使用固定的随机种子$s_{0}$来生成FewGLUE。设$\sum_{i}$是为随机种子$s_{i}$选择的SuperGLUE的随机子集，那么$\sum_{0}$ = FewGLUE。在本小节中，我们将基于不同的种子创建SuperGLUE的两个额外子集$\sum_{1}$and$\sum_{2}$。这让我们可以研究不同的训练样本是如何影响性能的。为此，我们将三种$\sum_{i}$用于CB、RTE和MultiRC的PET。为了只测量改变训练集对结果的影响，忽略未标记样本的影响，我们不使用蒸馏。</p>
+<p>　　结果如表6所示，对于所有任务，改变训练样本集可以导致PET的巨大性能差异。这强调了在<strong>比较不同的few-shot方法时使用相同的一组样本的重要性</strong>。然而,我们注意到，对于所有的种子，PET的平均性能与GPT-3接近。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/18/10.png" alt="10"></p>
+<p>　　我们的结果似乎与GPT-3的观点相反（样本的精确选择不重要），我们认为这是由于<em>priming</em>比PET从训练样本中获益要少的多，（即训练样本对于PET的影响更大），相应的，样本的选择对模型的性能影响较小（对于priming）。</p>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>　　我们对PET进行了简单而有效的改进，使其能够用于需要预测多个token的任务。PET与ALBERT结合使用具有强大的性能，在广泛的实验中，我们确定了影响性能的几个因素：同时使用多个模式将样本转换为完形填空题的可能性，对难以理解的模式进行补偿的能力，使用带标签的数据执行参数更新，以及底层LM本身。</p>
+<p>　　我们已经证明，使用PET，可以实现类似于SuperGLUE上GPT-3的few-shot文本分类性能，并且语言模型的参数少了三个数量级。</p>
+<p>未来工作中，可以研究以下问题：</p>
+<ol>
+<li>当PET与生成LM结合时，它是否也适用于生成任务</li>
+<li><strong>在多任务设置中是否有可能进一步改进</strong></li>
+</ol>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">郭新宇</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://guoxinyu1998.github.io/posts/18/">https://guoxinyu1998.github.io/posts/18/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://guoxinyu1998.github.io" target="_blank">Guo Xinyu's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/FSL/">FSL</a><a class="post-meta__tags" href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/">论文笔记</a></div><div class="post_share"><div class="social-share" data-image="https://pic2.zhimg.com/80/v2-eb86d96291535cf212ed524a5bafbcbb_720w.jpg?source=1940ef5c" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><button class="reward-button" type="button"><i class="fas fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="post-qr-code__img" src="/img/wechat.png" alt="wechat" onclick="window.open('/img/wechat.png')"/><div class="post-qr-code__desc">wechat</div></li><li class="reward-item"><img class="post-qr-code__img" src="/img/1.png" alt="alipay" onclick="window.open('/img/1.png')"/><div class="post-qr-code__desc">alipay</div></li></ul></div></button></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/17/"><img class="next-cover" data-src="https://pic2.zhimg.com/80/v2-eb86d96291535cf212ed524a5bafbcbb_720w.jpg?source=1940ef5c" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Exploting Cloze Questions for Few Shot Text Classification and Natural Language Inference</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/posts/17/" title="Exploting Cloze Questions for Few Shot Text Classification and Natural Language Inference"><img class="relatedPosts_cover" data-src="https://pic2.zhimg.com/80/v2-eb86d96291535cf212ed524a5bafbcbb_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-21</div><div class="relatedPosts_title">Exploting Cloze Questions for Few Shot Text Classification and Natural Language Inference</div></div></a></div><div class="relatedPosts_item"><a href="/posts/16/" title="Few-Shot Transfer Learning for Text Classification With Lightweight Word Embedding Based Models"><img class="relatedPosts_cover" data-src="https://pic2.zhimg.com/80/v2-6b384402b581c3c8ea24f7d6d3aeb188_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-19</div><div class="relatedPosts_title">Few-Shot Transfer Learning for Text Classification With Lightweight Word Embedding Based Models</div></div></a></div><div class="relatedPosts_item"><a href="/posts/15/" title="Meta-pretraining-Then-Meta-learning-for-Few-shot-Text-Classification"><img class="relatedPosts_cover" data-src="https://pic2.zhimg.com/80/v2-f60ef96e32013567e6ea47c25a1605f7_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-18</div><div class="relatedPosts_title">Meta-pretraining-Then-Meta-learning-for-Few-shot-Text-Classification</div></div></a></div><div class="relatedPosts_item"><a href="/posts/14/" title="SALNet: Semi-supervised Few-Shot Text Classification with Attention-based Lexicon Construction"><img class="relatedPosts_cover" data-src="https://pic1.zhimg.com/80/v2-c02e85719ceae1596dd060b2d49bf8d5_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-17</div><div class="relatedPosts_title">SALNet: Semi-supervised Few-Shot Text Classification with Attention-based Lexicon Construction</div></div></a></div><div class="relatedPosts_item"><a href="/posts/13/" title="ATTENTIVE TASK-AGNOSTIC META-LEARNING FOR FEW-SHOT TEXT CLASSIFICATION"><img class="relatedPosts_cover" data-src="https://pic1.zhimg.com/80/v2-c02e85719ceae1596dd060b2d49bf8d5_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-13</div><div class="relatedPosts_title">ATTENTIVE TASK-AGNOSTIC META-LEARNING FOR FEW-SHOT TEXT CLASSIFICATION</div></div></a></div><div class="relatedPosts_item"><a href="/posts/12/" title="Task Agnostic Meta-Learning for Few-Shot Learning"><img class="relatedPosts_cover" data-src="https://pic1.zhimg.com/80/v2-5d8cda5c1dc30e402147cb06acb91bee_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-11</div><div class="relatedPosts_title">Task Agnostic Meta-Learning for Few-Shot Learning</div></div></a></div></div></div><hr><div id="post-comment"><div class="comment-head"><div class="comment-headling"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div class="comments-items-1" data-name="Valine"><div class="vcomment" id="vcomment"></div><script>function loadvaline () {  
+  var requestSetting = function (from,set) {
+    var from = from
+    var setting = set.split(',').filter(function(item){
+    return from.indexOf(item) > -1
+    });
+    setting = setting.length == 0 ? from :setting;
+    return setting
+  }
+
+  var guestInfo = requestSetting(['nick','mail','link'],'nick,mail,link')
+  var requiredFields = requestSetting(['nick','mail'],'nick,mail')
+
+  function initValine () {
+    window.valine = new Valine({
+      el:'#vcomment',
+      appId: 'P8NEOKyfeC9bHLuaMnGReAz5-gzGzoHsz',
+      appKey: 'JVxIietS4NnVMnEqwKVnBNYH',
+      placeholder: '来呀，快活呀',
+      avatar: 'monsterid',
+      meta: guestInfo,
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: true,
+      serverURLs: '',
+      emojiCDN: 'true',
+      emojiMaps: "",
+      enableQQ: true,
+      requiredFields: requiredFields,
+      master: '607db4ef3c96629fb910ae8a233fae86',   //博主邮箱
+      friends: '18a99d40001be1e2b5edc415d5082468',
+      tagMeta: ["博主","博主女朋友","访客"],
+      
+      metaPlaceholder: {"nick":"QQ号","mail":"邮箱"},
+
+      // 设置Bilibili表情包地址
+  emojiCDN: '//i0.hdslb.com/bfs/emote/', 
+  // 表情title和图片映射
+  emojiMaps: {
+    "tv_doge": "6ea59c827c414b4a2955fe79e0f6fd3dcd515e24.png",
+    "tv_亲亲": "a8111ad55953ef5e3be3327ef94eb4a39d535d06.png",
+    "tv_偷笑": "bb690d4107620f1c15cff29509db529a73aee261.png",
+    "tv_再见": "180129b8ea851044ce71caf55cc8ce44bd4a4fc8.png",
+    "tv_冷漠": "b9cbc755c2b3ee43be07ca13de84e5b699a3f101.png",
+    "tv_发怒": "34ba3cd204d5b05fec70ce08fa9fa0dd612409ff.png",
+    "tv_发财": "34db290afd2963723c6eb3c4560667db7253a21a.png",
+    "tv_可爱": "9e55fd9b500ac4b96613539f1ce2f9499e314ed9.png",
+    "tv_吐血": "09dd16a7aa59b77baa1155d47484409624470c77.png",
+    "tv_呆": "fe1179ebaa191569b0d31cecafe7a2cd1c951c9d.png",
+    "tv_呕吐": "9f996894a39e282ccf5e66856af49483f81870f3.png",
+    "tv_困": "241ee304e44c0af029adceb294399391e4737ef2.png",
+    "tv_坏笑": "1f0b87f731a671079842116e0991c91c2c88645a.png",
+    "tv_大佬": "093c1e2c490161aca397afc45573c877cdead616.png",
+    "tv_大哭": "23269aeb35f99daee28dda129676f6e9ea87934f.png",
+    "tv_委屈": "d04dba7b5465779e9755d2ab6f0a897b9b33bb77.png",
+    "tv_害羞": "a37683fb5642fa3ddfc7f4e5525fd13e42a2bdb1.png",
+    "tv_尴尬": "7cfa62dafc59798a3d3fb262d421eeeff166cfa4.png",
+    "tv_微笑": "70dc5c7b56f93eb61bddba11e28fb1d18fddcd4c.png",
+    "tv_思考": "90cf159733e558137ed20aa04d09964436f618a1.png",
+    "tv_惊吓": "0d15c7e2ee58e935adc6a7193ee042388adc22af.png",
+    "tv_打脸": "56ab10b624063e966bfcb76ea5dc4794d87dfd47.png",
+    "tv_抓狂": "fe31c08edad661d63762b04e17b8d5ae3c71a757.png",
+    "tv_抠鼻": "c666f55e88d471e51bbd9fab9bb308110824a6eb.png",
+    "tv_斜眼笑": "911f987aa8bc1bee12d52aafe62bc41ef4474e6c.png",
+    "tv_无奈": "ea8ed89ee9878f2fece2dda0ea8a5dbfe21b5751.png",
+    "tv_晕": "5443c22b4d07fb1907ccc610c8e6db254f2461b7.png",
+    "tv_流汗": "cead1c351ab8d79e9f369605beb90148db0fbed3.png",
+    "tv_流泪": "7e71cde7858f0cd50d74b0264aa26db612a8a167.png",
+    "tv_流鼻血": "c32d39db2737f89b904ca32700d140a9241b0767.png",
+    "tv_点赞": "f85c354995bd99e28fc76c869bfe42ba6438eff4.png",
+    "tv_生气": "26702dcafdab5e8225b43ffd23c94ac1ff932654.png",
+    "tv_生病": "8b0ec90e6b86771092a498c54f09fc94621c1900.png",
+    "tv_疑问": "0793d949b18d7be716078349c202c15ff166f314.png",
+    "tv_白眼": "c1d59f439e379ee50eef488bcb5e5378e5044ea4.png",
+    "tv_皱眉": "72ccad6679fea0d14cce648b4d818e09b8ffea2d.png",
+    "tv_目瞪口呆": "0b8cb81a68de5d5365212c99375e7ace3e7891b7.png",
+    "tv_睡着": "8b196675b53af58264f383c50ad0945048290b33.png",
+    "tv_笑哭": "1abc628f6d4f4caf9d0e7800878f4697abbc8273.png",
+    "tv_腼腆": "89712c0d4af73e67f89e35cbc518420380a7f6f4.png",
+    "tv_色": "61822c7e9aae5da76475e7892534545336b23a6f.png",
+    "tv_调侃": "4bc022533ef31544ca0d72c12c808cf4a1cce3e3.png",
+    "tv_调皮": "b9c41de8e82dd7a8515ae5e3cb63e898bf245186.png",
+    "tv_鄙视": "6e72339f346a692a495b123174b49e4e8e781303.png",
+    "tv_闭嘴": "c9e990da7f6e93975e25fd8b70e2e290aa4086ef.png",
+    "tv_难过": "87f46748d3f142ebc6586ff58860d0e2fc8263ba.png",
+    "tv_馋": "fc7e829b845c43c623c8b490ee3602b7f0e76a31.png",
+    "tv_鬼脸": "0ffbbddf8a94d124ca2f54b360bbc04feb6bbfea.png",
+    "tv_黑人问号": "45821a01f51bc867da9edbaa2e070410819a95b2.png",
+    "tv_鼓掌": "1d21793f96ef4e6f48b23e53e3b9e42da833a0f6.png"
+      // ... 更多表情
+  }
+    });
+  }
+  loadScript('https://cdn.jsdelivr.net/gh/HCLonely/Valine@latest/dist/Valine.min.js', initValine)
+}
+
+if ('Valine' === 'Valine' || false) {
+  window.addEventListener('load', loadvaline)
+}
+else {
+  function loadOtherComment () {
+    loadvaline()
+  }
+}</script></div></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> 郭新宇</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="Guo Xinyu's blog" type="application/atom+xml">
+</head></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/algolia.js"></script><script src="/js/calendar.js"></script><script src="/js/languages.js"></script><script src="/js/fairyDustCursor.js"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script><script src="/gitcalendar/js/gitcalendar.js"></script><script src="/js/chocolate.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"position":"right","width":120,"height":260},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
