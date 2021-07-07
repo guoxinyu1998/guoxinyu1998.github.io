@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>随便写写</title>
+      <link href="/posts/23880/"/>
+      <url>/posts/23880/</url>
+      
+        <content type="html"><![CDATA[<p>1.2020-2021NLP核心技术更迭</p><p>预训练模型使用上的范式更迭：finetune 到 prompt-based tuning/task-reformulation。</p><p>从BERT开始，预训练模型的使用范式长期是pretrain-&gt;finetune的范式，即先在大量无标注语料上预训练一个模型，然后将模型（可选地，增加一定模块后）放到特定下游任务上的标注数据finetune。后来实验还表明在下游任务的数据上继续预训练，可以进一步压榨PTM的性能，所以有pretrain-&gt; further pretrain -&gt; finetune的范式 。这类方法思路就是通过调整PTM参数，来适应任务/数据特性。</p><p>2020年的GPT3 引出了一个很有意思的现象，正如它的标题：Language models are few-shot learners，在这样一个大规模PTM上，只要给出任务描述（和可选的少量样例）作为prompt，PTM无需更新参数也可以在下游任务达到不错的性能。GPT3的few-shot设定虽然结果远没有达到SOTA，但是结果是非常吸引人的，因此引出了很多工作，大体思路是用自动构建的prompt代替人工设计的prompt：</p><p>[5] <a href="https://link.zhihu.com/?target=https%3A//www.aclweb.org/anthology/2020.emnlp-main.346.pdf">AutoPrompt: Eliciting Knowledge from Language Models with Automatically Generated Prompts</a></p><p>[6] <a href="https://link.zhihu.com/?target=https%3A//arxiv.org/pdf/2101.00190">Prefix-Tuning: Optimizing Continuous Prompts for Generation</a></p><p>[7] <a href="https://link.zhihu.com/?target=https%3A//arxiv.org/pdf/2101.00121.pdf">WARP: Word-level Adversarial ReProgramming</a></p><p>[8] <a href="https://link.zhihu.com/?target=https%3A//arxiv.org/pdf/2103.10385.pdf">GPT Understands, Too</a></p><p>比较相关的还有LAMA、PET，都属于task reformulation，个人感觉这类将各种PTM tuning中的传统建模方法替代为基于模版填空/Prompting的方法是一种比较明显的趋势。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 随笔 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 随笔 </tag>
+            
+            <tag> FSL in NLP </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Automatically Identifying Words That Can Serve as Labels for Few-Shot Text Classification</title>
       <link href="/posts/19/"/>
       <url>/posts/19/</url>
@@ -25,31 +52,6 @@
             <tag> 论文笔记 </tag>
             
             <tag> PET </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>最新论文解读</title>
-      <link href="/posts/51202/"/>
-      <url>/posts/51202/</url>
-      
-        <content type="html"><![CDATA[<p><a href="https://mp.weixin.qq.com/s?__biz=MzIwMTc4ODE0Mw%3D%3D&amp;chksm=96ea6fe7a19de6f1be86b965e268df1b9c6320810cf32b6d64ddd3d238bf9088be41fb36adfe&amp;idx=1&amp;mid=2247512167&amp;scene=21&amp;sn=cc7695d92362e3b18a6e8969fb14dc27#wechat_redirect" target="_blank" rel="noopener">必须要GPT-3吗？不，BERT的MLM模型也能小样本学习</a></p><p><a href="https://mp.weixin.qq.com/s?__biz=MzIwMTc4ODE0Mw%3D%3D&amp;chksm=96ea40ada19dc9bb7f490e9f025b138aa3ed77e66aed544dd310eb6b85bc6018a255f8f4af6b&amp;idx=1&amp;mid=2247524141&amp;scene=21&amp;sn=d834270cad058931e04392dce844a643#wechat_redirect" target="_blank" rel="noopener">P-tuning：自动构建模版，释放语言模型潜能</a></p><p><a href="https://blog.csdn.net/c9Yv2cf9I06K2A9E/article/details/117914901?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162505074816780265420558%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162505074816780265420558&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-4-117914901.first_rank_v2_pc_rank_v29_1&amp;utm_term=It%E2%80%99s+Not+Just+Size+That+Matters%3A+Small+Language+Models+Are+Also+Few-Shot+Learners&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">Prompt-based Language Models：模版增强语言模型小结</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> FSL in NLP </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 随笔 </tag>
             
         </tags>
       
@@ -161,9 +163,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> Meta-learning </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -246,9 +248,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> Meta-learning </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -275,9 +277,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> Meta-learning </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
