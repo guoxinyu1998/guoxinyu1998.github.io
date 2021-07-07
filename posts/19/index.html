@@ -1,0 +1,311 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Automatically Identifying Words That Can Serve as Labels for Few-Shot Text Classification | Guo Xinyu's blog</title><meta name="description" content="Automatically Identifying Words That Can Serve as Labels for Few-Shot Text Classification COLING 2020 论文地址 Abstract　　最近的一种文本分类方法是将文本输入转换为包含某种形式的任务描述的完形填空题，用预先训练的语言模型处理它们，并将预测的单词映射到标签上。人为定义单词和标签之间的映射需要"><meta name="keywords" content="FSL,论文笔记,PET"><meta name="author" content="郭新宇"><meta name="copyright" content="郭新宇"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/wangzhan.png"><link rel="canonical" href="https://guoxinyu1998.github.io/posts/19/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin="crossorigin"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="preconnect" href="//zz.bdstatic.com"/><meta property="og:type" content="article"><meta property="og:title" content="Automatically Identifying Words That Can Serve as Labels for Few-Shot Text Classification"><meta property="og:url" content="https://guoxinyu1998.github.io/posts/19/"><meta property="og:site_name" content="Guo Xinyu's blog"><meta property="og:description" content="Automatically Identifying Words That Can Serve as Labels for Few-Shot Text Classification COLING 2020 论文地址 Abstract　　最近的一种文本分类方法是将文本输入转换为包含某种形式的任务描述的完形填空题，用预先训练的语言模型处理它们，并将预测的单词映射到标签上。人为定义单词和标签之间的映射需要"><meta property="og:image" content="https://pic2.zhimg.com/80/v2-f60ef96e32013567e6ea47c25a1605f7_720w.jpg?source=1940ef5c"><meta property="article:published_time" content="2021-07-07T00:55:15.000Z"><meta property="article:modified_time" content="2021-07-07T01:05:38.470Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="next" title="最新论文解读" href="https://guoxinyu1998.github.io/posts/51202/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: {"languages":{"author":"作者: 郭新宇","link":"链接: ","source":"来源: Guo Xinyu's blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  ClickShowText: undefined,
+  medium_zoom: true,
+  fancybox: true,
+  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: true,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2021-07-07 09:05:38'
+}</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><div class="aplayer" data-id="2698841554" data-server="netease" data-type="playlist" data-fixed="true" data-listFolded="false" data-order="random" data-preload="none"></div><link rel="stylesheet" href="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.css"><script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sviptzk/HexoStaticFile@master/Hexo/css/flink.min.css"><link rel="stylesheet" href="/gitcalendar/css/gitcalendar.css"/></head><body><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">21</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">8</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">3</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><i class="fa-fw fab fa-xbox"></i><span> 聚宝盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><i class="fa-fw far fa-comment"></i><span> 微语</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Abstract"><span class="toc-number">1.</span> <span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Introduction"><span class="toc-number">2.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Related-Work"><span class="toc-number">3.</span> <span class="toc-text">Related Work</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pattern-Exploiting-Training"><span class="toc-number">4.</span> <span class="toc-text">Pattern-Exploiting Training</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Likelihood-Ratio-Verbalizer-Search"><span class="toc-number">5.</span> <span class="toc-text">Likelihood Ratio Verbalizer Search</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Verbalization-Candidates"><span class="toc-number">5.1.</span> <span class="toc-text">Verbalization Candidates</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Multi-Verbalizers"><span class="toc-number">5.2.</span> <span class="toc-text">Multi-Verbalizers</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实验"><span class="toc-number">6.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Conclusion"><span class="toc-number">7.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div></div><div id="body-wrap"><div id="web_bg" data-type="photo"></div><header class="post-bg" id="page-header" style="background-image: url(https://pic2.zhimg.com/80/v2-f60ef96e32013567e6ea47c25a1605f7_720w.jpg?source=1940ef5c)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">Guo Xinyu's blog</a></span><span class="pull-right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fas fa-list"></i><span> 媒体</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/bangumis/"><i class="fa-fw fab fa-youtube"></i><span> 番剧</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> 电影</span></a></li><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><i class="fa-fw fab fa-xbox"></i><span> 聚宝盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><i class="fa-fw far fa-comment"></i><span> 微语</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down menus-expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/gallery/"><i class="fa-fw far fa-image"></i><span> 相册</span></a></li><li><a class="site-page" href="/home/"><i class="fa-fw fab fa-phoenix-framework"></i><span> 主页</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-comments"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Automatically Identifying Words That Can Serve as Labels for Few-Shot Text Classification</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2021-07-07 08:55:15"><i class="far fa-calendar-alt fa-fw"></i> 发表于 2021-07-07</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2021-07-07 09:05:38"><i class="fas fa-history fa-fw"></i> 更新于 2021-07-07</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/FSL-in-NLP/">FSL in NLP</a></span></div><div class="meta-secondline"> <span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta__icon"></i><span>字数总计:</span><span class="word-count">4.7k</span><span class="post-meta__separator">|</span><i class="far fa-clock fa-fw post-meta__icon"></i><span>阅读时长: 16 分钟</span></span></div><div class="meta-thirdline"><span class="post-meta-pv-cv"><span class="post-meta__separator">|</span><i class="far fa-eye fa-fw post-meta__icon"></i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span><span class="post-meta__separator">|</span><i class="far fa-comments fa-fw post-meta__icon"></i><span>评论数:</span><a href="/posts/19/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count comment-count" data-xid="/posts/19/" itemprop="commentCount"></span></a></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p><strong>Automatically Identifying Words That Can Serve as Labels for Few-Shot Text Classification</strong></p>
+<p>COLING 2020</p>
+<p><a href="https://arxiv.org/pdf/2010.13641.pdf" target="_blank" rel="noopener">论文地址</a></p>
+<h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p>　　最近的一种文本分类方法是将<strong>文本输入转换为包含某种形式的任务描述的完形填空题，用预先训练的语言模型处理它们，并将预测的单词映射到标签上。</strong>人为定义单词和标签之间的映射需要领域的专业知识和对语言模型能力的理解。为了解决这个问题，我们设计了一种方法，<strong>在给定少量训练数据的情况下自动找到这样的映射</strong>。对于许多任务，我们的方法找到的映射和认为设计的映射方法效果一样好。</p>
+<h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>　　在大型语料库上预训练语言模型对很多NLP任务都有改进(Radford et al., 2018; Devlin et al., 2019; Liu et al., 2019, inter alia)，但仅从几个样本中学习解决任务仍然是一个具有挑战性的问题。由于小数据集在许多自然语言处理的实际应用中是常见的，因此解决这一挑战对于实现广泛的适用性至关重要。对许多任务来说，一个有希望的方向是对它们进行重新表达(reformulate)(例如，通过附加一个指令，如“翻译成法语”)，这样就可以直接通过预训练的语言模型来解决任务。 (Radford et al., 2019;Schick and Schütze, 2020a; Brown et al., 2020)。<strong>PET</strong> (Schick and Schütze,  2020a)是一种针对文本分类的方法，其关键思想是将每个输入重新定义为一个完形填空问题，语言模型的预测可以以某种方式映射到一个标签;图1给出了一个例子。<strong>虽然PET在很少或没有标记的训练数据的情况下取得了显著的结果，但手工定义语言模型的预测和标签之间所需的映射是困难的，因为它既需要特定任务领域的知识，也需要对语言模型内在运行方式的理解，以确定模型能够充分理解的单词</strong>。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/19/1.png" alt="1"></p>
+<p>图1 ：pattern-verbalizer pair $p = (P,v)$的示例：通过应用$P$将输入$x$转换为完形填空问题。每个标签y的概率$q_{p}(y|x)$是根据其 verbalization$v(y)$是掩蔽位置的正确token的概率推导出的。</p>
+<hr>
+<p>　　在这项工作中，我们展示了如何自动获得这种映射，消除了对领域知识的需求:我们提出了<strong>带有 <em>Automatic Labels</em> 的PET(PETAL)</strong>，这是一种<strong>在给定少量训练数据的情况下，确定可作为标签代理单词的简单方法</strong>。其核心是，<strong>我们的方法打破了寻找映射的难题，该映射将训练数据的似然(likelihood)[1]最大化为几个可管理的子问题</strong>。将我们的方法集成到PET中明显优于常规监督训练，并且几乎与手动定义映射的PET性能相当。</p>
+<p>remark:</p>
+<p><a href="https://blog.csdn.net/songyu0120/article/details/85059149?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162557488016780261933740%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162557488016780261933740&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-1-85059149.first_rank_v2_pc_rank_v29_1&amp;utm_term=%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E7%9A%84%E4%BC%BC%E7%84%B6%E6%80%A7&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">likelihood</a></p>
+<h3 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h3><p>　　将问题重新表述为语言建模任务已经在完全无监督的场景下(Radford et al., 2019; Puri and Catanzaro, 2019; Davison et al., 2019)，在训练数据量有限的few-shot场景中(Opitz, 2019; Shwartz et al., 2020; Brown et al., 2020）进行了探索。同样的想法也常用于探索预训练语言模型中包含的知识 (Petroni et al., 2019; Talmor et al., 2019; Schick and Schütze, 2020b; Ettinger, 2020, inter alia).</p>
+<p>　　我们方法是PET的直接扩展，它的<strong>思想和<em>automatic verbalizer search (AVS)</em>类似</strong>，AVS是自动寻找从标签到单词的映射的另一种方法，其工作原理如下：首先，通过给每个标签分配一个随机单词来初始化映射，然后，在给定当前映射的情况下以贪婪的方式不断的用更好的替代词替换单词，该映射在多次迭代中得到改进。与之相反，<strong>我们的方法提供了一种封闭形式的解决方案，在概念上更简单、更快，需要更少的超参数，这在数据稀缺的情况下可能至关重要。并且我们提出的方法性能更好</strong>。</p>
+<h3 id="Pattern-Exploiting-Training"><a href="#Pattern-Exploiting-Training" class="headerlink" title="Pattern-Exploiting Training"></a>Pattern-Exploiting Training</h3><p>　　我们回顾了Schick and Schütze (2020a)提出的PET。设$M$是一个预训练的掩码语言模型(MLM)，$T$是它的词汇表，$[MASK] \in T$是掩码标记，……</p>
+<p>……</p>
+<p>给定$X$，$Y$的条件概率分布$q_{p}(y|x)$为：</p>
+<script type="math/tex; mode=display">
+q_{\mathbf{p}}(y \mid \mathbf{x})=\frac{\exp M\left(v_{y} \mid P(\mathbf{x})\right)}{\sum_{i=1}^{k} \exp M\left(v_{i} \mid P(\mathbf{x})\right)}</script><p>公式(1)</p>
+<p>其中$M(t|P(\mathbf x))$表示M在P(x)掩码位置赋给t的原始分数；也就是说，<strong>y作为x的正确标签的概率来自于其<em>verbalization</em> $v_{y}$是P(x)掩码位置上的“正确”标记的概率。</strong></p>
+<p>PET工作流程：</p>
+<ol>
+<li>对于每个$PVP_{p}$，在$\mathcal T$上微调一个MLM，用真实标签$y_{i}$和$q_{p}(y_{i}|x_{i})$之间的交叉熵作为损失函数。</li>
+<li>用微调的MLMs对于大量的无标记数据进行soft label注释</li>
+<li>另一种带有序列分类头的预训练语言模型在得到的soft label数据集上进行了微调;此模型作为任务的最终分类器。</li>
+</ol>
+<p>PET还有很多细节，与本文无关，此处忽略，……</p>
+<h3 id="Likelihood-Ratio-Verbalizer-Search"><a href="#Likelihood-Ratio-Verbalizer-Search" class="headerlink" title="Likelihood Ratio Verbalizer Search"></a>Likelihood Ratio Verbalizer Search</h3><p>　　手动定义<em>verbalizer</em> $v:Y \rightarrow T$是一个挑战：需要了解任务的标签，如何使用单个单词以自然语言的方式最好地表达它们，还需要了解所使用的MLM的能力，因为需要选择语言模型能够充分理解的词汇作为<em>verbalizer</em>，并且对应于词汇中的单个token。因此，我们的目标是在不需要特定于任务或模型的知识的情况下，自动为某个模式P找到一个好的<em>verbalizer</em> v。</p>
+<p>　　<strong>我们的方法需要为每个标签$y \in Y$设置<em>verbalization candidates</em>集合 $\mathcal V_{y} \subseteq T$；现在对于所有的标签$y$，简单的假设$\mathcal V_{y} = T$。设$\mathcal　V$是与这些候选集一致的所有<em>verbalizers</em>，即对于所有的标签y，当且仅当$v_{y} \in \mathcal V_{y}$时，$v \in \mathcal V$。衡量<em>verbalization</em> v是否合适的一个自然标准是计算给定v的训练数据的似然，得到最大似然估计</strong>：</p>
+<script type="math/tex; mode=display">
+\hat{v}=\underset{v \in \mathcal{V}}{\arg \max } \prod_{(\mathbf{x}, y) \in \mathcal{T}} q_{(P, v)}(y \mid \mathbf{x})</script><p>公式（2）</p>
+<p>然而，<strong>遍历$\mathcal V$以找到最佳<em>verbalizers</em>是很难处理的: 可能的<em>verbalizers</em>的数量$|\mathcal V|=|T|^{k}$在随着标签（类别k）的增加呈指数增长。并且MLM中，$T$包含数万个tokens</strong>。</p>
+<p>　　为了解决这个问题，<strong>我们将<em>k-class</em>分类任务重构为k个one-vs-rest分类[1]</strong>:对于每个$y \in Y$，我们寻找一个<em>verbalization</em> $v_{y}$，使M能够将带有标签y的样本与带有任何其他标签的样本区分开来。为此，我们引入二值化训练集$\mathcal T_{y} = \{(x_{1},\tilde y_{1}),…(x_{n},\tilde y_{n})\}$，其中当$y_{i} = y$时，$\tilde y_{i} =1$，其他情况为0。对于$t \in T$，定义：</p>
+<script type="math/tex; mode=display">
+q_{(P, t)}(1 \mid \mathbf{x})=\frac{\exp M(t \mid P(\mathbf{x}))}{\sum_{t^{\prime} \in T} \exp M\left(t^{\prime} \mid P(\mathbf{x})\right)}</script><p>公式(3)</p>
+<p>remark:</p>
+<p><a href="https://blog.csdn.net/u013066730/article/details/93901872?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162557619516780255277411%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=162557619516780255277411&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-93901872.first_rank_v2_pc_rank_v29_1&amp;utm_term=one-vs-rest&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">one-vs-rest</a></p>
+<p><strong>我们考虑对所有的token  $t^{\prime} \in T$进行归一化</strong>，并且$q_{(P,t)}(0|x) = 1-q_{(P,t)}(1|x)$。每个<em>verbalization</em>  $v_{y}$的最大似然估计表示为：</p>
+<script type="math/tex; mode=display">
+\hat{v}_{y}=\underset{v_{y} \in \mathcal{V}_{y}}{\arg \max } \prod_{(\mathbf{x}, \tilde{y}) \in \mathcal{T}_{y}} q_{\left(P, v_{y}\right)}(\tilde{y} \mid \mathbf{x})</script><p>公式(4)</p>
+<p>　　然而，这种重构造成了<strong>标签的不平衡</strong>: 如果$\mathcal T$是平衡的，每个$\mathcal T_{y}$包含的负面样本是正面样本的k−1倍。为了弥补这一点，我们对每个$q_{\left(P, v_{y}\right)}(\tilde{y} \mid \mathbf{x})$取$s(\tilde y)$次方：</p>
+<script type="math/tex; mode=display">
+s(\tilde{y})=\left\{\begin{array}{ll}
+1 & \text { if } \tilde{y}=1 \\
+n_{y} /\left(|\mathcal{T}|-n_{y}\right) & \text { otherwise }
+\end{array}\right.</script><p>公式(5)</p>
+<p>其中$n_{y}$是$\mathcal T$中标签为y的样本个数。</p>
+<p>　　<strong>接下来将极大似然重新表示为最小化$\tilde y$和$q_{\left(P, v_{y}\right)}(\tilde{y} \mid \mathbf{x})$之前的交叉熵</strong>。也就是$\hat{v}_{y}=\arg \min _{v_{y} \in \mathcal{V}_{y}} L_{\mathrm{CE}}\left(\mathcal{T} ; v_{y}\right)$，其中：</p>
+<script type="math/tex; mode=display">
+L_{\mathrm{CE}}\left(\mathcal{T} ; v_{y}\right)=-\sum_{(\mathbf{x}, \tilde{y}) \in \mathcal{T}_{y}} s(\tilde{y}) \cdot \log q_{\left(P, v_{y}\right)}(\tilde{y} \mid \mathbf{x})</script><p>公式(6)</p>
+<p>　　在解决了标签不平衡问题后，该公式很容易从公式4推倒出来。然而，公式6还存在以下问题：由<strong>于词汇$T$对于大多数预训练的MLMs来说是相当大的，$q_{\left(P, v_{y}\right)}(0 \mid \mathbf{x})$总是会接近1，因此，$log q_{\left(P, v_{y}\right)}(0 \mid \mathbf{x}) \approx log1 =0$。这就意味着负面样本对交叉熵几乎没有影响</strong>，因此优化$L_{CE}$会产生总体上非常可能但不一定反映y的含义的verbalizations $\hat v_{y}$，我们不考虑$q_{\left(P, v_{y}\right)}(\tilde{y} \mid \mathbf{x})$的绝对值，而是考虑似然比(LR)来解决这个问题：</p>
+<script type="math/tex; mode=display">
+L_{\mathrm{LR}}\left(\mathcal{T} ; v_{y}\right)=-\sum_{(\mathbf{x}, \bar{y}) \in \mathcal{T}_{y}} s(\tilde{y}) \cdot \log \frac{q_{\left(P, v_{y}\right)}(\tilde{y} \mid \mathbf{x})}{q_{\left(P, v_{y}\right)}(1-\tilde{y} \mid \mathbf{x})}</script><p>公式（7）</p>
+<p>在基于梯度的神经网络训练的图像分类中，该LR标准最近被证明优于交叉熵</p>
+<p>　　为了实现$L_{LR}$，我们对我们的出发点，即难以处理的最大似然估计，做了相当多的修改。然而，这两个目标实际上非常相似。关键区别在于公式(2)在$M(x_{y}|P(x))$和分配给其他标签的verbalizations的最大分数之间设置一个大的距离，而公式（7）在$M(x_{y}|P(x))$和分配给其他标签的verbalizations的平均分数之间设置一个大的距离。</p>
+<h4 id="Verbalization-Candidates"><a href="#Verbalization-Candidates" class="headerlink" title="Verbalization Candidates"></a>Verbalization Candidates</h4><p>　　对于每个$y \in Y$，上述公式需要Verbalization Candidates集合$\mathcal V_{y}$，这些候选集可以通过简单的设置$\mathcal V_{y} = T$来获得，<strong>但是为了便于verbalizer搜索，我们创建了仅包含词汇的小子集的候选集</strong>$\mathcal V_{y} \subset T$。首先，我么遵循 Schick and Schütze (2020a)的方法，通过移除所有不对应于真实单词或不包含至少2个字母字符的token来减少$T$。从剩下的列表中，我们在任务的无标记数据上收集了10000个出现最频繁的token，并用$T_{f}$表示过滤掉的词汇。</p>
+<p>　　由于我们在公式7中的损失函数考虑了似然比，token的整体似然无关紧要。<strong>为了确保对于给定的模式，候选集在语法和语义上都是合理的，我们进一步限制候选集，只保留能够最大化所有<em>positive examples</em>似然的token</strong>:对于每个标签$y \in Y$，我们定义一个候选集$T_{f,y}$，它包含1000个最大化$L_{CE}(\mathcal T_{y}^{+};t)$，其中$\mathcal T_{y}^{+} = \{(x,\hat y) \in \mathcal T_{y} |\hat y = 1 \}$。自然，这导致了对高频词汇的偏好。正如Schick和Schütze  (2020b)最近所表明的，<strong>预训练语言模型倾向于理解高频词汇，因此在所有其他条件相同的情况下，作为verbalization，高频词汇应该比稀有词更受青睐</strong>；也就是说，这种对高频词汇的偏好确实是可取的。</p>
+<h4 id="Multi-Verbalizers"><a href="#Multi-Verbalizers" class="headerlink" title="Multi-Verbalizers"></a>Multi-Verbalizers</h4><p>　　<strong>对于某些任务，为某个标签分配多个verbalizations是有意义的</strong>。如果自动找到verbalizations，这将更加适用，对于给定标签，最有可能的verbalizations涵盖了其不同方面。因此，我们引入了<em>mulit-verbalizers</em>的概念，verbalizations函数v的泛化：$Y \rightarrow P(T)$，其中$P(T)$表示$T$的幂集。为了将<em>mulit-verbalizers</em>集成到PET中，我们将等式1中的条件概率分布替换为：</p>
+<script type="math/tex; mode=display">
+q_{\mathbf{p}}(y \mid \mathbf{x})=\frac{\exp \left(\frac{1}{\left|v_{y}\right|} \sum_{t \in v_{y}} M(t \mid P(\mathbf{x}))\right)}{\sum_{i=1}^{k} \exp \left(\frac{1}{\left|v_{i}\right|} \sum_{t \in v_{i}} M(t \mid P(\mathbf{x}))\right)}</script><p>也就是说，我们<strong>将标准PET中M分配给标签的verbalization的原始分数替换为标签的所有verbalizations的平均分数。</strong></p>
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><p>　　对于PETAL，遵循Schick and Schütze (2020a) 中的设置，特别的，使用<strong>RoBERTa-large作为底层MLM</strong>。对于PET，使用相同的超参数，带有相同模式的评估任务，用于下游训练集的相同策略。<strong>我们与Schick和Schütze  (2020a)的不同之处在于，我们将所有输入转换为单个序列(即，我们移除了所有[SEP]token)，因为我们发现这略微改进了我们的方法在初步实验中发现的verbalizations</strong>。为了确保我们的结果与以前的工作具有可比性，并且PET性能的提高不仅仅是由于模式的这种修改，我们这样做只是为了找到verbalizers，而不是为了实际的PET训练和推断。</p>
+<p>　　我们首先<strong>定性</strong>地分析用我们的方法发现的verbalizers。数据集采用Yahoo<br>Questions.由问题和答案组成的数据集，这些问题和答案必须归类为十个可能的类别之一，如“健康”、“体育”和“政治”。我们使用简单的模式：</p>
+<script type="math/tex; mode=display">
+P(x) = [MASK] Question:x</script><p>和50个训练样本，也就是一个标签有5个样本。表1显示了使用$L_{CE}$和$L_{LR}$获得的所有标签的最可能的verbalizations；对于后者，我们考虑了不受限制的verbalizations候选集和第4节中定义的候选集。可以看出，出于第4节中论述的原因，$L_{CE}$不会产生有用的verbalizations：它只识别总体上很可能替代P(x)中[MASK]的单词。虽然使用$\mathcal V_{y} = T$的$L_{LR}$找到了合理的verbalizers，但有些是相当不常见的token (“PLoS”, “phylogen”，“gcc”)；使用更受约束的候选集($\mathcal V_{y} = T_{f,y}$)缓解了这个问题，并找到了在大多数情况下与任务的实际标签非常对应的单词。所示的 verbalizations也说明了使用multi-verbalizers的好处。例如，“计算机”的verbalizations包括“硬件”和“软件”；孤立地看，这些术语都没有完全涵盖这一类别，但它们的组合确实涵盖了它的大部分方面。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/19/2.png" alt="2"></p>
+<hr>
+<p>　　接下来，我们考虑更具挑战性的MNLI数据集(Williams等人，2018)，这是一个自然语言推理数据集，其中给定两个句子$x_{1}$ and  $x_{2}$，任务是判断两个句子是否相互矛盾，或者一个句子包含另一个句子，或者两者都不包含。在这个数据集上，表2将PETAL与AVS进行了比较，AVS是Schick  and  Schütze (2020a)中自动寻找verbalizers的方法，使用模式：</p>
+<script type="math/tex; mode=display">
+P(x_{1},x_{2}) = x_{1}?[mask],x_{2}</script><p>和50个带标签的训练样本。虽然这两种方法显然都无法找到“Neutral”标签的良好verbalizations，但使用PETAL会使其他两个标签的verbalizations更好，AVS确定的大多数单词与所考虑的标签完全无关。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/19/3.png" alt="3"></p>
+<p>　　为了<strong>定量</strong>评估我们的方法，使用了Yelp  Review Full Star (Yelp)和AG‘ News  数据集。Yelp的任务是根据顾客的文本评论猜测顾客给餐馆的星级数量(从1到5)；对于AG’s 而言，必须将“世界”、“商业”、“体育”和“科学/技术”四个类别中的一个分配给新闻文章。</p>
+<p>　　继Schick  and  Schütze  (2020a)之后，我们再次考虑一个场景，其中我们有$|\mathcal T| = 50$个标记的训练样本，每个任务有一组$10000 \cdot k$个未标记的样本；<strong>未标记的样本仅是PET所必需的，而不是用来寻找verbalizers的</strong>。对于我们的方法，我们考虑了一种变体，其中分别为每个模式计算verbalizers (sep)，以及另一种变体，为所有模式计算单个verbalizer，比如在AVS(joint)中；对于后者，所有模式的似然比损失被简单地相加并联合最小化。我们使用multi-verbalizer $\hat v$，其中$\hat v(y)$是每个标签最有可能的10个verbalizations(记作$n_{v} = 10$)，并将PETAL与以下基线进行比较：</p>
+<p><strong>supervised</strong>：没有PET的常规监督学习，即我们在预训练语言模型的基础上增加一个常规序列分类头，并像Devlin et al.(2019)那样进行微调。</p>
+<p><strong>PET + random</strong>：我们通过从$T_{f}$中为每个标签随机选择10个单词来生成一个 multi-verbalizer。我们用这个基线，以验证对监督学习的改进不是仅仅由于PET使用了额外的未标记的样本和辅助目标，改进的实际源头是使用了改进的verbalizer。</p>
+<p><strong>PET + AVS</strong>：……</p>
+<p><strong>PET + manual</strong>：我们考虑了Schick  and  Schütze (2020a)手动定义的verbalizers。这是通过结合特定任务和特定模型的知识所能达到的上限。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/19/4.png" alt="4"></p>
+<p>　　结果见表3。平均而言，带有随机verbalizers的PET比常规监督学习表现稍好；我们推测这是由于PET利用了额外的未标记数据。Random verbalizers 的表现比AVS差得多，而我们的方法在4个任务中有3个任务的性能明显优于AVS的方法，在MNLI上的差距尤其大。对于PETAL的joint变体和sep变体来说都是这样，后者的平均性能更好。此外，特别是对于MNLI，我们的方法几乎匹配手动定义映射的PET的性能，同时不需要特定于任务的知识来寻找verbalizers。监督学习和PETAL之间的巨大差距尤其令人惊讶，因为在给定模式模式后，在PET中特定任务知识的来源本质上是通用的。</p>
+<p>　　我们最后注意到，<strong>我们的方法为PET增加了一个超参数:每个标签的verbalizations 个数$n_{v}$，</strong>这对于小的训练集来说可能很难优化。然而，如图2所示，对于1到100的范围值，所有任务的结果都相对稳定；$n_{v} =3$时，在所有任务中获得最佳结果。</p>
+<p><img src= "/img/loading.gif" data-src="/posts/19/5.png" alt="5"></p>
+<hr>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>　　我们设计了PETAL，是对PET的一种扩展，自动将标签映射到单词。定性和定量分析表明，即使样本集小到只有50个样本，我们的方法也能够识别适合表示标签的单词，并且几乎和某些任务的手工映射的性能相当。对于未来的工作，<strong>可以研究PET的模式是否可以用类似的方式获得</strong>。</p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">郭新宇</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://guoxinyu1998.github.io/posts/19/">https://guoxinyu1998.github.io/posts/19/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://guoxinyu1998.github.io" target="_blank">Guo Xinyu's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/FSL/">FSL</a><a class="post-meta__tags" href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/">论文笔记</a><a class="post-meta__tags" href="/tags/PET/">PET</a></div><div class="post_share"><div class="social-share" data-image="https://pic2.zhimg.com/80/v2-6b384402b581c3c8ea24f7d6d3aeb188_720w.jpg?source=1940ef5c" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><button class="reward-button" type="button"><i class="fas fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="post-qr-code__img" src="/img/wechat.png" alt="wechat" onclick="window.open('/img/wechat.png')"/><div class="post-qr-code__desc">wechat</div></li><li class="reward-item"><img class="post-qr-code__img" src="/img/1.png" alt="alipay" onclick="window.open('/img/1.png')"/><div class="post-qr-code__desc">alipay</div></li></ul></div></button></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/51202/"><img class="next-cover" data-src="https://pic2.zhimg.com/80/v2-6b384402b581c3c8ea24f7d6d3aeb188_720w.jpg?source=1940ef5c" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">最新论文解读</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/posts/18/" title="It's Not Just Size That Matters: Small Language Models Are Also Few-Shot Learners"><img class="relatedPosts_cover" data-src="https://pic2.zhimg.com/80/v2-6b384402b581c3c8ea24f7d6d3aeb188_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-30</div><div class="relatedPosts_title">It's Not Just Size That Matters: Small Language Models Are Also Few-Shot Learners</div></div></a></div><div class="relatedPosts_item"><a href="/posts/17/" title="Exploting Cloze Questions for Few Shot Text Classification and Natural Language Inference"><img class="relatedPosts_cover" data-src="https://pic1.zhimg.com/80/v2-c02e85719ceae1596dd060b2d49bf8d5_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-21</div><div class="relatedPosts_title">Exploting Cloze Questions for Few Shot Text Classification and Natural Language Inference</div></div></a></div><div class="relatedPosts_item"><a href="/posts/16/" title="Few-Shot Transfer Learning for Text Classification With Lightweight Word Embedding Based Models"><img class="relatedPosts_cover" data-src="https://pic1.zhimg.com/80/v2-5d8cda5c1dc30e402147cb06acb91bee_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-19</div><div class="relatedPosts_title">Few-Shot Transfer Learning for Text Classification With Lightweight Word Embedding Based Models</div></div></a></div><div class="relatedPosts_item"><a href="/posts/15/" title="Meta-pretraining-Then-Meta-learning-for-Few-shot-Text-Classification"><img class="relatedPosts_cover" data-src="https://pic2.zhimg.com/80/v2-f60ef96e32013567e6ea47c25a1605f7_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-18</div><div class="relatedPosts_title">Meta-pretraining-Then-Meta-learning-for-Few-shot-Text-Classification</div></div></a></div><div class="relatedPosts_item"><a href="/posts/14/" title="SALNet: Semi-supervised Few-Shot Text Classification with Attention-based Lexicon Construction"><img class="relatedPosts_cover" data-src="https://pic2.zhimg.com/80/v2-f60ef96e32013567e6ea47c25a1605f7_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-17</div><div class="relatedPosts_title">SALNet: Semi-supervised Few-Shot Text Classification with Attention-based Lexicon Construction</div></div></a></div><div class="relatedPosts_item"><a href="/posts/13/" title="ATTENTIVE TASK-AGNOSTIC META-LEARNING FOR FEW-SHOT TEXT CLASSIFICATION"><img class="relatedPosts_cover" data-src="https://pic2.zhimg.com/80/v2-f60ef96e32013567e6ea47c25a1605f7_720w.jpg?source=1940ef5c"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-13</div><div class="relatedPosts_title">ATTENTIVE TASK-AGNOSTIC META-LEARNING FOR FEW-SHOT TEXT CLASSIFICATION</div></div></a></div></div></div><hr><div id="post-comment"><div class="comment-head"><div class="comment-headling"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div class="comments-items-1" data-name="Valine"><div class="vcomment" id="vcomment"></div><script>function loadvaline () {  
+  var requestSetting = function (from,set) {
+    var from = from
+    var setting = set.split(',').filter(function(item){
+    return from.indexOf(item) > -1
+    });
+    setting = setting.length == 0 ? from :setting;
+    return setting
+  }
+
+  var guestInfo = requestSetting(['nick','mail','link'],'nick,mail,link')
+  var requiredFields = requestSetting(['nick','mail'],'nick,mail')
+
+  function initValine () {
+    window.valine = new Valine({
+      el:'#vcomment',
+      appId: 'P8NEOKyfeC9bHLuaMnGReAz5-gzGzoHsz',
+      appKey: 'JVxIietS4NnVMnEqwKVnBNYH',
+      placeholder: '来呀，快活呀',
+      avatar: 'monsterid',
+      meta: guestInfo,
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: true,
+      serverURLs: '',
+      emojiCDN: 'true',
+      emojiMaps: "",
+      enableQQ: true,
+      requiredFields: requiredFields,
+      master: '607db4ef3c96629fb910ae8a233fae86',   //博主邮箱
+      friends: '18a99d40001be1e2b5edc415d5082468',
+      tagMeta: ["博主","博主女朋友","访客"],
+      
+      metaPlaceholder: {"nick":"QQ号","mail":"邮箱"},
+
+      // 设置Bilibili表情包地址
+  emojiCDN: '//i0.hdslb.com/bfs/emote/', 
+  // 表情title和图片映射
+  emojiMaps: {
+    "tv_doge": "6ea59c827c414b4a2955fe79e0f6fd3dcd515e24.png",
+    "tv_亲亲": "a8111ad55953ef5e3be3327ef94eb4a39d535d06.png",
+    "tv_偷笑": "bb690d4107620f1c15cff29509db529a73aee261.png",
+    "tv_再见": "180129b8ea851044ce71caf55cc8ce44bd4a4fc8.png",
+    "tv_冷漠": "b9cbc755c2b3ee43be07ca13de84e5b699a3f101.png",
+    "tv_发怒": "34ba3cd204d5b05fec70ce08fa9fa0dd612409ff.png",
+    "tv_发财": "34db290afd2963723c6eb3c4560667db7253a21a.png",
+    "tv_可爱": "9e55fd9b500ac4b96613539f1ce2f9499e314ed9.png",
+    "tv_吐血": "09dd16a7aa59b77baa1155d47484409624470c77.png",
+    "tv_呆": "fe1179ebaa191569b0d31cecafe7a2cd1c951c9d.png",
+    "tv_呕吐": "9f996894a39e282ccf5e66856af49483f81870f3.png",
+    "tv_困": "241ee304e44c0af029adceb294399391e4737ef2.png",
+    "tv_坏笑": "1f0b87f731a671079842116e0991c91c2c88645a.png",
+    "tv_大佬": "093c1e2c490161aca397afc45573c877cdead616.png",
+    "tv_大哭": "23269aeb35f99daee28dda129676f6e9ea87934f.png",
+    "tv_委屈": "d04dba7b5465779e9755d2ab6f0a897b9b33bb77.png",
+    "tv_害羞": "a37683fb5642fa3ddfc7f4e5525fd13e42a2bdb1.png",
+    "tv_尴尬": "7cfa62dafc59798a3d3fb262d421eeeff166cfa4.png",
+    "tv_微笑": "70dc5c7b56f93eb61bddba11e28fb1d18fddcd4c.png",
+    "tv_思考": "90cf159733e558137ed20aa04d09964436f618a1.png",
+    "tv_惊吓": "0d15c7e2ee58e935adc6a7193ee042388adc22af.png",
+    "tv_打脸": "56ab10b624063e966bfcb76ea5dc4794d87dfd47.png",
+    "tv_抓狂": "fe31c08edad661d63762b04e17b8d5ae3c71a757.png",
+    "tv_抠鼻": "c666f55e88d471e51bbd9fab9bb308110824a6eb.png",
+    "tv_斜眼笑": "911f987aa8bc1bee12d52aafe62bc41ef4474e6c.png",
+    "tv_无奈": "ea8ed89ee9878f2fece2dda0ea8a5dbfe21b5751.png",
+    "tv_晕": "5443c22b4d07fb1907ccc610c8e6db254f2461b7.png",
+    "tv_流汗": "cead1c351ab8d79e9f369605beb90148db0fbed3.png",
+    "tv_流泪": "7e71cde7858f0cd50d74b0264aa26db612a8a167.png",
+    "tv_流鼻血": "c32d39db2737f89b904ca32700d140a9241b0767.png",
+    "tv_点赞": "f85c354995bd99e28fc76c869bfe42ba6438eff4.png",
+    "tv_生气": "26702dcafdab5e8225b43ffd23c94ac1ff932654.png",
+    "tv_生病": "8b0ec90e6b86771092a498c54f09fc94621c1900.png",
+    "tv_疑问": "0793d949b18d7be716078349c202c15ff166f314.png",
+    "tv_白眼": "c1d59f439e379ee50eef488bcb5e5378e5044ea4.png",
+    "tv_皱眉": "72ccad6679fea0d14cce648b4d818e09b8ffea2d.png",
+    "tv_目瞪口呆": "0b8cb81a68de5d5365212c99375e7ace3e7891b7.png",
+    "tv_睡着": "8b196675b53af58264f383c50ad0945048290b33.png",
+    "tv_笑哭": "1abc628f6d4f4caf9d0e7800878f4697abbc8273.png",
+    "tv_腼腆": "89712c0d4af73e67f89e35cbc518420380a7f6f4.png",
+    "tv_色": "61822c7e9aae5da76475e7892534545336b23a6f.png",
+    "tv_调侃": "4bc022533ef31544ca0d72c12c808cf4a1cce3e3.png",
+    "tv_调皮": "b9c41de8e82dd7a8515ae5e3cb63e898bf245186.png",
+    "tv_鄙视": "6e72339f346a692a495b123174b49e4e8e781303.png",
+    "tv_闭嘴": "c9e990da7f6e93975e25fd8b70e2e290aa4086ef.png",
+    "tv_难过": "87f46748d3f142ebc6586ff58860d0e2fc8263ba.png",
+    "tv_馋": "fc7e829b845c43c623c8b490ee3602b7f0e76a31.png",
+    "tv_鬼脸": "0ffbbddf8a94d124ca2f54b360bbc04feb6bbfea.png",
+    "tv_黑人问号": "45821a01f51bc867da9edbaa2e070410819a95b2.png",
+    "tv_鼓掌": "1d21793f96ef4e6f48b23e53e3b9e42da833a0f6.png"
+      // ... 更多表情
+  }
+    });
+  }
+  loadScript('https://cdn.jsdelivr.net/gh/HCLonely/Valine@latest/dist/Valine.min.js', initValine)
+}
+
+if ('Valine' === 'Valine' || false) {
+  window.addEventListener('load', loadvaline)
+}
+else {
+  function loadOtherComment () {
+    loadvaline()
+  }
+}</script></div></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> 郭新宇</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div></div><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="Guo Xinyu's blog" type="application/atom+xml">
+</head></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font_plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font_minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/third-party/activate-power-mode.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script><script src="/js/search/local-search.js"></script><script src="/js/calendar.js"></script><script src="/js/languages.js"></script><script src="/js/fairyDustCursor.js"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script><script src="/gitcalendar/js/gitcalendar.js"></script><script src="/js/chocolate.js"></script><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/haruto.model.json"},"display":{"position":"right","width":120,"height":260},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
