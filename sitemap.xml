@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://guoxinyu1998.github.io/posts/22/</loc>
+    <loc>https://guoxinyu1998.github.io/posts/21/</loc>
     
     <lastmod>2021-07-12</lastmod>
     
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/posts/21534/</loc>
+    <loc>https://guoxinyu1998.github.io/posts/22/</loc>
     
-    <lastmod>2021-07-11</lastmod>
+    <lastmod>2021-07-12</lastmod>
     
   </url>
   
@@ -177,14 +177,14 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/bangumis/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/books/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/books/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/bangumis/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
@@ -205,13 +205,6 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/gallery/index.html</loc>
-    
-    <lastmod>2020-07-13</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://guoxinyu1998.github.io/link/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
@@ -219,7 +212,7 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/movies/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/gallery/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
@@ -233,7 +226,7 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/tags/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/movies/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
@@ -241,6 +234,13 @@
   
   <url>
     <loc>https://guoxinyu1998.github.io/talk/index.html</loc>
+    
+    <lastmod>2020-07-13</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://guoxinyu1998.github.io/tags/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
