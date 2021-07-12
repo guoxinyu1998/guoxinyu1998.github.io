@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Dynamic Memory Induction Networks for Few-Shot Text Classification</title>
+      <link href="/posts/22/"/>
+      <url>/posts/22/</url>
+      
+        <content type="html"><![CDATA[<p><strong>Dynamic Memory Induction Networks for Few-Shot Text Classification</strong></p><p><a href="https://arxiv.org/pdf/2005.05727.pdf" target="_blank" rel="noopener">论文地址</a></p><p><a href>代码暂无</a></p><p><a href="https://zhuanlan.zhihu.com/p/362834482" target="_blank" rel="noopener">论文解读</a></p><p>ACL 2020</p><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><p><strong>Dynamic Memory Induction Networks (DMIN)</strong></p><p>　　该模型利用<strong>动态路由</strong>为<strong>memory-based的FSL</strong>提供更大的灵活性，以便更好地适应支持集，这是few shot分类模型需要具备的的重要能力。在此基础上，我们进一步开发了包含查询信息的归纳模型，旨在增强元学习的泛化能力。</p><h3 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h3><p>　　few-shot文本分类需要模型在标记样本有限的情况下进行分类，这对于许多应用来说很重要的，但仍然是一项具有挑战性的任务。早期关于FSL的研究采用数据增强和正则化技术来减轻数据稀疏导致的过拟合。最近的研究利用了元学习(Finn et al., 2017; Zhang et al., 2018;Sun et al., 2019) 来提取元任务之间可转移的知识。</p><p>few-shot文本分类的关键挑战：</p><ul><li><strong>将支持集归纳为class-level representation</strong> (Gao et al., 2019)【1】。</li><li>另一个突出的挑战是各种原因造成的instance-level多样性(Gao et al., 2019; Geng et al., 2019【2】)，导致<strong>很难找到一个类的固定原型</strong> (Allen et al., 2019)【3】。</li></ul><p>最近的研究表明，模型可以受益于query-aware 方法(Gao et al., 2019)。</p><p>　　在本文中，我们提出了DMIN来进一步应对上述挑战。<strong>DMIN利用动态路由，通过利用路由组件在训练期间和训练之后自动调整耦合系数的能力，为memory-based的FSL提供更大的灵活性</strong>，以便更好地适应支持集。在此基础上，我们进一步开发了带有 query information的归纳模型，从而在支持集中的不同实例中识别出与query更相关的样本向量。这两个模块是在DMIN中联合(jointly)学习的。</p><p>remake：</p><p>【1】Tianyu Gao, Xu Han, Zhiyuan Liu, and Maosong Sun. 2019.Hybrid attention-based prototypical networks for noisy few-shot relation classification. In Proceedings of the Thirty-Second AAAI Conference on Artificial Intelligence,(AAAI-19), New York, USA.</p><p>【2】 Induction networks for few-shot text classification.</p><p>【3】Kelsey Allen, Evan Shelhamer, Hanul Shin, and Joshua Tenenbaum. 2019. Infinite mixture prototypes for few-shot learning. In Proceedings of the 36th International Conference on Machine Learning, volume 97 of Proceedings of Machine Learning Research, pages 232–241, Long Beach, California,USA. PMLR.</p><h3 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h3><p>略</p><h3 id="Dynamic-Memory-Induction-Network"><a href="#Dynamic-Memory-Induction-Network" class="headerlink" title="Dynamic Memory Induction Network"></a>Dynamic Memory Induction Network</h3><h4 id="Overall-Architecture"><a href="#Overall-Architecture" class="headerlink" title="Overall Architecture"></a>Overall Architecture</h4><p><img src= "/img/loading.gif" data-src="/posts/22/4.png" alt="4"></p><p>　　如图1所示，它建立在 two-stage few-shot 框架的基础上（ Gidaris　and Komodakis (2018)）。在<strong>监督学习阶段</strong>(绿色子图)，训练数据中的一部分类别被选作 base sets，它包含$C_{base}$个base classes，用于<strong>微调预训练句子编码器、训练分类器</strong>。</p><p>　　在<strong>元学习阶段</strong>(橙色子图)，我们构建一个“episode”来计算梯度，并在每次训练迭代中更新我们的模型。对于C-way  K-shot问题，通过从训练集中随机选择C类，并在每个选择的类中选择K个样本作为支持集$S$，形成一个training episode。其余样本的子集用作查询集$Q$。<strong>用支持集训练模型，在查询集中最小化损失函数并更新模型。</strong></p><h4 id="Pre-trained-Encoder"><a href="#Pre-trained-Encoder" class="headerlink" title="Pre-trained Encoder"></a>Pre-trained Encoder</h4><p>　　我们<strong>使用BERT-base进行句子编码</strong>，BERT是基于Transformer模型的多层双向Transformer编码器。</p><p>　　插入特殊分类嵌入([<strong>CLS</strong>])作为第一个token，并添加special token ([<strong>SEP</strong>])作为最终token。我们使用从[<em>CLS</em>]输出的d维隐藏向量作为给定文本  $x$  的表示  $e$ ：$e = E(x|\theta)$。<strong>预训练的BERT模型提供了强大的上下文相关句子表示，可用于各种目标任务，适用于few-shot文本分类任务</strong> (Bao et al., 2019)【1】。</p><p>　　我们在<strong>监督学习阶段微调预训练的BERT编码器</strong>。对于每个输入文档$x$，编码器$E(x|\theta)$(带有参数$\theta$)将输出一个d维的向量$e$。$W_{base}$是一个矩阵，为每个base class保存一个class-level 向量，作为元学习的 base memory 。$E(x|\theta)$和$W_{base}$将在元训练过程中进一步调整。实验表明，<strong>将先前的模型替换为预训练编码器后的性能优于最先进的模型</strong>。</p><p>remake：</p><p>【1】Few-shot text classification with distributional signatures </p><h4 id="Dynamic-Memory-Module"><a href="#Dynamic-Memory-Module" class="headerlink" title="Dynamic Memory Module"></a>Dynamic Memory Module</h4><p>　　在<strong>元学习阶段</strong>，为了<strong>从给定的支持集中归纳出类级表示</strong>，我们通过memory matrix $W_{base}$，根据监督学习阶段学习到的知识，开发了一个动态记忆模块(DMM)。与静态内存不同，DMM利用动态路由为从base classes中学习的memory提供更大的灵活性，以更好地适应支持集。路由组件可以在训练期间和训练之后自动调整耦合系数，这本质上适合FSL的需要。</p><p>　　具体来说，支持集中的样本首先由BERT编码成样本向量$\{e_{c,s}\}_{s=1}^{K} $，然后被馈送到后面的 dynamic memory routing process。</p><p>Dynamic Memory Routing Process</p><p><img src= "/img/loading.gif" data-src="/posts/22/1.png" alt="1"></p><p>　　给定一个 Memory matrix $M$ (here $M_{base}$)和样本向量$q \in R^{d}$，该算法旨在基于监督学习阶段学习的memory $M$对样本向量进行自适应。</p><script type="math/tex; mode=display">q^{\prime} = DMR(M,q)</script><p>公式（1）</p><p>　　首先，对于$M$矩阵中每一项$m_{i}$和$q$，应用动态路由中的标准matrix-transformation操作和squash操作。</p><script type="math/tex; mode=display">\begin{aligned}\hat{m}_{i j} &=\operatorname{squash}\left(W_{j} m_{i}+b_{j}\right), \\\hat{q}_{j} &=\operatorname{squash}\left(W_{j} q+b_{j}\right),\end{aligned}</script><p>公式(2)（3）</p><p>其中 transformation权重$W_{j}$和偏置$b_{j}$在所有inputs（包括$m_{i}$和$q$）中共享。</p><p>　　然后我们计算$\hat m_{i}$和$\hat q_{j}$间的皮尔逊相关系数(Pearson Correlation Coefficients )(PCCs)：</p><script type="math/tex; mode=display">\begin{aligned}p_{i j} &=\tanh \left(\operatorname{PCCs}\left(\hat{m}_{i j}, \hat{q}_{j}\right)\right) \\P C C s &=\frac{\operatorname{Cov}\left(x_{1}, x_{2}\right)}{\sigma_{x_{1}} \sigma_{x_{2}}}\end{aligned}</script><p>公式（4）（5）</p><p>上面给出了向量$x_{1}$和$x_{2}$的PCCs的通式。由于PCCs值在[-1，1]的范围内，因此它们可用于encourage或penalize路由参数。</p><p>　　路由迭代过程现在可以调整关于输入胶囊$m_{i}$、$q$和更高级胶囊$v_{j}$的耦合系数$d_{i}$。</p><script type="math/tex; mode=display">\begin{aligned}d_{i} &=\operatorname{softmax}\left(\alpha_{i}\right), \\\alpha_{i j} &=\alpha_{i j}+p_{i j} \hat{m}_{i} v_{j} .\end{aligned}</script><p>公式（6）（7）</p><p>　　我们的目标是开发基于memory的动态路由机制，我们在每次路由迭代中添加带有路由协议的PCCs，如等式8所示。</p><script type="math/tex; mode=display">\hat{v}_{j}=\sum_{i=1}^{n}\left(d_{i j}+p_{i j}\right) m_{i j},\\v_{j}=\operatorname{squash}\left(\hat{v}_{j}\right)</script><p>公式(8)（9）</p><p>　　使用公式（6）和（7）来更新耦合系数$\alpha _{i,j}$和$p_{i,j}$，最后输出自适应向量$q^{\prime}$</p><p>　　Dynamic Memory Module在memory $W_{base}$的指导下，使用DMR来适应样本向量$e_{c,s}$。也就是说，适应样本向量(adapted sample vector)是由$e_{c,s}^{\prime} = DMR(W_{base},e_{c,s})$计算得到的。</p><h4 id="Query-enhanced-Induction-Module"><a href="#Query-enhanced-Induction-Module" class="headerlink" title="Query-enhanced Induction Module"></a>Query-enhanced Induction Module</h4><p>　　在样本向量$\{e_{c,s}^{\prime}\}_{s = 1,…,K}$ 适应并且查询向量$\{e_{q}\}_{q=1}$被预训练编码器编码之后，现在合并queries来创建一个Query-guided Induction Module (QIM)。<strong>目的是在支持集的(adapted)样本向量中识别与query更相关的向量</strong>，以便构建类级向量来更好地对query进行分类。由于动态路由可以自动调整耦合系数来帮助增强相关的queries和样本向量，并且penalizes不相关的queries和向量，因此QIM通过将adapted sample vectors视为关于新类的背景知识的memory来重用DMR过程，并且<strong>从与查询更相关/相似的adapted sample vectors中归纳类级表示</strong>。</p><script type="math/tex; mode=display">e_{c}=D M R\left(\left\{e_{c, s}^{\prime}\right\}_{s=1, \ldots, K}, e_{q}\right)</script><p>公式（10）</p><h4 id="Similarity-Classifier"><a href="#Similarity-Classifier" class="headerlink" title="Similarity Classifier"></a>Similarity Classifier</h4><p>　　在最后的分类阶段，我们将新的<strong>类向量</strong>$e_{c}$和<strong>查询向量</strong>$e_{q}$馈送给上述在监督训练阶段的分类器，并获得分类分数。神经网络分类器的标准设置是，在提取特征向量$e \in  R^{d}$之后，通过以下方式估计分类概率向量$p$：</p><ol><li>首先使用点积运算$s_{k} = e^{T}w_{k}^{\ast}$计算每个类别$k \in [1,K^{\ast}]$的原始分类分数$s_{k}$</li><li>然后对$K^{\ast}$个分类分数应用softmax</li></ol><p>　　然而，due to completely novel categories，这种类型的分类器不适合FSL。在这项工作中，我们使用<strong>余弦相似度计算原始分类分数</strong>：</p><script type="math/tex; mode=display">s_{k}=\tau \cdot \cos \left(e, w_{k}^{*}\right)=\tau \cdot \bar{e}^{T} \bar{w}_{k}^{*}</script><p>公式（11）</p><p>其中$\bar{e}=\frac{e}{|e|} \text { and } \bar{w}_{k}^{<em>}=\frac{w_{k}^{</em>}}{\left|w_{k}^{*}\right|}$是$l_{2}-normalized$向量。$\tau$是可学习的标量。在base分类器被训练之后，属于同一类别的所有特征向量必须与该类别的单个分类权重向量非常紧密地匹配。因此，第一阶段训练的base分类权重<script type="math/tex">W_{\text {base }}=\left\{w_{b}\right\}_{b=1}^{C_{\text {base }}}</script>可以看作是base classes的特征向量。</p><p>　　在few-shot分类场景中，我们将查询向量$e_{q}$和新的类向量$e_{c}$馈送到分类器，并以统一的方式获得分类分数。</p><script type="math/tex; mode=display">s_{q, c}=\tau \cdot \cos \left(e_{q}, e_{c}\right)=\tau \cdot \bar{e}_{q}^{T} \bar{e}_{c}</script><p>公式（12）</p><h4 id="Objective-Function"><a href="#Objective-Function" class="headerlink" title="Objective Function"></a>Objective Function</h4><p>　　在监督学习阶段，训练目标是在给定输入文本$x$及其标签$y$的情况下，最小化$C_{base}$个base classes的交叉熵损失：</p><script type="math/tex; mode=display">L_{1}(x, \boldsymbol{y}, \hat{\boldsymbol{y}})=-\sum_{k=1}^{C_{\text {base }}} y_{k} \log \left(\hat{y}_{k}\right)</script><p>公式（13）</p><p>其中$y$是ground-truth标签的one-hot表示，$\hat y$是base classes的预测概率，其中$\hat y_{k} = softmax(s_{k})$。</p><p>　　在元训练阶段，对于每个meta episode，给定支持集S和查询集Q ，训练目标是最小化C个新类上的交叉熵损失。</p><script type="math/tex; mode=display">L_{2}(S, Q)=-\frac{1}{C} \sum_{c=1}^{C} \frac{1}{L} \sum_{q=1}^{L} y_{q} \log \left(\hat{y}_{q}\right)</script><p>其中，$\hat y_{q} = softmax(s_{q})$是meta episode中$C$个新类别的预测概率，$s_{q} = \{s_{q,c}\}_{c=1}^{C}$（公式12）。我们通过支持集S训练模型，最小化每个meta episode中查询集Q的损失来更新模型参数。</p><h3 id="Experiments"><a href="#Experiments" class="headerlink" title="Experiments"></a>Experiments</h3><h4 id="Dataset-and-Evaluation-Metrics"><a href="#Dataset-and-Evaluation-Metrics" class="headerlink" title="Dataset and Evaluation Metrics"></a>Dataset and Evaluation Metrics</h4><p>数据集：miniRCV1  ODIC</p><p>评价指标：分类精度</p><p>　　分别从miniRCV1 and ODIC的测试集中随机生成100和300个meta-episodes。在1-shot和5-shot场景下，为每个episode中的每个类取10个测试文本用于评估。</p><h4 id="Implementation-Details"><a href="#Implementation-Details" class="headerlink" title="Implementation Details"></a>Implementation Details</h4><p>　　使用<strong>谷歌预训练的BERT-Base模型作为文本分类器</strong>，在训练过程中微调模型。在ODIC and miniRCV1上，base classes的数量$C_{base}$分别设置为100和20。DMR迭代的次数为3。用$C = [5,10]$和$K = [1,5]$来构建基于episode的元训练。在每个training episode中，除了使用K个样本文本作为支持集之外，还使用10个查询样本作为查询集。比如，对于5-way 5-shot场景，一个training episode中有$10 \times 5+ 5 \times 5$个文本。</p><h3 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h3><p>和以下基线进行了比较:</p><ul><li>BERT (Devlin et al., 2019) finetune</li><li>ATAML (Jiang et al., 2018), </li><li>关系网络(Sung et al., 2018),</li><li>归纳网络 (Geng et al., 2019),</li><li>HATT (Gao et al., 2019),</li><li>LwoF (Gidaris and Komodakis, 2018).</li></ul><p><strong>用BERT句子编码器复现这些baseline以便直接比较</strong></p><h4 id="Overall-Performance"><a href="#Overall-Performance" class="headerlink" title="Overall Performance"></a>Overall Performance</h4><p>　　模型的准确度和标准偏差如表1和表2所示。我们可以看到，DMIN始终优于所有现有模型，并在两个数据集上都取得了新的最先进的结果</p><p><img src= "/img/loading.gif" data-src="/posts/22/2.png" alt="2"></p><p>　　LwoF构建了一个两阶段的训练过程，记忆模块从监督学习中学习并用于元学习阶段，但训练后记忆机制是静态的，而DMIN使用动态记忆路由来自动调整训练后的耦合系数，以推广到新的类别，并显著优于LwoF。<strong>还要注意一些基线模型的性能比原论文中报告的要高</strong>（如关系网络和归纳网络），<strong>这是因为我们使用BERT代替了基于BiLSTM的编码器。BERT编码器通过强大的上下文表示能力改进了基线模型</strong>，我们的模型可以通过dynamic memory routing方法进一步优于这些模型。即使有这些更强的基线，提出的DMIN在两个数据集上都始终优于它们。</p><h4 id="Ablation-Study"><a href="#Ablation-Study" class="headerlink" title="Ablation Study"></a>Ablation Study</h4><p>　　表3中分析了DMIN的不同组成部分对性能的影响。具体来说，我们移除了DMM和QIM，并改变了DMR迭代的次数。我们看到最佳性能是通过3次迭代实现的。实验结果表明了动态记忆模块和带有查询信息的归纳模块的有效性。</p><p><img src= "/img/loading.gif" data-src="/posts/22/3.png" alt="3"></p><h4 id="Further-Analysis"><a href="#Further-Analysis" class="headerlink" title="Further Analysis"></a>Further Analysis</h4><p><img src= "/img/loading.gif" data-src="/posts/22/5.png" alt="5"></p><p>　　图2是在10-way  5-shot设置下，应用DMM前后支持样本向量的t-SNE可视化。我们随机选择一个包含50个文本(每类10个文本)的支持集，获得DMM前后的样本向量。我们可以看到，DMM产生的支持向量被更好地分离，证明了DMM在<strong>利用监督学习经验来编码样本特征和类特征之间的语义关系</strong>以进行few-shot文本分类方面的有效性。</p><h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>　　Dynamic Memory Induction Networks建立在<strong>具有动态路由的外部工作记忆的基础上</strong>，<strong>利用动态路由来寻找先前的学习经验，利用外部记忆来更好地适应支持集</strong>，从而泛化到unseen类。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> FSL in NLP </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> 论文笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Knowledge Guided Metric Learning for Few-Shot Text Classification</title>
       <link href="/posts/21534/"/>
       <url>/posts/21534/</url>
@@ -217,9 +244,9 @@
             
             <tag> FSL </tag>
             
-            <tag> Meta-learning </tag>
-            
             <tag> 论文笔记 </tag>
+            
+            <tag> Meta-learning </tag>
             
         </tags>
       
@@ -302,9 +329,9 @@
             
             <tag> FSL </tag>
             
-            <tag> Meta-learning </tag>
-            
             <tag> 论文笔记 </tag>
+            
+            <tag> Meta-learning </tag>
             
         </tags>
       
@@ -331,9 +358,9 @@
             
             <tag> FSL </tag>
             
-            <tag> Meta-learning </tag>
-            
             <tag> 论文笔记 </tag>
+            
+            <tag> Meta-learning </tag>
             
         </tags>
       
