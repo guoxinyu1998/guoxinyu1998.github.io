@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://guoxinyu1998.github.io/posts/14/</loc>
+    
+    <lastmod>2021-07-13</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://guoxinyu1998.github.io/posts/15/</loc>
+    
+    <lastmod>2021-07-13</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://guoxinyu1998.github.io/posts/16/</loc>
+    
+    <lastmod>2021-07-13</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://guoxinyu1998.github.io/posts/22/</loc>
+    
+    <lastmod>2021-07-13</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://guoxinyu1998.github.io/posts/8/</loc>
     
     <lastmod>2021-07-12</lastmod>
@@ -10,13 +38,6 @@
   
   <url>
     <loc>https://guoxinyu1998.github.io/posts/21/</loc>
-    
-    <lastmod>2021-07-12</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://guoxinyu1998.github.io/posts/22/</loc>
     
     <lastmod>2021-07-12</lastmod>
     
@@ -68,27 +89,6 @@
     <loc>https://guoxinyu1998.github.io/posts/7/</loc>
     
     <lastmod>2021-07-04</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://guoxinyu1998.github.io/posts/16/</loc>
-    
-    <lastmod>2021-06-19</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://guoxinyu1998.github.io/posts/15/</loc>
-    
-    <lastmod>2021-06-19</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://guoxinyu1998.github.io/posts/14/</loc>
-    
-    <lastmod>2021-06-17</lastmod>
     
   </url>
   
@@ -177,6 +177,13 @@
   </url>
   
   <url>
+    <loc>https://guoxinyu1998.github.io/books/index.html</loc>
+    
+    <lastmod>2020-07-13</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://guoxinyu1998.github.io/bangumis/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
@@ -184,7 +191,7 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/books/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/categories/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
@@ -198,13 +205,6 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/gallery/index.html</loc>
-    
-    <lastmod>2020-07-13</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://guoxinyu1998.github.io/link/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
@@ -212,7 +212,7 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/tags/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/gallery/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
@@ -233,7 +233,7 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/categories/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/tags/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
