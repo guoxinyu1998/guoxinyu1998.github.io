@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Prototype Rectification for Few-Shot Learning</title>
+      <link href="/posts/25/"/>
+      <url>/posts/25/</url>
+      
+        <content type="html"><![CDATA[<p><strong>Prototype Rectification for Few-Shot Learning</strong></p><p><a href="https://arxiv.org/abs/1911.10713v1" target="_blank" rel="noopener">论文地址</a></p><p><a href>代码未开源</a></p><p><a href="https://blog.csdn.net/wangs1996/article/details/107530001" target="_blank" rel="noopener">论文解读1</a></p><p><a href="https://www.zhihu.com/column/p/184005996?utm_medium=social&amp;utm_source=weibo" target="_blank" rel="noopener">论文解读2</a></p><p><a href="https://zhuanlan.zhihu.com/p/109075199" target="_blank" rel="noopener">论文解读3</a></p><p>对类中的样本简单求平均得到的prototype representation与真实的prototype representation是有很大的bias的，并且从两方面</p><ul><li>intra-class bias</li><li>cross-class bias</li></ul><p>分别进行了分析以及消除</p><p><img src= "/img/loading.gif" data-src="/posts/25/1.jpg" alt="1"></p><p>intra-class bias</p><p><img src= "/img/loading.gif" data-src="/posts/25/2.png" alt="2"></p><p>cross-class bias</p><p><img src= "/img/loading.gif" data-src="/posts/25/3.png" alt="3"></p><p>详细内容见原论文以及解读</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> FSL in NLP </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> 度量学习 </tag>
+            
+            <tag> Semi-supervised </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hybrid Attention-Based Prototypical Networks for Noisy Few-Shot Relation Classification</title>
       <link href="/posts/24/"/>
       <url>/posts/24/</url>
@@ -661,6 +690,8 @@
             
             <tag> 论文笔记 </tag>
             
+            <tag> 度量学习 </tag>
+            
         </tags>
       
     </entry>
@@ -672,7 +703,7 @@
       <link href="/posts/2/"/>
       <url>/posts/2/</url>
       
-        <content type="html"><![CDATA[<h2 id="matching-networks-for-one-shot-learning"><a href="#matching-networks-for-one-shot-learning" class="headerlink" title="matching networks for one shot learning"></a>matching networks for one shot learning</h2><p>2017年</p><p><a href="https://arxiv.org/pdf/1606.04080.pdf" target="_blank" rel="noopener">论文地址</a></p><p><a href="https://blog.csdn.net/hustqb/article/details/83861134?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162376252116780357211830%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162376252116780357211830&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-2-83861134.pc_search_result_cache&amp;utm_term=matching+networks+for+one+shot&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">论文分析1</a></p><p><a href="https://blog.csdn.net/feitianlzk/article/details/79455317?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162376252116780357211830%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162376252116780357211830&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-3-79455317.pc_search_result_cache&amp;utm_term=matching+networks+for+one+shot&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">论文分析2</a></p><p><a href="https://blog.csdn.net/wangkaidehao/article/details/104716288?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162376252116780357211830%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162376252116780357211830&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-6-104716288.pc_search_result_cache&amp;utm_term=matching+networks+for+one+shot&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">论文分析3</a></p><p><a href="https://blog.csdn.net/GrayOnDream/article/details/100708320?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162376242616780366545897%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162376242616780366545897&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-3-100708320.pc_search_result_cache&amp;utm_term=matching+network+%E8%AE%BA%E6%96%87%E5%88%86%E6%9E%90&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">论文解读、代码解读</a></p>]]></content>
+        <content type="html"><![CDATA[<h2 id="matching-networks-for-one-shot-learning"><a href="#matching-networks-for-one-shot-learning" class="headerlink" title="matching networks for one shot learning"></a>matching networks for one shot learning</h2><p>2017年</p><p><a href="https://arxiv.org/pdf/1606.04080.pdf" target="_blank" rel="noopener">论文地址</a></p><p><a href="https://zhuanlan.zhihu.com/p/259546063" target="_blank" rel="noopener">论文解读_上</a></p><p><a href="https://zhuanlan.zhihu.com/p/259758231" target="_blank" rel="noopener">论文解读_下</a></p><p><a href="https://blog.csdn.net/hustqb/article/details/83861134?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162376252116780357211830%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162376252116780357211830&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-2-83861134.pc_search_result_cache&amp;utm_term=matching+networks+for+one+shot&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">论文分析1</a></p><p><a href="https://blog.csdn.net/feitianlzk/article/details/79455317?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162376252116780357211830%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162376252116780357211830&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-3-79455317.pc_search_result_cache&amp;utm_term=matching+networks+for+one+shot&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">论文分析2</a></p><p><a href="https://blog.csdn.net/wangkaidehao/article/details/104716288?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162376252116780357211830%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162376252116780357211830&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-6-104716288.pc_search_result_cache&amp;utm_term=matching+networks+for+one+shot&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">论文分析3</a></p><p><a href="https://blog.csdn.net/GrayOnDream/article/details/100708320?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162376242616780366545897%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162376242616780366545897&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-3-100708320.pc_search_result_cache&amp;utm_term=matching+network+%E8%AE%BA%E6%96%87%E5%88%86%E6%9E%90&amp;spm=1018.2226.3001.4187" target="_blank" rel="noopener">论文解读、代码解读</a></p>]]></content>
       
       
       <categories>

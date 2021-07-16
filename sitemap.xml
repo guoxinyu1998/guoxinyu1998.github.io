@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://guoxinyu1998.github.io/posts/25/</loc>
+    
+    <lastmod>2021-07-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://guoxinyu1998.github.io/posts/3/</loc>
+    
+    <lastmod>2021-07-16</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://guoxinyu1998.github.io/posts/2/</loc>
+    
+    <lastmod>2021-07-16</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://guoxinyu1998.github.io/posts/24/</loc>
     
     <lastmod>2021-07-16</lastmod>
@@ -163,20 +184,6 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/posts/3/</loc>
-    
-    <lastmod>2021-06-15</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://guoxinyu1998.github.io/posts/2/</loc>
-    
-    <lastmod>2021-06-15</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://guoxinyu1998.github.io/posts/1/</loc>
     
     <lastmod>2021-06-15</lastmod>
@@ -191,14 +198,14 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/bangumis/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/books/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/books/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/bangumis/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
@@ -247,14 +254,14 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/tags/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/talk/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/talk/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/tags/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
@@ -268,20 +275,6 @@
     <priority>1.0</priority>
   </url>
 
-  
-  <url>
-    <loc>https://guoxinyu1998.github.io/tags/NLP/</loc>
-    <lastmod>2021-07-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://guoxinyu1998.github.io/tags/%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2021-07-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
   
   <url>
     <loc>https://guoxinyu1998.github.io/tags/FSL/</loc>
@@ -305,6 +298,27 @@
   </url>
   
   <url>
+    <loc>https://guoxinyu1998.github.io/tags/PET/</loc>
+    <lastmod>2021-07-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://guoxinyu1998.github.io/tags/NLP/</loc>
+    <lastmod>2021-07-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://guoxinyu1998.github.io/tags/%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2021-07-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://guoxinyu1998.github.io/tags/Semi-supervised-learning/</loc>
     <lastmod>2021-07-16</lastmod>
     <changefreq>daily</changefreq>
@@ -312,7 +326,7 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/tags/PET/</loc>
+    <loc>https://guoxinyu1998.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2021-07-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -326,7 +340,7 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/tags/%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/</loc>
+    <loc>https://guoxinyu1998.github.io/tags/Semi-supervised/</loc>
     <lastmod>2021-07-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -356,14 +370,14 @@
 
   
   <url>
-    <loc>https://guoxinyu1998.github.io/categories/NLP%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/</loc>
+    <loc>https://guoxinyu1998.github.io/categories/FSL-in-NLP/</loc>
     <lastmod>2021-07-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/categories/FSL-in-NLP/</loc>
+    <loc>https://guoxinyu1998.github.io/categories/NLP%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2021-07-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
