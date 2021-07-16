@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://guoxinyu1998.github.io/posts/24/</loc>
+    
+    <lastmod>2021-07-16</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://guoxinyu1998.github.io/posts/25/</loc>
     
     <lastmod>2021-07-16</lastmod>
@@ -17,13 +24,6 @@
   
   <url>
     <loc>https://guoxinyu1998.github.io/posts/2/</loc>
-    
-    <lastmod>2021-07-16</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://guoxinyu1998.github.io/posts/24/</loc>
     
     <lastmod>2021-07-16</lastmod>
     
@@ -198,21 +198,7 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/books/index.html</loc>
-    
-    <lastmod>2020-07-13</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://guoxinyu1998.github.io/bangumis/index.html</loc>
-    
-    <lastmod>2020-07-13</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://guoxinyu1998.github.io/categories/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
@@ -233,7 +219,21 @@
   </url>
   
   <url>
+    <loc>https://guoxinyu1998.github.io/books/index.html</loc>
+    
+    <lastmod>2020-07-13</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://guoxinyu1998.github.io/link/index.html</loc>
+    
+    <lastmod>2020-07-13</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://guoxinyu1998.github.io/categories/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
@@ -254,14 +254,14 @@
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/talk/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/tags/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
   </url>
   
   <url>
-    <loc>https://guoxinyu1998.github.io/tags/index.html</loc>
+    <loc>https://guoxinyu1998.github.io/talk/index.html</loc>
     
     <lastmod>2020-07-13</lastmod>
     
