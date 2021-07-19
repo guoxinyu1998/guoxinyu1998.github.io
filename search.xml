@@ -4,6 +4,64 @@
   
     
     <entry>
+      <title>Boosting Few-Shot Learning With Adaptive Margin Loss</title>
+      <link href="/posts/27/"/>
+      <url>/posts/27/</url>
+      
+        <content type="html"><![CDATA[<p><strong>Boosting Few-Shot Learning With Adaptive Margin Loss</strong></p><p><a href="https://www.weiranhuang.com/publications/pdf/traml2020.pdf" target="_blank" rel="noopener">论文地址</a></p><p><a href="https://zhuanlan.zhihu.com/p/144538053" target="_blank" rel="noopener">论文解读</a></p><p><a href="https://blog.csdn.net/qq_36104364/article/details/106979488" target="_blank" rel="noopener">论文解读2</a></p><p>论文代码：可以基于 baseline <a href="http://link.zhihu.com/?target=https%3A//github.com/ElementAI/am3/blob/master/AM3_protonet%2B%2B.py">AM3 的代码</a> 来很容易地复现。只需要在 898 行计算 loss 前，在 logits 上加入自适应 margin 即可。AM3 已经内置了 label 的语义向量在 label_embeddings_train 里 ，只需要将它们归一化后即可计算语义相似度，然后根据语义相似度计算自适应 margin。</p><p>　　本文在基于度量学习的小样本分类算法的基础上，通过引入类别相关（class-relevant）或任务相关（task-relevant）的自适应边缘损失（Adaptive Margin Loss），改进了原有算法的分类效果。本文的核心观点是可以利用不同类别之间的语义相似性来生成自适应边缘（Margin虽然翻译为边缘，但其实应该理解为两种类别之间的边界距离），具体地说就是让相似类别之间的边界类别比不相似类别之间的边界距离大。</p><p><strong>创新点</strong></p><ul><li>在基于度量学习的小样本分类算法的基础上，引入了自适应边缘损失，改进分类效果</li><li>提出两中自适应边缘损失的计算方式：CRAML和TRAML</li></ul><p><img src= "/img/loading.gif" data-src="/posts/27/1.jpg" alt="1"></p><p>我们希望增大“狗”和“狼”之间的边界距离，以增强相似类别的区分能力，提出一种自适应边缘损失的方法，利用损失函数去引导特征提取网络改进对于相似类别特征的表征能力。</p><p><strong>损失函数</strong>：</p><p>　　在 meta-training 阶段，我们从 base class 数据集中随机抽取 $n_{t}$个类（类别集合记作$C_{t}$），每个类中随机抽取 $n_{s}$个样本，合并后作为小训练集（称为支持集$S$）。然后再从每个类随机抽取若干样本，合并后作为小测试集（称为查询集 $Q$）。支持集和查询集中的样本通过 embedding 函数 $\mathcal F$ 映射到特征空间中，每个类的代表点用 $r_{1},…,r_{n_{t}}$来表示（比如，每个类所有支持集中的样本的中心点作为代表点）。最后引入一个度量模块$D$ 来衡量两个特征向量的相似度（比如 cosine similarity）。对于每个查询集中的点 $(x,y) \in Q$ ，我们计算它的特征向量到各个类代表点之间到相似度，然后通过 softmax 计算损失函数如下:</p><script type="math/tex; mode=display">\mathcal{L}^{\mathrm{cls}}=-\frac{1}{|Q|} \sum_{(x, y) \in Q} \log \frac{e^{\mathcal{D}\left(\mathcal{F}(x), r_{y}\right)}}{\sum_{k \in C_{t}} e^{\mathcal{D}\left(\mathcal{F}(x), r_{k}\right)}}</script><p><strong>普通的边缘损失函数</strong>（naive additive margin loss，NAML）：</p><script type="math/tex; mode=display">\mathcal{L}^{\mathrm{na}}=-\frac{1}{|Q|} \sum_{(x, y) \in Q} \log \frac{e^{\mathcal{D}\left(\mathcal{F}(x), r_{y}\right)}}{e^{\mathcal{D}\left(\mathcal{F}(x), r_{y}\right)}+\sum_{k \in C_{t} \backslash\{y\}} e^{\mathcal{D}\left(\mathcal{F}(x), r_{k}\right)+m}}</script><p>它在类别两两之间加上了相同的边际 $m$，强迫不同类的样本之间分开一定的距离。这种简单加上等距离边际的方法在小样本测试集上（比如相似度很高的类别上）可能会带来错误。为了进一步精细化设计边际，我们借助类别之间的语义相似度，来自适应地生成边际。</p><p><strong>如何来衡量两个类别之间的语义相似度：</strong></p><p>具体来说，我们首先把各个类别的名称（比如“狗”）输入到一个预训练语言模型（比如 Glove）中，得到每个类别对应的语义向量（词向量），然后通过一个相似度度量模块（比如 cosine similarity）就可以计算类别两两之间的语义相似度了。根据类别之间的语义相似度，我们自适应地生成边际并加入到损失函数中。</p><p><strong>自适应边际生成流程图</strong></p><p><img src= "/img/loading.gif" data-src="/posts/27/2.jpg" alt="2"></p><p><strong>类别相关的边际损失（CRAML）</strong></p><p><img src= "/img/loading.gif" data-src="/posts/27/3.png" alt="3"></p><p><strong>任务相关的边际损失（TRAML）</strong></p><p><img src= "/img/loading.gif" data-src="/posts/27/4.png" alt="4"></p><p>每次只考虑一个 meta-training task 中涉及的类别，那么可以更加精细地生成适合的边际。通过将一个 meta-training task 中的每个类与该 meta-training task 中其他类一一比对，我们可以衡量一个 task 内“相对的”语义相似度，从而生成适合这个 task 的边际。</p><p><img src= "/img/loading.gif" data-src="/posts/27/5.png" alt="5"></p><p>　　本文提出一种新的改进小样本学习的思路——边缘损失，本身在目标识别算法中边缘损失函数已经有一定的研究基础，而本文则是首次将其引入到小样本分类问题中。本文提出的两种边缘生成方法CRAML和TRAML均是从语义信息的角度出发，而边缘的计算还可以利用其他的信息或者约束。本文提出方法计算过程并不复杂，但却取得了较高的性能提升（PN提升超过10%，AM3提升2%-3%）。而唯一的遗憾是两种方法之间似乎是独立的，并没有相关联系，<strong>如何将两种方式结合，其实也是一种改进思路</strong>。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> FSL in CV </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> 论文笔记 </tag>
+            
+            <tag> 度量学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Few-Shot Learning with Global Class Representations</title>
+      <link href="/posts/26/"/>
+      <url>/posts/26/</url>
+      
+        <content type="html"><![CDATA[<p><strong>Few-Shot Learning with Global Class Representations</strong></p><p><a href="https://www.weiranhuang.com/publications/pdf/globalfsl2019.pdf" target="_blank" rel="noopener">论文地址</a></p><p><a href="https://github.com/tiangeluo/fsl-global" target="_blank" rel="noopener">论文代码</a></p><p><a href="https://zhuanlan.zhihu.com/p/78743300" target="_blank" rel="noopener">论文解读1</a></p><p><a href="https://blog.csdn.net/cp_oldy/article/details/103283868" target="_blank" rel="noopener">论文解读2</a></p><p><a href="https://blog.csdn.net/qq_36104364/article/details/108102436" target="_blank" rel="noopener">论文解读3</a></p><p>　　传统小样本学习的方法，通常只使用基类数据进行学习。由于基类和新类之间<strong>存在严重的样本不均衡问题</strong>，导致容易过拟合到基类数据，这一点在广义小样本问题中尤为突出。通过<strong>在训练阶段引入新类的数据</strong>，我们同时对基类和新类学习全局类别表征，并利用样本生成策略解决类别不均衡问题，有效防止训练模型在基类数据中出现过拟合的现象，从而提高了模型泛化到新类的能力。</p><p><img src= "/img/loading.gif" data-src="/posts/26/1.jpg" alt="1"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> FSL in CV </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> 论文笔记 </tag>
+            
+            <tag> 度量学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Prototype Rectification for Few-Shot Learning</title>
       <link href="/posts/25/"/>
       <url>/posts/25/</url>
@@ -329,9 +387,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> Meta-learning </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -414,9 +472,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> Meta-learning </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -443,9 +501,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> Meta-learning </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
