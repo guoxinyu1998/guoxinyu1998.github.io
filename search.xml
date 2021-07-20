@@ -4,6 +4,64 @@
   
     
     <entry>
+      <title>Asymmetric Distribution Measure for Few-shot Learning</title>
+      <link href="/posts/30/"/>
+      <url>/posts/30/</url>
+      
+        <content type="html"><![CDATA[<p><strong>Asymmetric Distribution Measure for Few-shot Learning(非对称度量方法)</strong></p><p> IJCAI 2020</p><p><a href="https://cs.nju.edu.cn/liwenbin/ADM.pdf" target="_blank" rel="noopener">论文地址</a></p><p><a href>代码暂无</a></p><p>　　现有metric based的方法大多数基于对称的度量，对于小样本学习，非对称的度量方式可能更合适，作者提出了非对称度量方法，该方法同时计算local和global的非对称度量，此外作者还提出了一种task-aware的对比度量策略，以此来增强度量函数。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> FSL in CV </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Learning Task-aware Local Representations for Few-shot Learning</title>
+      <link href="/posts/29/"/>
+      <url>/posts/29/</url>
+      
+        <content type="html"><![CDATA[<p><strong>Learning Task-aware Local Representations for Few-shot Learning</strong></p><p> IJCAI 2020</p><p><a href="https://www.ijcai.org/Proceedings/2020/0100.pdf" target="_blank" rel="noopener">论文地址</a></p><p><a href="https://www.ijcai.org/Proceedings/2020/0100.pdf" target="_blank" rel="noopener">代码暂无</a></p><p>　　现有的基于metric的方法都受限于一种独立image2image或者image2class的度量机制，这可能无法充分挖掘局部描述子LRs的潜力，因此作者提出了Adaptive Task-aware Local Representation Network，通过episodic attention来自动的选择在整个task里比较重要的特征。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> FSL in CV </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Finding Task-Relevant Features for Few-Shot Learning by Category Traversal</title>
       <link href="/posts/28/"/>
       <url>/posts/28/</url>
@@ -22,9 +80,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -51,9 +109,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -80,9 +138,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -138,9 +196,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -194,6 +252,8 @@
             
             <tag> FSL </tag>
             
+            <tag> 度量学习 </tag>
+            
             <tag> 论文笔记 </tag>
             
         </tags>
@@ -220,6 +280,8 @@
         <tags>
             
             <tag> FSL </tag>
+            
+            <tag> 度量学习 </tag>
             
             <tag> 论文笔记 </tag>
             
@@ -416,9 +478,9 @@
             
             <tag> FSL </tag>
             
-            <tag> Meta-learning </tag>
-            
             <tag> 论文笔记 </tag>
+            
+            <tag> Meta-learning </tag>
             
         </tags>
       
@@ -501,9 +563,9 @@
             
             <tag> FSL </tag>
             
-            <tag> Meta-learning </tag>
-            
             <tag> 论文笔记 </tag>
+            
+            <tag> Meta-learning </tag>
             
         </tags>
       
@@ -530,9 +592,9 @@
             
             <tag> FSL </tag>
             
-            <tag> Meta-learning </tag>
-            
             <tag> 论文笔记 </tag>
+            
+            <tag> Meta-learning </tag>
             
         </tags>
       
@@ -640,6 +702,8 @@
             
             <tag> FSL </tag>
             
+            <tag> 度量学习 </tag>
+            
             <tag> 论文笔记 </tag>
             
         </tags>
@@ -666,6 +730,8 @@
         <tags>
             
             <tag> FSL </tag>
+            
+            <tag> 度量学习 </tag>
             
             <tag> 论文笔记 </tag>
             
@@ -748,9 +814,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -777,9 +843,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
@@ -806,9 +872,9 @@
             
             <tag> FSL </tag>
             
-            <tag> 论文笔记 </tag>
-            
             <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
             
         </tags>
       
