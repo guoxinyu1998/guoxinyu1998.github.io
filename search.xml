@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Infinite Mixture Prototypes for Few-Shot Learning</title>
+      <link href="/posts/31/"/>
+      <url>/posts/31/</url>
+      
+        <content type="html"><![CDATA[<p><strong>Infinite Mixture Prototypes for Few-Shot Learning</strong></p><p>2019 ICML</p><p><a href="https://arxiv.org/pdf/1902.04552.pdf" target="_blank" rel="noopener">论文地址</a></p><p><a href>论文代码暂无</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> FSL in CV </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> FSL </tag>
+            
+            <tag> 度量学习 </tag>
+            
+            <tag> 论文笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Asymmetric Distribution Measure for Few-shot Learning</title>
       <link href="/posts/30/"/>
       <url>/posts/30/</url>
