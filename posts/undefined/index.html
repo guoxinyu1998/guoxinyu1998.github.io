@@ -198,25 +198,22 @@ window.addEventListener('load',preloader.endLoading())</script><div class="js-pj
       el: '#vcomment',
       appId: 'P8NEOKyfeC9bHLuaMnGReAz5-gzGzoHsz',
       appKey: 'JVxIietS4NnVMnEqwKVnBNYH',
-      placeholder: '来快活呀',
       avatar: 'monsterid',
-      meta: 'nick,main,link'.split(','),
-      pageSize: '10',
-      lang: 'zh-CN',
-      recordIP: true,
+      
+    
       serverURLs: '',
-      emojiCDN: 'true',
+      
       emojiMaps: "",
-      enableQQ: true,
+      
       path: window.location.pathname,
-      master: '607db4ef3c96629fb910ae8a233fae86'.split(','),
-      friends: 'e0ecb13e7d97d02bd1bbc866a4e9dd80,36a1bd1d914022a7f744f758983cf5ab,18a99d40001be1e2b5edc415d5082468'.split(','),
-      tagMeta: '博主,小伙伴,访客'.split(','),
-      requiredFields: [],
+      // master: ''.split(','),
+      // friends: ''.split(','),
+      //tagMeta: '博主,小伙伴,访客'.split(','),
+      //requiredFields: [],
       visitor: false
 
       // 设置Bilibili表情包地址
-      emojiCDN: '//i0.hdslb.com/bfs/emote/', 
+      //emojiCDN: '//i0.hdslb.com/bfs/emote/', 
       // 表情title和图片映射
       emojiMaps: {
         "tv_doge": "6ea59c827c414b4a2955fe79e0f6fd3dcd515e24.png",
@@ -276,7 +273,7 @@ window.addEventListener('load',preloader.endLoading())</script><div class="js-pj
   }
 
   if (typeof Valine === 'function') initValine() 
-  else getScript('https://cdn.jsdelivr.net/gh/HCLonely/Valine@latest/dist/Valine.min.js').then(initValine)
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
 }
 
 if ('Valine' === 'Valine' || !true) {
