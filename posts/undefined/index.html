@@ -196,7 +196,7 @@ window.addEventListener('load',preloader.endLoading())</script><div class="js-pj
   const init = () => {
     twikoo.init(Object.assign({
       el: '#twikoo-wrap',
-      envId: '',
+      envId: 'https://twikoo-one-jade.vercel.app/',
       region: '',
       onCommentLoaded: function () {
         btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.vemoji)'))
@@ -206,7 +206,7 @@ window.addEventListener('load',preloader.endLoading())</script><div class="js-pj
 
   const getCount = () => {
     twikoo.getCommentsCount({
-      envId: '',
+      envId: 'https://twikoo-one-jade.vercel.app/',
       region: '',
       urls: [window.location.pathname],
       includeReply: false
