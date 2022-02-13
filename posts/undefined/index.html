@@ -194,6 +194,7 @@ document.addEventListener('DOMContentLoaded', panguInit)</script><script>var pre
 }
 window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
 
+  // 设置必填项所需的函数
   var requestSetting = function (from,set) {
     var from = from
     var setting = set.split(',').filter(function(item){
@@ -203,6 +204,7 @@ window.addEventListener('load',preloader.endLoading())</script><div class="js-pj
     return setting
   }
   var requiredFields = requestSetting(['nick','mail'],'nick,mail')
+  // 以上为自己添加
 
   function initValine () {
 
@@ -217,13 +219,13 @@ window.addEventListener('load',preloader.endLoading())</script><div class="js-pj
       recordIP: false,
       serverURLs: '',
       enableQQ: true,
-      emojiCDN: 'false',
+      // emojiCDN: '',
       emojiMaps: "",
       path: window.location.pathname,
       master: '607db4ef3c96629fb910ae8a233fae86'.split(','),
       friends: 'e0ecb13e7d97d02bd1bbc866a4e9dd80,36a1bd1d914022a7f744f758983cf5ab,18a99d40001be1e2b5edc415d5082468'.split(','),
       tagMeta: '博主,小伙伴,访客'.split(','),
-      requiredFields: requiredFields,
+      requiredFields: requiredFields,  //设置必填项
       visitor: false,
       
       
