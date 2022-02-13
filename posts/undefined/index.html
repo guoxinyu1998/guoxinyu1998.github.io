@@ -215,20 +215,21 @@ window.addEventListener('load',preloader.endLoading())</script><div class="js-pj
       meta: guestInfo
       pageSize: '10',
       lang: 'zh-CN',
-      recordIP: false,
+      recordIP: true,
       serverURLs: '',
       emojiCDN: 'true',
       emojiMaps: "",
       enableQQ: true,
       path: window.location.pathname,
-      master: '607db4ef3c96629fb910ae8a233fae8'.split(','),
-      friends: 'e0ecb13e7d97d02bd1bbc866a4e9dd80,36a1bd1d914022a7f744f758983cf5ab,18a99d40001be1e2b5edc415d5082468'.split(','),
-      tagMeta: '博主,小伙伴,访客'.split(','),
-      metaPlaceholder: {"nick":"QQ号","mail":"邮箱"},
-      visitor: false
       requiredFields: requiredFields,
+      
+      master: ['607db4ef3c96629fb910ae8a233fae8'],
+      friends: ['e0ecb13e7d97d02bd1bbc866a4e9dd80','36a1bd1d914022a7f744f758983cf5ab','18a99d40001be1e2b5edc415d5082468'],
+      tagMeta: ["博主","小伙伴","访客"],
+      metaPlaceholder: {"nick":"QQ号","mail":"邮箱"},
+      
 
-      // 设置Bilibili表情包地址
+  // 设置Bilibili表情包地址
   emojiCDN: '//i0.hdslb.com/bfs/emote/', 
   // 表情title和图片映射
   emojiMaps: {
