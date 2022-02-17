@@ -5018,8 +5018,8 @@ a.social-icon svg.icon {
 }
 .card-widget.card-info .player-avatar {
   display: inline-block;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
 }
 .card-widget.card-info .player-avatar img {
   max-width: 100%;
@@ -5105,7 +5105,7 @@ a.social-icon svg.icon {
   -moz-perspective: 1000px;
   -ms-perspective: 1000px;
   perspective: 1000px;
-  min-height: 1000px;
+  min-height: 200px;
   width: 100%;
   height: 50%;
 }
