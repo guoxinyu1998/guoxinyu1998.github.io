@@ -5,12 +5,26 @@
     
     <entry>
       <title>Butterfly主题高级配置</title>
-      <link href="/posts/55638/"/>
-      <url>/posts/55638/</url>
+      <link href="/posts/3/"/>
+      <url>/posts/3/</url>
       
         <content type="html"><![CDATA[]]></content>
       
       
+      <categories>
+          
+          <category> Butterfly主题配置 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Butterfly </tag>
+            
+            <tag> vercel </tag>
+            
+        </tags>
       
     </entry>
     
@@ -34,8 +48,6 @@
         <tags>
             
             <tag> Butterfly </tag>
-            
-            <tag> vercel </tag>
             
         </tags>
       
