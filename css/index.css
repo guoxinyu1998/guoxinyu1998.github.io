@@ -3405,12 +3405,6 @@ li.categoryBar-list-item:nth-child(4) {
   background: -ms-linear-gradient(rgba(0, 0, 0, 0.4) 25%, rgba(200,16 , 16, 0) 100%);
   background: linear-gradient(rgba(0, 0, 0, 0.4) 25%, rgba(200,16 , 16, 0) 100%);
 }
-li.categoryBar-list-item:nth-child(5) {
-  background: url('https://npm.elemecdn.com/akilar-candyassets/image/cover5.webp');
-}
-li.categoryBar-list-item:nth-child(6) {
-  background: url('https://npm.elemecdn.com/akilar-candyassets/image/cover6.webp');
-}
 li.categoryBar-list-item:nth-child(1)>span::after {
   content: !important;
 }
