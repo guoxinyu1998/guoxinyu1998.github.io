@@ -6769,35 +6769,37 @@ svg.icon {
      fill: currentColor;
      overflow: hidden;
   }
+/*日间透明度设置*/
 /* 首页文章卡片 */
 #recent-posts > .recent-post-item{
-    background:rgba(255, 255, 255, 0.2);
+  background:rgba(255, 255, 255, 0.9);
 }
 /* 首页侧栏卡片 */
 .card-widget{
-  background:rgba(255, 255, 255, 0.2)!important;
+background:rgba(255, 255, 255, 0.9)!important;
 }
 /* 文章页面正文背景 */
 div#post{
-  background: rgba(255, 255, 255, 0.2);
+background: rgba(255, 255, 255, 0.9);
 }
 /* 分页页面 */
 div#page{
-  background: rgba(255, 255, 255, 0.2);
+background: rgba(255, 255, 255, 0.9);
 }
 /* 归档页面 */
 div#archive{
-  background: rgba(255, 255, 255, 0.2);
+background: rgba(255, 255, 255, 0.9);
 }
 /* 标签页面 */
 div#tag{
-  background: rgba(255, 255, 255, 0.2);
+background: rgba(255, 255, 255, 0.9);
 }
 /* 分类页面 */
 div#category{
-  background: rgba(255, 255, 255, 0.2);
+background: rgba(255, 255, 255, 0.9);
 }
 
+/*一图流*/
 /* 页脚透明 */
 #footer{
   background: transparent!important;
@@ -6823,6 +6825,51 @@ div#category{
   #page-header::before{
     background: transparent!important;
     }
+
+
+
+
+/*夜间模式透明度*/
+[data-theme="dark"]
+  #aside-content .card-widget{
+      background: rgba(0, 0, 0, 0.5)!important;
+    }
+[data-theme="dark"]
+  div#post{
+    background: rgba(0, 0, 0, 0.5)!important;
+    }
+
+/*阅读模式*/
+.read-mode #aside-content .card-widget{
+    background: rgba(158, 204, 171, 0.5)!important;
+    }
+.read-mode div#post{
+    background: rgba(158, 204, 171, 0.5)!important;
+    }
+
+
+
+/*阅读模式透明度*/
+.read-mode #aside-content .card-widget{
+  background: rgba(158, 204, 171, 0.5)!important;
+}
+.read-mode div#post{
+background: rgba(158, 204, 171, 0.5)!important;
+}
+
+
+
+/*夜间模式下的阅读模式透明度*/
+[data-theme="dark"]
+  .read-mode #aside-content .card-widget{
+        background: rgba(0, 0, 0, 0.5)!important;
+        color: #ffffff;
+      }
+[data-theme="dark"]  
+  .read-mode div#post{
+      background: rgba(0, 0, 0, 0.5)!important;
+      color: #ffffff;
+      }
 .search-dialog {
   position: fixed;
   top: 100px;
