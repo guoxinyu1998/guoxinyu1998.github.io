@@ -1411,7 +1411,7 @@ canvas:not(#ribbon-canvas),
   }
 }
 :root {
-  --global-font-size: 14px;
+  --global-font-size: Zhi Mang Xing;
   --global-bg: #fff;
   --font-color: #4c4948;
   --hr-border: #d2ebfd;
@@ -6539,9 +6539,9 @@ blockquote.pullquote.right {
     font-display: swap;
   }
   
-h1#site-title {
+/* h1#site-title {
     font-family: 'Candyhome', -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Lato, Roboto, "PingFang SC", "STZhongsong", "Lantinghei SC", sans-serif;
-}
+} */
 
 /* div#post {
     font-family: 'Zhi Mang Xing', -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Lato, Roboto, "PingFang SC", "STZhongsong", "Lantinghei SC", sans-serif;
@@ -6567,9 +6567,9 @@ a.article-title {
 div.article-meta-wrap {
     font-family: 'Zhi Mang Xing', -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Lato, Roboto, "PingFang SC", "STZhongsong", "Lantinghei SC", sans-serif;
 } */
-html {
+/* html {
     font-family: 'Zhi Mang Xing', -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Lato, Roboto, "PingFang SC", "STZhongsong", "Lantinghei SC", sans-serif;
-}
+} */
 .search-dialog {
   position: fixed;
   top: 100px;
