@@ -6992,8 +6992,8 @@ svg.icon.festival-decoration {
 #page-header,
 #web_bg,
 img.post_bg {
-    -webkit-animation: imgblur 10s 1 ease-in-out;
-    animation: imgblur 10s 1 ease-in-out;
+    -webkit-animation: imgblur 1s 1 ease-in-out;
+    animation: imgblur 1s 1 ease-in-out;
 }
 @keyframes imgblur {
   0% {
