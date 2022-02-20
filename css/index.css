@@ -7312,7 +7312,7 @@ img.post_bg {
 
 
     [data-theme="dark"] .tk-master .tk-content::before {
-      border-left: 15px solid #1c1c1c;
+      border-left: 15px solid #000;
       border-right: 0px solid transparent;
     }
   }
