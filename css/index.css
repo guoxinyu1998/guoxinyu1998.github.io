@@ -6843,32 +6843,25 @@ background: rgba(255, 255, 255, 0.9);
 /*夜间模式透明度*/
 [data-theme="dark"]
   #recent-posts > .recent-post-item{
-      background:rgba(0, 0, 0, 0.5);
+      background:rgba(35, 35, 35,.5)!important;
     }
 [data-theme="dark"]
   #aside-content .card-widget{
-      background: rgba(0, 0, 0, 0.5)!important;
+      background: rgba(255, 255, 255,.7)!important;
     }
 [data-theme="dark"]
-  div#post{
-      background: rgba(0, 0, 0, 0.5)!important;
+  div#archive{
+      background: rgba(35, 35, 35, 0.5);
     }
 [data-theme="dark"]
   div#page{
-      background: rgba(0, 0, 0, 0.5);
-    }  
-[data-theme="dark"]
-  div#archive{
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(35, 35, 35, 0.5);
+  }
+ [data-theme="dark"]
+  div#post{
+      background: rgba(35, 35, 35, 0.5);
     }
-[data-theme="dark"]
-  div#tag{
-      background: rgba(0, 0, 0, 0.5);
-    }  
-[data-theme="dark"]
-  div#category{
-      background: rgba(0, 0, 0, 0.5);
-    }  
+
   
 
 /*阅读模式*/
@@ -6894,12 +6887,12 @@ background: rgba(158, 204, 171, 0.5)!important;
 /*夜间模式下的阅读模式透明度*/
 [data-theme="dark"]
   .read-mode #aside-content .card-widget{
-        background: rgba(0, 0, 0, 0.5)!important;
+        background: rgba(255, 255, 255, 0.7)!important;
         color: #ffffff;
       }
 [data-theme="dark"]  
   .read-mode div#post{
-      background: rgba(0, 0, 0, 0.5)!important;
+      background: rgba(35, 35, 35, 0.5)!important;
       color: #ffffff;
       }
 /*评论框侧面弹出效果*/
