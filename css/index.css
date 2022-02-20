@@ -6869,11 +6869,6 @@ background: rgba(255, 255, 255, 0.9);
   div#post{
       background: rgba(35, 35, 35, 0.5);
     }
-[data-theme=dark]
-  .tk-content {
-      background: #000;
-      color: #fff;
-    }
 
   
 
@@ -7242,7 +7237,7 @@ img.post_bg {
   
   /* 夜间模式配色，具体比照上方默认模式class */
   [data-theme="dark"] .tk-content {
-    background: #1d1d1d;
+    background: #000;
     color: #fff;
   }
   [data-theme="dark"] .tk-content a {
@@ -7252,7 +7247,7 @@ img.post_bg {
     border-right: 15px solid #000;
   }
   [data-theme="dark"] .tk-master .tk-content {
-    background: #1c1c1c;
+    background: #000;
     color: #fff;
   }
   [data-theme="dark"] .tk-master .tk-content a {
@@ -7262,7 +7257,7 @@ img.post_bg {
     border-top: 2px solid transparent;
     border-bottom: 20px solid transparent;
     border-right: 15px solid #000;
-    border-left: 0px solid transparent;
+    border-left: 0px solid #000;
   }
 
   /* new*/
