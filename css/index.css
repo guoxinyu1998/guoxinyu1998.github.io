@@ -5084,11 +5084,11 @@ div#quit-box {
 .post-reward .reward-button .reward-main {
   position: absolute;
   bottom: 40px;
-  left: -25%;
+  left: 0;
   z-index: 100;
   display: none;
   padding: 0 0 15px;
-  width: 150%;
+  width: 100%;
 }
 .post-reward .reward-button .reward-main .reward-all {
   display: inline-block;
