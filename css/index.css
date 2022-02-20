@@ -7256,8 +7256,8 @@ img.post_bg {
   [data-theme="dark"] .tk-master .tk-content::before {
     border-top: 2px solid transparent;
     border-bottom: 20px solid transparent;
-    border-right: 15px solid #000;
-    border-left: 0px solid #000;
+    border-right: 0px solid transparent;
+    border-left: 15px solid #000;
   }
 
   /* new*/
