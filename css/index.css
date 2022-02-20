@@ -6955,6 +6955,38 @@ div#quit-board.fixedcomment {
   div#quit-board.fixedcomment {
     background: rgba(147, 146, 128, 0.3);
   }
+/*封面节日挂件*/
+svg.icon.festival-decoration {
+    width: 3em;
+    height: 3em;
+    left: 2em;
+    margin-bottom: -3em;
+    display: block;
+    z-index: 100;
+    position: relative;
+    -webkit-animation: sway 1s infinite ease-in-out alternate;
+    animation: sway 1s infinite ease-in-out alternate;
+}
+@-webkit-keyframes sway {
+  0% {
+    -webkit-transform: rotate(20deg);
+    transform-origin: center top;
+  }
+  100% {
+    -webkit-transform: rotate(-20deg);
+    transform-origin: center top;
+  }
+}
+@keyframes sway {
+  0% {
+    transform: rotate(20deg);
+    transform-origin: center top;
+  }
+  100% {
+    transform: rotate(-20deg);
+    transform-origin: center top;
+  }
+}
 .search-dialog {
   position: fixed;
   top: 100px;
