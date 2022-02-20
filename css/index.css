@@ -6846,9 +6846,13 @@ background: rgba(255, 255, 255, 0.9);
       background:rgba(35, 35, 35,.5)!important;
     }
 [data-theme="dark"]
-  #aside-content .card-widget:not(.card-info) {
+  .card-widget:not(.card-info) {
       color: rgba(255, 255, 255,.7)!important;
     }
+[data-theme=dark]
+  div.card-widget {
+      background: rgba(35,35,35,.5)!important;
+  }
 [data-theme="dark"]
   div#archive{
       background: rgba(35, 35, 35, 0.5);
