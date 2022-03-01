@@ -3436,7 +3436,7 @@ span.categoryBar-list-count::after {
   right: -100%;
 }
 li.categoryBar-list-item:nth-child(1) {
-  background: url('https://npm.elemecdn.com/akilar-candyassets/image/cover1.webp');
+  background: url('https://cdn.jsdelivr.net/gh/guoxinyu1998/blogimg1/backandcover/sc1.jpg');
 }
 li.categoryBar-list-item:nth-child(2) {
   background: #abcdef;
