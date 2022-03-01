@@ -7034,8 +7034,8 @@ svg.icon.festival-decoration {
 #page-header,
 #web_bg,
 img.post_bg {
-    -webkit-animation: imgblur 1s 1 ease-in-out;
-    animation: imgblur 1s 1 ease-in-out;
+    -webkit-animation: imgblur 2s 1 ease-in-out;
+    animation: imgblur 2s 1 ease-in-out;
 }
 @keyframes imgblur {
   0% {
@@ -7162,7 +7162,7 @@ img.post_bg {
 /*twikoo美化教程*/
 /* 自定义twikoo评论输入框高度 */
 .tk-input[data-v-619b4c52] .el-textarea__inner {
-    height: 130px !important;
+    height: 300px !important;
   }
   /* 输入评论时自动隐藏输入框背景图片 */
   .tk-input[data-v-619b4c52] .el-textarea__inner:focus {
