@@ -4,6 +4,85 @@
   
     
     <entry>
+      <title>C++自学路线及书籍推荐</title>
+      <link href="/posts/11/"/>
+      <url>/posts/11/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> 👨‍💻C++自学 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 👨‍💻C++ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>20年老中医，专治各种疑难杂症</title>
+      <link href="/posts/9/"/>
+      <url>/posts/9/</url>
+      
+        <content type="html"><![CDATA[<h4 id="Chrome-Windows-无法登录">Chrome Windows 无法登录</h4><div class="note warning modern"><p>科学上网是前提</p></div><p>Windows端的chorme在登录时可能会出现以下情况：</p><p><img src="https://cdn.jsdelivr.net/gh/guoxinyu1998/blogimg1/blogimg/9.1.png" alt="9.1"></p><p>解决办法：</p><div class="note blue icon modern"><i class="note-icon fas fa-bullhorn"></i><p>桌面右键chrome图标，找到<code>chrome_proxy.exe</code>，双击打开，科学上网后，直接登录即可……</p></div><p><img src="https://cdn.jsdelivr.net/gh/guoxinyu1998/blogimg1/blogimg/9.2.png" alt="9.2"></p><hr><h4 id="部分应用无法使用wifi">部分应用无法使用wifi</h4><p>前一阵子我一个朋友说，明明wifi网速很快，但自己的腾讯视频却无法使用wifi，而用数据却可以。最怪异的是其他应用都可以正常使用wifi……</p><p>出现这种问题的原因可能在于：wifi连接之后，会自动为你分配一个DNS地址，但该DNS可能对部分应用不太友好，一般来说更换DNS地址能有效解决该问题。</p><details class="folding-tag" pink><summary> 个人搜集的一些DSN地址，点击查看详情 </summary>              <div class='content'>              <div class="note info modern"><p>注意，不同地区可能速度快慢不同，在北京地区，速度从上到下递减</p></div><p>阿里：<br>223.5.5.5<br>223.6.6.6<br>oneDns：<br>117.50.10.10<br>117.50.22.22<br>117.20.11.11<br>北京电信 DNS ：<br>219.141.136.10<br>219.141.140.10<br>北京联通 DNS ：<br>123.123.123.123<br>123.123.123.124<br>202.106.0.20<br>202.106.195.68<br>腾讯：<br>119.29.29.29<br>182.254.116.116</p>              </div>            </details><p>手机端修改DNS地址：</p><div class="note blue icon modern"><i class="note-icon fas fa-bullhorn"></i><p>由于手机型号不同，此处以小米手机为例</p></div><p>找到对应的wifi，点击右侧的<code>&gt;</code>，出现如下界面：</p><p><img src="https://cdn.jsdelivr.net/gh/guoxinyu1998/blogimg1/blogimg/9.3.jpg" alt="9.3"></p><p>将<code>IP设置</code>选为静态，修改<code>DNS</code>1即可。</p><hr>]]></content>
+      
+      
+      <categories>
+          
+          <category> 🧐疑难杂症 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 💯life </tag>
+            
+            <tag> 👾problem </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Few-shot Learning</title>
+      <link href="/posts/10/"/>
+      <url>/posts/10/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> 📚Few-shot Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 🌌Machine Learning </tag>
+            
+            <tag> 🪐Meta-learning </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>github+typora+picgo优雅解决博客中的图片问题</title>
       <link href="/posts/8/"/>
       <url>/posts/8/</url>
@@ -97,7 +176,7 @@
       <link href="/posts/5/"/>
       <url>/posts/5/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<p>有空的时候再写吧……</p>]]></content>
       
       
       <categories>
