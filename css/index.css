@@ -3450,6 +3450,9 @@ li.categoryBar-list-item:nth-child(4) {
 li.categoryBar-list-item:nth-child(5) {
   background: url('https://cdn.jsdelivr.net/gh/guoxinyu1998/blogimg1/backandcover/c14.jpg');
 }
+li.categoryBar-list-item:nth-child(6) {
+  background: url('https://cdn.jsdelivr.net/gh/guoxinyu1998/blogimg1/backandcover/pcday1.jpg');
+}
 li.categoryBar-list-item:nth-child(1)>span::after {
   content: !important;
 }
@@ -6901,11 +6904,14 @@ background: rgba(255, 255, 255, 0.9);
   div#page{
       background: rgba(35, 35, 35, 0.5);
     }
- [data-theme="dark"]
+[data-theme="dark"]
   div#post{
       background: rgba(35, 35, 35, 0.5);
     }
-
+[data-theme=dark] 
+  div#category {
+      background: rgba(35,35,35,0.5);
+  }
   
 
 /*阅读模式*/
