@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>Few-Shot Learning with Global Class Representations</title>
+      <link href="/posts/FSL14/"/>
+      <url>/posts/FSL14/</url>
+      
+        <content type="html"><![CDATA[<details class="folding-tag" ><summary> 论文相关信息，点击查看详情 </summary>              <div class='content'>              <p><a href="https://www.weiranhuang.com/publications/pdf/globalfsl2019.pdf">论文地址</a></p><p><a href="https://github.com/tiangeluo/fsl-global">论文代码</a></p><p><a href="https://zhuanlan.zhihu.com/p/78743300">论文解读1</a></p><p><a href="https://blog.csdn.net/cp_oldy/article/details/103283868">论文解读2</a></p><p><a href="https://blog.csdn.net/qq_36104364/article/details/108102436">论文解读3</a></p>              </div>            </details><p>传统小样本学习的方法，通常只使用基类数据进行学习。由于基类和新类之间<strong>存在严重的样本不均衡问题</strong>，导致容易过拟合到基类数据，这一点在广义小样本问题中尤为突出。通过<strong>在训练阶段引入新类的数据</strong>，我们同时对基类和新类学习全局类别表征，并利用样本生成策略解决类别不均衡问题，有效防止训练模型在基类数据中出现过拟合的现象，从而提高了模型泛化到新类的能力。</p><p><img src="https://cdn.jsdelivr.net/gh/guoxinyu1998/blogimg1/blogimg/FSL14_1.jpg" alt="FSL14_1"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 📚Few-shot Learning </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 🌌Machine Learning </tag>
+            
+            <tag> 🪐Meta-learning </tag>
+            
+            <tag> 📝Text Classification </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>手机端部分应用无法使用wifi</title>
       <link href="/posts/ynzz3/"/>
       <url>/posts/ynzz3/</url>
@@ -242,11 +271,11 @@
             
             <tag> 🌠PicGo </tag>
             
+            <tag> 🏷️外挂标签 </tag>
+            
             <tag> 🔠markdown </tag>
             
             <tag> ➕latex </tag>
-            
-            <tag> 🏷️外挂标签 </tag>
             
         </tags>
       
