@@ -1,0 +1,743 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>SALNet-Semi-supervised-Few-Shot-Text-Classification-with-Attention-based-Lexicon-Construction | Guo Xinyu's blog</title><meta name="keywords" content="🌌Machine Learning,🪐Meta-learning,📝Text Classification,👀Attention"><meta name="author" content="郭新宇"><meta name="copyright" content="郭新宇"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="提出了一个简单而有效的用于few-shot文本分类的半监督bootstrap学习框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SALNet-Semi-supervised-Few-Shot-Text-Classification-with-Attention-based-Lexicon-Construction">
+<meta property="og:url" content="https://gxystruggle.top/posts/FSL23/index.html">
+<meta property="og:site_name" content="Guo Xinyu&#39;s blog">
+<meta property="og:description" content="提出了一个简单而有效的用于few-shot文本分类的半监督bootstrap学习框架">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://npm.elemecdn.com/gxy-assets/backandcover/39.jpg">
+<meta property="article:published_time" content="2022-05-02T01:51:01.000Z">
+<meta property="article:modified_time" content="2022-05-19T02:38:49.018Z">
+<meta property="article:author" content="郭新宇">
+<meta property="article:tag" content="🌌Machine Learning">
+<meta property="article:tag" content="🪐Meta-learning">
+<meta property="article:tag" content="📝Text Classification">
+<meta property="article:tag" content="👀Attention">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://npm.elemecdn.com/gxy-assets/backandcover/39.jpg"><link rel="shortcut icon" href="https://npm.elemecdn.com/gxy-assets/blogbuild/ironman.png"><link rel="canonical" href="https://gxystruggle.top/posts/FSL23/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="baidu-site-verification" content="o966R8pi1rSGlykr"/><link rel="manifest" href="/manifest.json"/><meta name="msapplication-TileColor" content="#82284e"/><link rel="apple-touch-icon" sizes="180x180" href="/img/icons/apple-touch-icon.png"/><link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32x32.png"/><link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png"/><link rel="mask-icon" href="/img/icons/safari-pinned-tab.svg" color="#5bbad5"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://npm.elemecdn.com/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?65390daedf5e6542349db83925e31dbd";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":100},
+  copy: {
+    success: '我已经到了你的剪切板里，快去复制吧！',
+    error: '你的剪切板有点难搞哦，复制失败了！',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 郭新宇","link":"链接: ","source":"来源: Guo Xinyu's blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    justifiedGallery: {
+      js: 'https://npm.elemecdn.com/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://npm.elemecdn.com/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SALNet-Semi-supervised-Few-Shot-Text-Classification-with-Attention-based-Lexicon-Construction',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-19 10:38:49'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-clock/lib/clock.min.css" /><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-filter-gitcalendar/lib/gitcalendar.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.0.0"></head><body><div id="loading-box"><div class="gear-loader"><div class="gear-loader_overlay"></div><div class="gear-loader_cogs"><div class="gear-loader_cogs__top"><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_part"></div><div class="gear-top_hole"></div></div><div class="gear-loader_cogs__left"><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_part"></div><div class="gear-left_hole"></div></div><div class="gear-loader_cogs__bottom"><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_part"></div><div class="gear-bottom_hole"></div></div></div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://npm.elemecdn.com/gxy-assets/blogbuild/%E5%A4%B4%E5%83%8F.jpg" onerror="onerror=null;src='https://npm.elemecdn.com/gxy-assets/blogbuild/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-shouye"></use></svg><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-shijianzhou"></use></svg><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-biaoqian"></use></svg><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-fenlei"></use></svg><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhinengduomeitiAPI"></use></svg><span> 生活</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/movies/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-dianying"></use></svg><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-shuji"></use></svg><span> 书单</span></a></li><li><a class="site-page child" href="/music/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-yinle"></use></svg><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-box"></use></svg><span> 魔法盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-shuoshuo"></use></svg><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-xiangce"></use></svg><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/contact/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-liuyanban"></use></svg><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wode"></use></svg><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://npm.elemecdn.com/gxy-assets/backandcover/39.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Guo Xinyu's blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-shouye"></use></svg><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-shijianzhou"></use></svg><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-biaoqian"></use></svg><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-fenlei"></use></svg><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhinengduomeitiAPI"></use></svg><span> 生活</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/movies/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-dianying"></use></svg><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-shuji"></use></svg><span> 书单</span></a></li><li><a class="site-page child" href="/music/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-yinle"></use></svg><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/box/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-box"></use></svg><span> 魔法盒</span></a></div><div class="menus_item"><a class="site-page" href="/talk/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-shuoshuo"></use></svg><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-xiangce"></use></svg><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/contact/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-liuyanban"></use></svg><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wode"></use></svg><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">SALNet-Semi-supervised-Few-Shot-Text-Classification-with-Attention-based-Lexicon-Construction</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-02T01:51:01.000Z" title="发表于 2022-05-02 09:51:01">2022-05-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-19T02:38:49.018Z" title="更新于 2022-05-19 10:38:49">2022-05-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%F0%9F%93%9AFew-shot-Learning/">📚Few-shot Learning</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="SALNet-Semi-supervised-Few-Shot-Text-Classification-with-Attention-based-Lexicon-Construction"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><details class="folding-tag" ><summary> 论文相关信息，点击查看详情 </summary>
+              <div class='content'>
+              <p>2021 AAAI论文</p><p><a target="_blank" rel="noopener" href="https://ojs.aaai.org/index.php/AAAI/article/view/17558">论文地址</a></p><p><a target="_blank" rel="noopener" href="https://github.com/HiitLee/SALNet">论文代码</a></p>
+              </div>
+            </details>
+<h3 id="Abstract-18">Abstract</h3>
+<ul>
+<li>提出了一个用于few-shot文本分类的半监督bootstrap[1]学习框架。</li>
+<li><strong>从少量的初始数据中，框架通过使用来自基于LSTM训练的分类器的注意力权重来获得更大的可靠训练数据集</strong>。首先<strong>使用注意力机制从给定的标记数据集训练一个基于LSTM的文本分类器</strong>。然后<strong>为每个类别收集一组单词，称为词典（lexicon）</strong>，它应该是基于为分类任务计算的注意力权重的<strong>每个类别的代表性单词集</strong>。使用由分类器和构建的词典的组合所标记的新数据来引导分类器，以提高预测精度。</li>
+<li>本文方法在四个公开可用的基准数据集上优于以前的最先进的方法，包括用于few-shot文本分类任务的半监督学习算法和预处理算法。</li>
+<li>此外，本文还证实了所构建的词典是足够可靠的，并且显著提高了原始分类器的性能。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/MrLevo520/article/details/53189615?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162618173216780264024782%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=162618173216780264024782&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-53189615.first_rank_v2_pc_rank_v29_1&amp;utm_term=bootstrap%E7%AE%97%E6%B3%95&amp;spm=1018.2226.3001.4187">bootstrap</a></p>
+<h3 id="Introduction-17">Introduction</h3>
+<p>近年来，基于深度学习的文本分类器在各种自然语言处理任务中取得了很大的成功。然而，一个关键的限制是**，当没有足够的标记数据时，这些有效的分类器很难实现**。因为需要人为进行标记，所以获得合理数量的标记数据通常是困难和昂贵的。另一方面，传统的文本分类方法是使用domain lexicon进行分类，因为我们可以使用该词典正确地决定类别，并且和训练数据的大小是不相关的。解决数据稀疏问题的方法是对每个领域进行词汇化，并将其用于文本分类。另一方面，为一个新的领域自动生成一个高质量的词典并不容易。**半监督学习[1]是一种在训练中同时使用少量已标记数据和大量未标记数据的方法。**传统的基于神经网络的SSL方法仅使用分类器的高置信度预测或利用不同分类器之间的一致性进行pseudo-learning。这些方法会导致训练过程中分类错误不断累积。因此，在半监督下训练用于文本分类的分类器仍然具有挑战性，因为它仍然需要非常多的带标签的训练数据才能实现令人满意的性能。</p>
+<p><strong>本文将深度学习分类器与词典相结合，解决标注数据稀疏问题</strong>。<strong>关于注意力机制，重要词对于文本分类通常具有高的注意力权重</strong>。作者将注意力层可视化，并从经验上证实注意力机制确实对能够代表输入数据类别的单词赋予了更高的权重。还观察到，尽管最初训练的分类器的性能很差，但分类器对以高置信度预测的数据的重要词的权重更高。例如，以下是一个IMDB审查数据集上注意力机制的可视化示例。<strong>从注意力机制中收集这些高权重的单词，并为半监督分类生成一组单词(称为词典)</strong>。</p>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_1.png" alt="FSL23_1"></p>
+<p>图1：使用基于LSTM的分类器对注意机制进行可视化，该分类器使用很少的标记数据进行训练。较暗的颜色表示较高的注意力权重。</p>
+<p>本文提出了一种基于注意力的词典构建的半监督few-shot文本分类方法。我们的方法与neural bootstrapping方法密切相关。<strong>bootstrapping的一个主要缺点是，如果最初训练的分类器具有非常低的性能，那么新的训练集变得不可靠，因为它可能包含大量错误标记的数据。而作者通过使用一组词来克服这个问题，这些词可以使用模式匹配来明确地预测未标记的数据</strong>。</p>
+<details class="folding-tag" ><summary> 本文的主要贡献 </summary>
+              <div class='content'>
+              <ul><li>提出了一个半监督bootstrap学习框架，该框架利用了由注意机制构建的词汇，并且该方法从最初训练的分类器提高了至少1%到8%的准确率。</li><li>通过将原始分类器的准确率提高至少1%到9%，来验证构建的词典的有效性。</li><li>当有极小的标记数据集时，我们通过实验证明方法的有效性。</li></ul>
+              </div>
+            </details>
+<h3 id="Background">Background</h3>
+<p>论文中讨论的神经网络模型的背景知识。</p>
+<p>1.<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA4Mzc0NjkwNA==&amp;mid=2650783542&amp;idx=1&amp;sn=3846652d54d48e315e31b59507e34e9e&amp;chksm=87fad601b08d5f17f41b27bb21829ed2c2e511cf2049ba6f5c7244c6e4e1bd7144715faa8f67&amp;mpshare=1&amp;scene=1&amp;srcid=1113JZIMxK3XhM9ViyBbYR76#rd%20%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%E2%80%94%20%E7%89%88%E6%9D%83%E5%A3%B0%E6%98%8E%EF%BC%9A%E6%9C%AC%E6%96%87%E4%B8%BACSDN%E5%8D%9A%E4%B8%BB%E3%80%8CMicrostrong0305%E3%80%8D%E7%9A%84%E5%8E%9F%E5%88%9B%E6%96%87%E7%AB%A0%EF%BC%8C%E9%81%B5%E5%BE%AACC%204.0%20BY-SA%E7%89%88%E6%9D%83%E5%8D%8F%E8%AE%AE%EF%BC%8C%E8%BD%AC%E8%BD%BD%E8%AF%B7%E9%99%84%E4%B8%8A%E5%8E%9F%E6%96%87%E5%87%BA%E5%A4%84%E9%93%BE%E6%8E%A5%E5%8F%8A%E6%9C%AC%E5%A3%B0%E6%98%8E%E3%80%82%20%E5%8E%9F%E6%96%87%E9%93%BE%E6%8E%A5%EF%BC%9Ahttps://blog.csdn.net/program_developer/article/details/77896069">注意力机制1</a></p>
+<p>2.<a target="_blank" rel="noopener" href="https://blog.csdn.net/longxinchen_ml/article/details/86533005?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162391619516780255262270%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=162391619516780255262270&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_v2~rank_v29-1-86533005.pc_search_result_cache&amp;utm_term=transformer&amp;spm=1018.2226.3001.4187">transformer</a></p>
+<h3 id="Methods">Methods</h3>
+<p>所提出的方法包括以下步骤:</p>
+<ol>
+<li>
+<p>从给定的一个非常小的带标记数据集中创建一个基本分类器。我们训练基本分类器来过拟合训练集。分类器必须包含一个注意力机制，为每个类别收集关键词。</p>
+</li>
+<li>
+<p>在未标记数据集U上重新运行具有注意力机制的基本分类器</p>
+</li>
+<li>
+<p>获取一组预测U的关键词，我们称之为词典；换句话说，我们使用U和分类器注意力权重来为关键词的集合创建词典。</p>
+</li>
+<li>
+<p>使用训练好的分类器和词典预测U中的标签。</p>
+</li>
+<li>
+<p>将新的标记数据添加到训练集中，并从第一步开始再次训练分类器。</p>
+</li>
+<li>
+<p>重复上述过程，直到pseudo-labeled数据不再添加到训练集中。每个epoch中，使用扩充的数据集，我们在所有的训练中 do early-stopping[1]。</p>
+</li>
+</ol>
+<p>1.<a target="_blank" rel="noopener" href="https://www.datalearner.com/blog/1051537860479157">early-stopping</a></p>
+<hr>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_2.png" alt="FSL23_2"></p>
+<p><em>图 2：使用基于注意的分类器和词库。设置t1=  3和t2= 4，并设置阈值为0.9来验证高置信度。</em></p>
+<hr>
+<p>图2是模型概述。使用基于注意的LSTM来构建一组用于文本分类的关键词。基于注意力的LSTM根据每个类别中单词的注意力权重提取一组相关单词。Ruder和Plank  (2018)表明，相对置信度比绝对置信度更稳健，因此，对于每个类，根据分类器选择具有最高置信度的前n个未标记数据。然后，对于所选的n个数据中的每一个，选择具有最高注意力权重的m个单词，生成n个包含m个单词的集合。把收集到的词集作为对应类的词典。表1显示了AG  News数据集中每个词典中的关键词的示例，关键词是从最初训练的分类器中获得的。</p>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_3.png" alt="FSL23_3"></p>
+<p>**在未标注的数据中计算对应于每一类词典的匹配词的数量。然后，将匹配词的数量作为对应类的预测置信度，并将置信度最高的类作为预测标签。**如果有两个类之间匹配单词的数量相等，那么忽略两个类，并且不预测标签，因为有预测错误的可能性。</p>
+<p>有两种pseudo-labeling的情况，如图2所示。（结合图2来理解）</p>
+<ul>
+<li>
+<p>case1:如果分类器预对未标注数据的预测结果具有高置信度（图2中是&gt;0.9），且词典至少有t1个单词匹配，则根据分类器的预测对数据进行标注。在case1中，使用词典在分类器的预测中选择正确的标签。</p>
+</li>
+<li>
+<p>case2:如果词典至少有t2个匹配的单词，那么根据词典预测对数据进行标记。换句话说，在case2中，对于分类器以低置信度错误预测的未标记数据，使用词典来决定标签</p>
+</li>
+</ul>
+<p>如果在SALNet中使用两个以上的分类器，可以通过对额外的分类器重复情况1和情况2的过程来添加pseudo-labeled数据。一旦在pseudo-labeled后获得了新的数据集，<strong>新的数据集在每个类中可能有不同数量的数据。这种不平衡可能会使分类器过拟合更大的数据类别。通过从每个类中选择相同数量的数据（最小类中的数据数量）来解决这个问题</strong>，进行下一个训练步骤。</p>
+<h3 id="Experimental-Setup">Experimental Setup</h3>
+<h4 id="Datasets-3">Datasets</h4>
+<p>四个基准数据集</p>
+<ul>
+<li>IMDB评论</li>
+<li>AG News</li>
+<li>Y ahoo! Answers</li>
+<li>DBpedia</li>
+</ul>
+<p><strong>只取原始训练数据的1%作为随机抽样的标记数据</strong>。在新的标记数据集中，使用85%的数据作为训练集，15%的数据作为开发集。删除剩余99%数据的标签。所有数据都有均衡的类别分布。使用开发集来确定每个epoch的early-stopping。表2给出了数据分布。</p>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_4.png" alt="FSL23_4"></p>
+<h4 id="Hyperparameters">Hyperparameters</h4>
+<p><strong>使用预先训练的GloVe作为单词嵌入</strong>，由于<strong>基于注意的LSTM和TextCNN</strong>简单且性能高，选择这两个基本模型作为分类器，TextCNN由大小为3、4、5的过滤器窗口和100个特征映射组成，每个特征映射后面是ReLU激活和max-pooling。基于注意力的LSTM由300个隐藏大小组成。以128的batch大小训练所有的分类器，并使用Adam优化器进行优化，学习率分别为0.001和0.005。</p>
+<p>SALNet方法使用的词典大小为50，使用3个(=t1)和4个(=t2)匹配词来对未标记数据进行预测。关于词典的大小，研究表明，当数据量小或者类的数量大时，最好每个类有一个小的词典。在匹配词方面，作者发现用每个类中的一两个匹配词模糊的预测了数据的类别。例如，使用一个匹配单词错误地将下面来自Yelp review dataset的样本预测为积极的，因为它包含一个积极的单词“good”。</p>
+<p><em>Even though Midler and Alvarado give good performances this film really drags and I was bored silly by the end</em></p>
+<p>因此可以假设，<strong>对于正确识别一类未标记数据，最好是有三个或更多的匹配词</strong>，而不是和词库相关的的一个或两个匹配词。</p>
+<h4 id="Baselines-5">Baselines</h4>
+<p>将我们的方法<strong>与传统SSL和三个最先进的基线进行比较</strong>。对于所有的bootstrapping方法，验证<strong>高置信度的阈值设置为0.9</strong></p>
+<ul>
+<li>
+<p>Self-training ：Self-training是SSL最简单的方法之一。由于源代码不公开，我们使用他们的算法来实现这个方法。</p>
+</li>
+<li>
+<p>Delta-training(Jo and Cinarel 2019)：由于代码没有发布，我们基于他们论文中提出的算法自己实现它。由于包括我们的方法在内的所有基线都使用高置信度作为阈值，我们在delta-training中使用高置信度来保证实验的公平性。</p>
+</li>
+<li>
+<p>VAMPIRE (Gururangan et al. 2019)使用了和他们论文中实验相同的超参数。</p>
+</li>
+<li>
+<p>BERT (Devlin et al. 2019)使用预先训练的BERT-based-uncased-model模型，并对其进行了微调，用于文本分类。</p>
+</li>
+</ul>
+<h3 id="Experimental-Results-and-Analysis">Experimental Results and Analysis</h3>
+<h4 id="Main-Results">Main Results</h4>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_5.png" alt="FSL23_5"></p>
+<p>表3：与基线性能(测试精度(%)的比较。每个结果都是五次随机抽样的平均值，括号内为标准偏差。</p>
+<hr>
+<p>表3证明了<strong>本文的方法优于所有的基线，特别是初始训练的分类器的性能不到80%时</strong>。self-tarining 和delta-training 等半监督bootstrapping方法仅使用分类器的高置信度预测，这些方法在初始训练的分类器的性能低于75%时表现出较低的性能。<strong>结果表明，bootstrapping 算法的缺点是只有在初始训练的分类器表现良好时才有效</strong>。另一方面，与其他bootstrapping算法相比，SALNet表现出了相对稳健的性能。在Yahoo! Answer上的性能得到明显提升，数据数量较少，分类器的预测具有很高的可信度。在DBpedia上，由于最初训练的分类器的性能已经超过94%，因此性能的提升非常小。</p>
+<p>可以观察到，通过对预先训练的BERT进行微调，在Yahoo! Answer和DBpedia上实现了最优的性能。回想一下，BERT使用词块标记化并为每个词生成上下文化向量，而GloVe将一个词编码为固定大小的向量表示。因此，每个预训练模型可能根据数据集的特征执行不同的操作。重要的是，与需要大量计算资源和大规模数据集的预训练BERT相比，本文的低资源方法在某些领域的性能优于预训练BERT。此外，<strong>用BERT作为分类器的SALNet在四个基准数据集上的性能优于原始BERT和用BERT进行的self-training</strong>。无论何时获得额外pseudo-labeled 数据，SALNet中的BERT都会重复微调过程。</p>
+<h4 id="Experiments-for-few-shot-learning">Experiments for few-shot learning</h4>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_6.png" alt="FSL23_6"></p>
+<p>表4：使用极少数标记数据的实验结果。每个结果都是五次随机抽样的平均值，括号内为标准偏差。</p>
+<p>通过实验<strong>证明SALNet在有极少量标记数据时的有效性</strong>。随机选择原始训练集的0.2%，并将标记训练集的15%分配给开发集。如之前所述，除SALNet之外的bootstrapping方法会在半监督学习过程中积累分类错误，最终导致性能的低改进。另一方面，由于<strong>SALNet使用了可靠的词典，因此对于few-shot文本分类，SALNet的性能得到了稳定的提高</strong>，如表4所示。观察到BERT在两个数据集(Yahoo! and DBpedia）上，与使用基于注意力的LSTM和TextCNNS等基线分类器的SALNet相比，实现了最高性能。然而，当在SALNet中使用BERT时，SALNet比原始BERT和带有BERT的self-tarining表现出更好的性能。</p>
+<p>当使用原始训练数据的0.2%到0.9%时，证实了方法的相对稳定性。另一方面，如果取不到原始训练集的0.2%，那么数据就太少了，以至于不能包含每类的代表性单词。因此，SALNet构建了不可靠的词汇，并在训练过程中积累错误。</p>
+<h3 id="Analysis-4">Analysis</h3>
+<h4 id="Attention-mechanism">Attention mechanism</h4>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_7.png" alt="FSL23_7"></p>
+<p>图3：由初始训练的分类器以高置信度预测的数据的注意力分数的可视化。</p>
+<p>图3显示了模型中最初训练的基于注意的词汇分类器的注意层:颜色越深，得分越高。注意到，<strong>最初训练的分类器对预测数据中的重要单词赋以较高的分数</strong>;换句话说，注意力机制成功地利用注意力得分识别出相关词汇进行文本分类。这就是为什么注意机制在本文的分类方法中是至关重要的。</p>
+<h4 id="Effectiveness-of-the-constructed-lexicons">Effectiveness of the constructed lexicons</h4>
+<p>为了在半监督学习中对无标记数据进行标注，当数据包含属于这个类的词典中的一个单词时，对该数据的类别进行预测。</p>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_8.png" alt="FSL23_8"></p>
+<p>表5：由词典预测的数据的比率®和准确率(ac)</p>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_9.png" alt="FSL23_9"></p>
+<p>表6：在四个基准数据集上<strong>使用从词典中获得的更新后的训练集</strong>测试的性能。</p>
+<p><strong>表5显示了词典预测数据的比例和词典预测的准确率</strong>。还进行了实验来验证所构建的词典的有效性。由于BERT在基线中表现出最好的性能，使用BERT来演示词典的有效性。本文得到了一个新的词典预测数据集，并从每个类中选择相同数量的数据，以避免对更大的类的过拟合。然后，<strong>用新的数据集更新训练数据集，用更新后的数据集训练BERT</strong>。表6表明，所构建的词典有效地提高了BERT的性能。注意到，本实验使用BERT来验证所构建词典的有效性，而前面的实验使用BERT来验证SALNet的bootstrapping学习。</p>
+<h4 id="Ablation-study-2">Ablation study</h4>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_10.png" alt="FSL23_10"></p>
+<p>表7：使用原始训练集的1%  (A)，0.2% (B)进行消融实验。每个结果都是五次随机抽样的平均值。#:基于注意力的LSTM，*:基于注意力的LSTM + CNN</p>
+<p>进行消融研究以显示SALNet中各组成部分的有效性。在SALNet中去掉了词典，以验证该词典的有效性。从表7可以看出，在四个数据集上，<strong>词典和基于注意的LSTM组合的模型优于仅使用基于注意的LSTM的模型</strong>。<strong>当标记数据极为有限时，这种效果尤其显著</strong>。<strong>由于SALNet使用分类器预测的数据以较高的置信度来构建词典，而所构建的词典使用模式匹配来显式地预测未标注的数据，因此该词典提高了pseudo-labeling的可靠性</strong>。</p>
+<p>根据SALNet中分类器的数量进一步进行实验，探索性能，结果如表7所示。因为如果使用两个分类器而不是一个分类器进行pseudo-labeling，可以获得一个由许多高置信度预测标签组成的 扩充后的训练集，那么<strong>在SALNet中使用两个分类器比只使用一个分类器获得更好的性能</strong>。此外，<strong>两种分类器的性能也存在差异，因为TextCNN的初始性能在四个数据集上优于基于注意力的LSTM</strong>。</p>
+<h4 id="Analysis-of-failure-cases">Analysis of failure cases</h4>
+<p><img src= "https://npm.elemecdn.com/gxy-assets/blogbuild/loading.gif" data-lazy-src="https://npm.elemecdn.com/gxy-assets/blogimg/FSL23_11.png" alt="FSL23_11"></p>
+<p>表8：已构建词典的错误示例N: None, E: Electronic, O: Office, Ar: Artist, Al: Album, M: Music, C: Culture, S: Society, T: Transportation, At: Athlete</p>
+<p>本文将产生的错误分为两类:</p>
+<ul>
+<li>第一类错误，少于10个单词的短句</li>
+<li>第二类错误，每个词典中模棱两可的关键词。</li>
+</ul>
+<p>表8显示了一些类型和错误的示例。<strong>从第1类中，可以看到短句子样本中没有包含用于文本分类的关键词。在这种情况下，该词典包含了不属于这个类的核心词。对于1类错误，计划在训练集中排除少于10个单词的数据</strong>。</p>
+<p><strong>第二类错误是由每一类的歧义词引起的</strong>。例如，如果有“艺术家”、“专辑”等类别，每个类的词汇可以包括“歌手”、“唱歌”、“歌迷”和“吉他”。<strong>对于第2类错误，计划统计每一类中歧义词的数量，并根据分类器的置信度为关键字分配一个权重</strong>。</p>
+<h3 id="Conclusions-and-Future-Work">Conclusions and Future Work</h3>
+<ul>
+<li>提出了一个简单而有效的用于few-shot文本分类的半监督bootstrap学习框架，它充分利用了<strong>少量标注数据和大量未标注数据</strong>的优点。</li>
+<li>框架<strong>使用注意机制生成词典，并使用构建的词典进行pseudo-labeling</strong>。<strong>该词典可以在分类器的预测结果中选择正确的标签，并且对于模型不能正确预测的未标注数据，词库可以进行正确的预测</strong>。</li>
+<li>大量的实验结果表明，该方法取得了最优的性能。</li>
+<li>作者计划探索使用预先训练的语言模型生成词汇的方法，如XLNet 和ALBERT。还计划研究为关键词分配权重，以提高词典性能。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">郭新宇</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gxystruggle.top/posts/FSL23/">https://gxystruggle.top/posts/FSL23/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gxystruggle.top" target="_blank">Guo Xinyu's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%F0%9F%8C%8CMachine-Learning/">🌌Machine Learning</a><a class="post-meta__tags" href="/tags/%F0%9F%AA%90Meta-learning/">🪐Meta-learning</a><a class="post-meta__tags" href="/tags/%F0%9F%93%9DText-Classification/">📝Text Classification</a><a class="post-meta__tags" href="/tags/%F0%9F%91%80Attention/">👀Attention</a></div><div class="post_share"><div class="social-share" data-image="https://npm.elemecdn.com/gxy-assets/backandcover/39.jpg" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://npm.elemecdn.com/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://npm.elemecdn.com/social-share.js/dist/js/social-share.min.js" defer></script></div></div><link rel="stylesheet" href="https://npm.elemecdn.com/gxy-assets/jsandcss/coin.css" media="defer" onload="this.media='all'"/><div class="post-reward"><button class="tip-button reward-button"><span class="tip-button__text">好活儿，当赏！💰</span><div class="coin-wrapper"><div class="coin"><div class="coin__middle"></div><div class="coin__back"></div><div class="coin__front"></div></div></div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://npm.elemecdn.com/gxy-assets/blogbuild/wechat.png" target="_blank"><img class="post-qr-code-img" src="https://npm.elemecdn.com/gxy-assets/blogbuild/wechat.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="https://npm.elemecdn.com/gxy-assets/blogbuild/zhifubao.png" target="_blank"><img class="post-qr-code-img" src="https://npm.elemecdn.com/gxy-assets/blogbuild/zhifubao.png" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></button></div><audio id="coinAudio" src="https://npm.elemecdn.com/akilar-candyassets@1.0.16/audio/coin.mp3"></audio><script defer="defer" src="https://npm.elemecdn.com/gxy-assets/jsandcss/coin.js"></script><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/FSL22/"><img class="next-cover" src="https://npm.elemecdn.com/gxy-assets/backandcover/38.jpg" onerror="onerror=null;src='https://npm.elemecdn.com/gxy-assets/blogbuild/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">FEW-SHOT TEXT CLASSIFICATION WITH DISTRIBUTIONAL SIGNATURES</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Twikoo</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://npm.elemecdn.com/gxy-assets/blogbuild/%E5%A4%B4%E5%83%8F.jpg" onerror="this.onerror=null;this.src='https://npm.elemecdn.com/gxy-assets/blogbuild/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">郭新宇</div><div class="author-info__description">牧羊少年</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">39</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/guoxinyu1998" target="_blank" title="Github"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github1"></use></svg></a><a class="social-icon" href="mailto:984189011x@qq.com" target="_blank" title="Email"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-loveletter"></use></svg></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=984189011&amp;website=www.oicqzone.com" target="_blank" title="QQ"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-QQ"></use></svg></a><a class="social-icon" href="https://weibo.com/6079019133/profile?rightmod=1&amp;wvr=6&amp;mod=personinfo" target="_blank" title="Weibo"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo1"></use></svg></a><a class="social-icon" href="https://npm.elemecdn.com/gxy-assets/blogbuild/微信名片.jpg" target="_blank" title="Wechat"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weixin"></use></svg></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Abstract-18"><span class="toc-number">1.</span> <span class="toc-text">Abstract</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Introduction-17"><span class="toc-number">2.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Background"><span class="toc-number">3.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Methods"><span class="toc-number">4.</span> <span class="toc-text">Methods</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Experimental-Setup"><span class="toc-number">5.</span> <span class="toc-text">Experimental Setup</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Datasets-3"><span class="toc-number">5.1.</span> <span class="toc-text">Datasets</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Hyperparameters"><span class="toc-number">5.2.</span> <span class="toc-text">Hyperparameters</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Baselines-5"><span class="toc-number">5.3.</span> <span class="toc-text">Baselines</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Experimental-Results-and-Analysis"><span class="toc-number">6.</span> <span class="toc-text">Experimental Results and Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Main-Results"><span class="toc-number">6.1.</span> <span class="toc-text">Main Results</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Experiments-for-few-shot-learning"><span class="toc-number">6.2.</span> <span class="toc-text">Experiments for few-shot learning</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Analysis-4"><span class="toc-number">7.</span> <span class="toc-text">Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Attention-mechanism"><span class="toc-number">7.1.</span> <span class="toc-text">Attention mechanism</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Effectiveness-of-the-constructed-lexicons"><span class="toc-number">7.2.</span> <span class="toc-text">Effectiveness of the constructed lexicons</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ablation-study-2"><span class="toc-number">7.3.</span> <span class="toc-text">Ablation study</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Analysis-of-failure-cases"><span class="toc-number">7.4.</span> <span class="toc-text">Analysis of failure cases</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Conclusions-and-Future-Work"><span class="toc-number">8.</span> <span class="toc-text">Conclusions and Future Work</span></a></li></ol></div></div><div class="card-widget card-recommend-post"><div class="item-headline"><i class="fas fa-dharmachakra"></i><span>相关推荐</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/FSL12/" title="ATTENTIVE TASK-AGNOSTIC META-LEARNING FOR FEW-SHOT TEXT CLASSIFICATION"><img src="https://npm.elemecdn.com/gxy-assets/backandcover/17.jpg" alt="ATTENTIVE TASK-AGNOSTIC META-LEARNING FOR FEW-SHOT TEXT CLASSIFICATION"></a><div class="content"><a class="title" href="/posts/FSL12/" title="ATTENTIVE TASK-AGNOSTIC META-LEARNING FOR FEW-SHOT TEXT CLASSIFICATION">ATTENTIVE TASK-AGNOSTIC META-LEARNING FOR FEW-SHOT TEXT CLASSIFICATION</a><time datetime="2022-03-19" title="发表于 2022-03-19">2022-03-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/FSL8att2/" title="Hybrid Attention-Based Prototypical Networks for Noisy Few-Shot Relation Classification"><img src="https://npm.elemecdn.com/gxy-assets/backandcover/13.jpg" alt="Hybrid Attention-Based Prototypical Networks for Noisy Few-Shot Relation Classification"></a><div class="content"><a class="title" href="/posts/FSL8att2/" title="Hybrid Attention-Based Prototypical Networks for Noisy Few-Shot Relation Classification">Hybrid Attention-Based Prototypical Networks for Noisy Few-Shot Relation Classification</a><time datetime="2022-02-23" title="发表于 2022-02-23">2022-02-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/FSL9att3/" title="Hierarchical Attention Prototypical Networks for Few-Shot Text Classification"><img src="https://npm.elemecdn.com/gxy-assets/backandcover/14.jpg" alt="Hierarchical Attention Prototypical Networks for Few-Shot Text Classification"></a><div class="content"><a class="title" href="/posts/FSL9att3/" title="Hierarchical Attention Prototypical Networks for Few-Shot Text Classification">Hierarchical Attention Prototypical Networks for Few-Shot Text Classification</a><time datetime="2022-02-28" title="发表于 2022-02-28">2022-02-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/FSL10/" title="Dynamic Memory Induction Networks for Few-Shot Text Classification"><img src="https://npm.elemecdn.com/gxy-assets/backandcover/15.jpg" alt="Dynamic Memory Induction Networks for Few-Shot Text Classification"></a><div class="content"><a class="title" href="/posts/FSL10/" title="Dynamic Memory Induction Networks for Few-Shot Text Classification">Dynamic Memory Induction Networks for Few-Shot Text Classification</a><time datetime="2022-03-05" title="发表于 2022-03-05">2022-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/FSL14/" title="Few-Shot Learning with Global Class Representations"><img src="https://npm.elemecdn.com/gxy-assets/backandcover/27.jpg" alt="Few-Shot Learning with Global Class Representations"></a><div class="content"><a class="title" href="/posts/FSL14/" title="Few-Shot Learning with Global Class Representations">Few-Shot Learning with Global Class Representations</a><time datetime="2022-03-27" title="发表于 2022-03-27">2022-03-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/FSL2/" title="Few-shot learning for short text classification"><img src="https://npm.elemecdn.com/gxy-assets/backandcover/2.jpg" alt="Few-shot learning for short text classification"></a><div class="content"><a class="title" href="/posts/FSL2/" title="Few-shot learning for short text classification">Few-shot learning for short text classification</a><time datetime="2022-01-08" title="发表于 2022-01-08">2022-01-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022  <i id="heartbeat" class="fa fas fa-heartbeat"></i> 郭新宇</div></div><head><link rel="stylesheet" href="https://npm.elemecdn.com/gxy-assets/jsandcss/heartbeat.min.css"></head></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="rightside.chat_btn"><i class="fas fa-sms"></i></button><button id="to_comment" type="button" title="直达评论" onclick="FixedCommentBtn();"><i class="fas fa-comments"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">本地搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://npm.elemecdn.com/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://npm.elemecdn.com/instant.page/instantpage.min.js" type="module"></script><script src="https://npm.elemecdn.com/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://npm.elemecdn.com/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://npm.elemecdn.com/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://npm.elemecdn.com/katex@latest/dist/katex.min.css"><script src="https://npm.elemecdn.com/katex@latest/dist/contrib/copy-tex.min.js"></script><link rel="stylesheet" type="text/css" href="https://npm.elemecdn.com/katex@latest/dist/contrib/copy-tex.css"><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>(()=>{
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'https://twikoo-one-jade.vercel.app/',
+      region: 'ap-baoding',
+      onCommentLoaded: function () {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.vemoji)'))
+      }
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo-one-jade.vercel.app/',
+      region: 'ap-baoding',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      document.getElementById('twikoo-count').innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const runFn = () => {
+    init()
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+  }
+
+  const loadTwikoo = () => {
+    if (typeof twikoo === 'object') {
+      setTimeout(runFn,0)
+      return
+    } 
+    getScript('https://npm.elemecdn.com/twikoo/dist/twikoo.all.min.js').then(runFn)
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://npm.elemecdn.com/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'd72c334ea626f70aa6a5',
+      clientSecret: 'd9b9e251acfdf70e336930214bdffe83f697e504',
+      repo: 'gxystruggle_gitalk',
+      owner: 'guoxinyu1998',
+      admin: ['guoxinyu1998'],
+      id: '989d033efcca0d1f1a5fc522aeeca87a',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://npm.elemecdn.com/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Twikoo' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getComment = () => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo-one-jade.vercel.app/',
+        region: 'ap-baoding',
+        pageSize: 6,
+        includeReply: true
+      }).then(function (res) {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        saveToLocal.set('twikoo-newest-comments', JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray)
+      }).catch(function (err) {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.innerHTML= "无法获取评论，请确认相关配置是否正确"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      getScript('https://npm.elemecdn.com/twikoo/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'data-lazy-src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+        
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}' title='${array[i].content}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('twikoo-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script src="https://npm.elemecdn.com/gxy-assets/jsandcss/fairyDustCursor.js"></script><script defer src="https://npm.elemecdn.com/gxy-assets/jsandcss/live2d_autoload.min.js"></script><div class="aplayer no-destroy" data-id="2698841554" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="list" data-lrctype="1" data-preload="none" data-autoplay="false" muted></div><script async src="https://npm.elemecdn.com/gxy-assets/jsandcss/dttitle.js"></script><script async src="//at.alicdn.com/t/font_3185678_5n830b5k2dm.js"></script><script data-pjax defer src="https://npm.elemecdn.com/gxy-assets/jsandcss/fixed_comment.js"></script><script src="https://npm.elemecdn.com/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = true;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://npm.elemecdn.com/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="true"></script><script src="//code.tidio.co/m1tn6ajp5sxcxrsywtbtodb6ercpapyk.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><link rel="stylesheet" href="https://npm.elemecdn.com/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://npm.elemecdn.com/aplayer/dist/APlayer.min.js"></script><script src="https://npm.elemecdn.com/gxy-assets/jsandcss/Meting.min.js"></script><script src="https://npm.elemecdn.com/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show","#fixedcard-dashboard","#web_bg",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax], .pjax-reload script').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><div class="app-refresh" id="app-refresh" style="position: fixed;top: -2.2rem;left: 0;right: 0;z-index: 99999;padding: 0 1rem;font-size: 15px;height: 2.2rem;transition: all 0.3s ease;"><div class="app-refresh-wrap" style=" display: flex;color: #fff;height: 100%;align-items: center;justify-content: center;"><label>✨ 郭新宇的魔法屋上新啦！ 👉</label><a href="javascript:void(0)" onclick="location.reload()"><span style="color: #fff;text-decoration: underline;cursor: pointer;">🍭查看新品🍬</span></a></div></div><script>if ('serviceWorker' in navigator) {
+if (navigator.serviceWorker.controller) {
+navigator.serviceWorker.addEventListener('controllerchange', function() {
+showNotification()
+})
+}
+window.addEventListener('load', function() {
+navigator.serviceWorker.register('/sw.js')
+})
+}
+function showNotification() {
+if (GLOBAL_CONFIG.Snackbar) {
+var snackbarBg =
+document.documentElement.getAttribute('data-theme') === 'light' ?
+GLOBAL_CONFIG.Snackbar.bgLight :
+GLOBAL_CONFIG.Snackbar.bgDark
+var snackbarPos = GLOBAL_CONFIG.Snackbar.position
+Snackbar.show({
+text: '✨ 郭新宇的魔法屋上新啦！ 👉',
+backgroundColor: snackbarBg,
+duration: 500000,
+pos: snackbarPos,
+actionText: '🍭查看新品🍬',
+actionTextColor: '#fff',
+onActionClick: function(e) {
+location.reload()
+},
+})
+} else {
+var showBg =
+document.documentElement.getAttribute('data-theme') === 'light' ?
+'#49b1f5' :
+'#1f1f1f'
+var cssText = `top: 0; background: ${showBg};`
+document.getElementById('app-refresh').style.cssText = cssText
+}
+}</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<div id="workboard"></div><div id="ghbdages" style="overflow:hidden;max-height:90px;height:auto;text-align:center;margin-top:10px"><div class="swiper-wrapper"><div class="swiper-slide"><a class="github-badge" target="_blank" href="http://beian.miit.gov.cn/" style="margin-inline:5px" title="本站已经成功在工信部备案"><img src="https://img.shields.io/badge/%E5%86%80ICP%E5%A4%87-2022002305%E5%8F%B7-e1d492?style=plastic&amp;logo=data:image/png;base64,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" alt=""/></a><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" title="博客框架为Hexo_v6.0.0"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=plastic&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" title="主题版本Butterfly_v4.0.1"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=plastic&amp;logo=bitdefender" alt=""/></a></div><div class="swiper-slide"><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" title="本站资源托管在Github"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=plastic&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" title="本站由Vercel提供加速服务"><img src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=plastic&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></div></div></div><style>a.github-badge:hover:before {display:none}</style>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="/js/runtime.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-footer-beautify/lib/swiperbdage_init.min.js"></script><script data-pjax>
+  function butterfly_clock_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://npm.elemecdn.com/hexo-butterfly-clock/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_injector_config();
+  }
+  </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax src="https://npm.elemecdn.com/hexo-butterfly-clock/lib/clock.min.js"></script><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/11/" alt=""><img width="48" height="48" src="https://npm.elemecdn.com/gxy-assets/backandcover/25.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-03-25</span><a class="blog-slider__title" href="posts/11/" alt="">C++感悟</a><div class="blog-slider__text">C++自学思路指南以及心得体会！</div><a class="blog-slider__button" href="posts/11/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/10/" alt=""><img width="48" height="48" src="https://npm.elemecdn.com/gxy-assets/backandcover/22.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-03-24</span><a class="blog-slider__title" href="posts/10/" alt="">Few-shot Learning</a><div class="blog-slider__text">FSL相关论文以及个人理解！</div><a class="blog-slider__button" href="posts/10/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/ynzz1/" alt=""><img width="48" height="48" src="https://npm.elemecdn.com/gxy-assets/backandcover/23.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-03-24</span><a class="blog-slider__title" href="posts/ynzz1/" alt="">20年老中医，专治各种疑难杂症</a><div class="blog-slider__text">记录一下学习生活中遇到的各种稀奇古怪的难题！</div><a class="blog-slider__button" href="posts/ynzz1/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/6/" alt=""><img width="48" height="48" src="https://npm.elemecdn.com/gxy-assets/backandcover/19.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-03-22</span><a class="blog-slider__title" href="posts/6/" alt="">如何写出令人赏心悦目的博客</a><div class="blog-slider__text">markdown命令，latex数学符号，博客中的图片问题，外挂标签的使用……想要写出清晰明了，美观大气的博客看这一篇就够了！</div><a class="blog-slider__button" href="posts/6/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/1/" alt=""><img width="48" height="48" src="https://npm.elemecdn.com/gxy-assets/backandcover/8.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2022-02-15</span><a class="blog-slider__title" href="posts/1/" alt="">Hexo和Butterfly那点事儿</a><div class="blog-slider__text">Hexo博客搭建、Butterfly主题美化以及个性化设置！</div><a class="blog-slider__button" href="posts/1/" alt="">详情   </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1s');
+    arr[i].setAttribute('data-wow-delay', '0.5s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script></div><script defer src="https://unpkg.zhimg.com/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://unpkg.zhimg.com/hexo-butterfly-wowjs/lib/wow_init.js"></script><script data-pjax src="https://npm.elemecdn.com/hexo-filter-gitcalendar/lib/gitcalendar.js"></script><script data-pjax>
+  function gitcalendar_injector_config(){
+      var parent_div_git = document.getElementById('recent-posts');
+      var item_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><style>#git_container{min-height: 280px}@media screen and (max-width:650px) {#git_container{min-height: 0px}}</style><div id="git_loading" style="width:10%;height:100%;margin:0 auto;display: block;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animatetransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animatetransform></path></svg><style>#git_container{display: none;}</style></div><div id="git_container"></div></div>';
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+      console.log('已挂载gitcalendar')
+      }
+
+    if( document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+        gitcalendar_injector_config()
+        GitCalendarInit("https://blog-calendaler.vercel.app/api?guoxinyu1998",['#e4dfd7', '#f9f4dc', '#f7e8aa', '#f7e8aa', '#f8df72', '#fcd217', '#fcc515', '#f28e16', '#fb8b05', '#d85916', '#f43e06'],'guoxinyu1998')
+    }
+  </script><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><!-- hexo injector body_end end --></body></html>
